@@ -1,0 +1,30 @@
+﻿@using Jmelosegui.Mvc.GoogleMap
+
+@{
+    ViewBag.Title = "Varaždinski ratovi";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @(Html.GoogleMap()
+              .Name("map")
+              .Center(c => c.UseCurrentPosition().Latitude(46.305).Longitude(16.335))
+              .Markers(m => m.Add().Title("Hello World!"))
+              .Zoom(14)
+              .Height(600)
+              .ApiKey("AIzaSyB3HF7za99ZA7QS8LhLJTkGN95LTB-_Ffk")
+              .ClientEvents(events => events.OnMapClick("mapClickEvent"))
+        )
+    </div>
+</div>
+
+@section scripts
+{
+    @(Html.GoogleMap().ScriptRegistrar())
+
+    <script type="text/javascript">
+        function mapClickEvent(args) {
+            alert(args.latLng);
+        }
+    </script>
+}
