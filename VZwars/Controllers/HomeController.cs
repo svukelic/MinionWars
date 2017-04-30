@@ -10,21 +10,36 @@ namespace VZwars.Controllers
     {
         public ActionResult Index()
         {
+            /*if (Session["UserName"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }*/
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Login()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(string username)
         {
-            ViewBag.Message = "Your contact page.";
+            Session["UserName"] = username;
+            return RedirectToAction("Index");
+        }
 
-            return View();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            Session["UserName"] = null;
+            return RedirectToAction("Login");
         }
     }
 }

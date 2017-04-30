@@ -1,19 +1,31 @@
 ﻿@using Jmelosegui.Mvc.GoogleMap
+@using System.Drawing
 
 @{
-    ViewBag.Title = "Varaždinski ratovi";
+    ViewBag.Title = "Minion wars";
 }
 
+<!-- Modal -->
+@Html.Partial("Partial_userPageModal")
+
+@Html.Partial("Partial_clickModal")
+
+@Html.Partial("Partial_buildingModal")
+
+<!-- Dodatne tipke -->
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">User stuff</button>
+
+<!-- Mapa -->
 <div class="row">
     <div class="col-md-12">
         @(Html.GoogleMap()
               .Name("map")
-              .Center(c => c.UseCurrentPosition().Latitude(46.305).Longitude(16.335))
-              .Markers(m => m.Add().Title("Hello World!"))
-              .Zoom(14)
+              .Center(c => c.Latitude(46.312d).Longitude(16.361d))
+              .Zoom(15)
               .Height(600)
+              .ScaleControlVisible(false).PanControlVisible(false).OverviewMapControlVisible(false).StreetViewControlVisible(false).ZoomControlVisible(false).MapTypeControlVisible(false)
               .ApiKey("AIzaSyB3HF7za99ZA7QS8LhLJTkGN95LTB-_Ffk")
-              .ClientEvents(events => events.OnMapClick("mapClickEvent"))
+              .ClientEvents(events => events.OnMapClick("mapClickEvent").OnMapLoaded("mapLoadedEvent"))
         )
     </div>
 </div>
@@ -21,10 +33,108 @@
 @section scripts
 {
     @(Html.GoogleMap().ScriptRegistrar())
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
+        var UserMarker = null;
+        var map = null;
+        var clickedPosition = null;
+        var clickedMarker = null;
+   
+        $(document).ready(function () {
+            navigator.geolocation.watchPosition(savePosition);
+
+            $("#modalStats").hide();
+            $("#modalMinions").hide();
+        });
+
         function mapClickEvent(args) {
-            alert(args.latLng);
+            var adresa = GetAddress(args.latLng);
+            clickedPosition = args.latLng;
+            var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), args.latLng.lat(), args.latLng.lng()).toFixed(2);
+            $("#distanceClick").text(distance + " metara");
+            if (distance > 75) {
+                $("#btnBuildCamp").prop("disabled", true);
+            }
+            else {
+                $("#btnBuildCamp").prop("disabled", false);
+            }
+            $("#clickModal").modal();
         }
+
+        function mapLoadedEvent(args) {
+            map = args.map;
+        }
+
+        function savePosition(position) {
+            var pos = new google.maps.LatLng({ lat: position.coords.latitude, lng: position.coords.longitude });
+            if(map != null){
+                if (UserMarker == null) {
+                    UserMarker = new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        id: 'UserMaker',
+                        title: 'User',
+                        icon: 'http://minion-wars.azurewebsites.net/Content/icons/barbute.png'
+                    });
+                    map.panTo(pos);
+                }
+                else {
+                    UserMarker.setPosition(pos);
+                }
+            }
+        }
+
+        function GetAddress(latlng) {
+            var geocoder = geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        $("#addressClick").text("Location: " + results[1].formatted_address);
+                        return results[1].formatted_address;
+                    }
+                }
+            });
+        }
+
+        function GetDistance(lat1, lon1, lat2, lon2) {
+            var p = 0.017453292519943295;
+            var c = Math.cos;
+            var a = 0.5 - c((lat2 - lat1) * p) / 2 +
+                    c(lat1 * p) * c(lat2 * p) *
+                    (1 - c((lon2 - lon1) * p)) / 2;
+
+            return 12742 * 1000 * Math.asin(Math.sqrt(a));
+        }
+
+        $(function () {
+            $("#userTabs").tabs();
+        });
+
+        $("#btnBuildCamp").click(function () {
+            if(clickedPosition != null){
+                var marker = new google.maps.Marker({
+                    position: clickedPosition,
+                    map: map,
+                    id: 'test1',
+                    title: 'Camp',
+                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/camping-tent.png'
+                });
+
+                marker.addListener('click', function (e) {
+                    clickedMarker = marker;
+                    $("#buildingModal").modal();
+                });
+            }
+            $("#clickModal").modal('hide');
+        });
+
+        $("#btnUpgradeCamp").click(function () {
+            if (clickedMarker != null) {
+                $("#buildingModal").modal('hide');
+                clickedMarker.setIcon("http://minion-wars.azurewebsites.net/Content/icons/goblin-camp.png");
+                clickedMarker.setTitle("Outpost");
+            }
+        });
     </script>
 }
