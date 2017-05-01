@@ -181,6 +181,8 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Minion.cs" />
+    <Compile Include="Models\MinionGenotype.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -189,6 +191,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\icons\barbute.png" />
     <Content Include="Content\icons\camping-tent.png" />
+    <Content Include="Content\icons\dwarf-helmet.png" />
     <Content Include="Content\icons\goblin-camp.png" />
     <Content Include="Content\icons\king.png" />
     <Content Include="Content\icons\visored-helm.png" />
@@ -251,6 +254,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\minions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

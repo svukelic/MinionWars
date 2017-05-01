@@ -40,6 +40,8 @@
         var map = null;
         var clickedPosition = null;
         var clickedMarker = null;
+        var subscribedMarkers = new Array();
+        var markerMovement = new Array();
    
         $(document).ready(function () {
             navigator.geolocation.watchPosition(savePosition);
@@ -47,6 +49,45 @@
             $("#modalStats").hide();
             $("#modalMinions").hide();
         });
+
+        (function worker() {
+            for (var i = 0; i < markerMovement.length; i++) {
+                var result = subscribedMarkers.findIndex(x => x.id == markerMovement[i].id);
+                MoveMarker(markerMovement[i].destination, result, i);
+            }
+
+            setTimeout(worker, 100);
+        })();
+
+        function MoveMarker(destination, index, movementIndex) {
+            var currentLat = subscribedMarkers[index].getPosition().lat();
+            var currentLng = subscribedMarkers[index].getPosition().lng();
+
+            if (GetDistance(currentLat, currentLng, destination.lat(), destination.lng()) <= 10) {
+                alert("arrived");
+                markerMovement.splice(movementIndex, 1);
+            }
+            else {
+                var newLat = null;
+                if (destination.lat() > currentLat) {
+                    newLat = currentLat + 1 / (1852 * 60);
+                }
+                else {
+                    newLat = currentLat - 1 / (1852 * 60);
+                }
+
+                var newLng = null;
+                if (destination.lng() > currentLng) {
+                    newLng = currentLng + 1 / (1852 * 60);
+                }
+                else {
+                    newLng = currentLng - 1 / (1852 * 60);
+                }
+
+                var pos = new google.maps.LatLng({ lat: newLat, lng: newLng });
+                subscribedMarkers[index].setPosition(pos);
+            }
+        }
 
         function mapClickEvent(args) {
             var adresa = GetAddress(args.latLng);
@@ -135,6 +176,48 @@
                 clickedMarker.setIcon("http://minion-wars.azurewebsites.net/Content/icons/goblin-camp.png");
                 clickedMarker.setTitle("Outpost");
             }
+        });
+
+        $("#btnSendMinions").click(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SendMinions")',
+                data: { 'count': 10 },
+                dataType: 'json',
+                success: function (jsonData) {
+                    if (jsonData != null) {
+                        if (jsonData.length > 0) {
+                            for(var i = 0; i<jsonData.length; i++){
+                            if (clickedPosition != null) {
+                                var marker = new google.maps.Marker({
+                                    position: UserMarker.getPosition(),
+                                    map: map,
+                                    id: jsonData[i].id,
+                                    title: 'Minion group',
+                                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-helmet.png'
+                                });
+
+                                var markerData = {
+                                    id: jsonData[i].id,
+                                    destination: clickedPosition
+                                };
+
+                                marker.addListener('click', function (e) {
+                                    alert("clicked");
+                                });
+
+                                subscribedMarkers.push(marker);
+                                markerMovement.push(markerData);
+                            }
+                        }
+                        }
+                    }
+                    $("#clickModal").modal('hide');
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
         });
     </script>
 }

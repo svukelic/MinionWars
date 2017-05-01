@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using VZwars.Models;
 
 namespace VZwars.Controllers
 {
@@ -40,6 +42,17 @@ namespace VZwars.Controllers
         {
             Session["UserName"] = null;
             return RedirectToAction("Login");
+        }
+
+        public ActionResult SendMinions(int count)
+        {
+            string path = Server.MapPath("~/Content/");
+            Minion minion = MinionGenotype.generateRandomMinion();
+            List<Minion> minionList = new List<Minion>();
+
+            minionList.Add(minion);
+
+            return Json(minionList);
         }
     }
 }
