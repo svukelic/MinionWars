@@ -47,12 +47,15 @@ namespace VZwars.Controllers
         public ActionResult SendMinions(int count)
         {
             string path = Server.MapPath("~/Content/");
-            Minion minion = MinionGenotype.generateRandomMinion();
-            List<Minion> minionList = new List<Minion>();
+            Battlegroup group = new Battlegroup();
 
-            minionList.Add(minion);
+            for(int i=0; i < count; count++)
+            {
+                Minion minion = MinionGenotype.generateRandomMinion();
+                group.frontline.Add(minion);
+            }
 
-            return Json(minionList);
+            return Json(group);
         }
     }
 }

@@ -178,11 +178,19 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Abilities\Ability.cs" />
+    <Compile Include="Models\Abilities\AbilityGenerator.cs" />
+    <Compile Include="Models\Abilities\AbilityInstances\Heal.cs" />
+    <Compile Include="Models\Abilities\Effect.cs" />
+    <Compile Include="Models\Abilities\PassiveEffect.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Entities\Battlegroup.cs" />
+    <Compile Include="Models\Entities\MinionStats.cs" />
+    <Compile Include="Models\Entities\MinionType.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Minion.cs" />
-    <Compile Include="Models\MinionGenotype.cs" />
+    <Compile Include="Models\Entities\Minion.cs" />
+    <Compile Include="Models\Entities\MinionGenotype.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
