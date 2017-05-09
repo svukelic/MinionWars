@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6A3963B0-D1A3-4D03-9F01-8694ECECC3EA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MinionWarsEntitiesLib</RootNamespace>
+    <AssemblyName>MinionWarsEntitiesLib</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Abilities\Ability.cs" />
+    <Compile Include="Abilities\AbilityGenerator.cs" />
+    <Compile Include="Abilities\AbilityInstances\Heal.cs" />
+    <Compile Include="Abilities\Effect.cs" />
+    <Compile Include="Battlegroups\BattlegroupManager.cs" />
+    <Compile Include="Geolocations\Geolocations.cs" />
+    <Compile Include="Minions\MinionGenotype.cs" />
+    <Compile Include="Models\Battlegroup.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BattlegroupAssignment.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BattlegroupMovementHistory.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\HiveNode.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Location.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Minion.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MinionOwnership.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MinionType.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MinionWarsEntities.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MinionWarsEntities.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MinionWarsEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MinionWarsEntities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MinionWarsEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ModifierCoeficients.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Orders.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResourceNode.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResourceType.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserMovementHistory.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Users.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserTraits.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\ResourceManager.cs" />
+    <Compile Include="Structures\HiveManager.cs" />
+    <Compile Include="EntityManagers\UsersManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Combat\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="Models\MinionWarsEntities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MinionWarsEntities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Models\MinionWarsEntities.edmx.diagram">
+      <DependentUpon>MinionWarsEntities.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\MinionWarsEntities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MinionWarsEntities.edmx</DependentUpon>
+      <LastGenOutput>MinionWarsEntities.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\MinionWarsEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MinionWarsEntities.edmx</DependentUpon>
+      <LastGenOutput>MinionWarsEntities.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

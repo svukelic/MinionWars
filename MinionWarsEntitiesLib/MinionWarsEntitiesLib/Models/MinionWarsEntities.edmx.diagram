@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ad20889957bc46379958190932ee6571" Name="Diagram1">
+        <EntityTypeShape EntityType="MinionWarsModel.Battlegroup" Width="1.5" PointX="3" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.BattlegroupAssignment" Width="1.5" PointX="8.25" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.BattlegroupMovementHistory" Width="1.5" PointX="8.25" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.HiveNode" Width="1.5" PointX="6" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Location" Width="1.5" PointX="0.75" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Minion" Width="1.5" PointX="6" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.MinionOwnership" Width="1.5" PointX="8.25" PointY="13.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.MinionType" Width="1.5" PointX="3.75" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.ModifierCoeficients" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Orders" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.ResourceNode" Width="1.5" PointX="6" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.ResourceType" Width="1.5" PointX="3.75" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.UserMovementHistory" Width="1.5" PointX="6" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Users" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.UserTraits" Width="1.5" PointX="1.5" PointY="15.875" IsExpanded="true" />
+        <AssociationConnector Association="MinionWarsModel.fk_assignment_bg" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_bg_current" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_bg_destination" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_bg_orders" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_bg_user" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_bgmove_bg" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_assignment_minion" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_bgmove_loc" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_hnode_loc" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_hnode_minion" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_rnode_loc" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_usermove_loc" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_minion_mtype" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_ownership_minion" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_ownership_users" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_rnode_rtype" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_usermove_user" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_users_traits" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
