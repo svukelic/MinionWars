@@ -80,7 +80,7 @@ namespace WarsGeneratorConsole
         private static void MinionGenerationEvent(DbGeography loc)
         {
             //generate wild minion group
-            WildMinionGeneratorManager.GenerateWildMinionGroup();
+            WildMinionGeneratorManager.GenerateWildMinionGroup(loc);
             UsersManager.UpdateEventSaturations(loc, 1);
         }
 

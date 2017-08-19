@@ -1,4 +1,5 @@
-﻿<div id="userPageModal" class="modal fade" role="dialog">
+﻿@model VZwars.Models.UserDataModel
+<div id="userPageModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <div class="modal-content">
@@ -17,7 +18,7 @@
                     <div class="row" id="modalInfo">
                         <h2>User info</h2>
                         <hr />
-                        <p>Username: test</p>
+                        <p>Username: @Html.DisplayTextFor(model => model.userModel.user.username) </p>
                     </div>
                     <!-- Stats -->
                     <div class="row" id="modalStats">

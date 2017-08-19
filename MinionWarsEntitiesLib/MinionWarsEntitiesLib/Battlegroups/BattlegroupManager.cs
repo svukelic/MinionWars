@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MinionWarsEntitiesLib.Abilities;
 using System.Data.Entity.Spatial;
+using MinionWarsEntitiesLib.AiManagers;
 
 namespace MinionWarsEntitiesLib.Battlegroups
 {
@@ -89,6 +90,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
             if(bg.location.Distance(orders.location).Value <= 10)
             {
                 arrived = true;
+                OrdersManager.ContinueOrders(bg, orders);
             }
             else
             {

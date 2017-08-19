@@ -55,14 +55,5 @@ namespace MinionWarsEntitiesLib.EntityManagers
                 if (u.event_saturation < 0) u.event_saturation = 0;
             }
         }
-
-        public static string TestData()
-        {
-            //string test = db.UserMovementHistory.Last().occurence.ToString();
-            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
-            List<UserMovementHistory> umh = db.UserMovementHistory.ToList();
-            List<Users> test = db.Users.ToList();
-            return umh.First().location.ToString();
-        }
     }
 }

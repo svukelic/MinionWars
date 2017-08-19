@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using VZwars.Models;
+using MinionWarsEntitiesLib;
+using MinionWarsEntitiesLib.Geolocations;
 
 namespace VZwars.Controllers
 {
@@ -20,7 +22,9 @@ namespace VZwars.Controllers
             {
                 return RedirectToAction("Login");
             }*/
-            return View();
+            UserDataModel userModel = new UserDataModel(1);
+            //System.Diagnostics.Debug.WriteLine(userModel.userModel.user.username);
+            return View(userModel);
         }
 
         public ActionResult Login()
@@ -47,15 +51,24 @@ namespace VZwars.Controllers
         public ActionResult SendMinions(int count)
         {
             string path = Server.MapPath("~/Content/");
-            Battlegroup group = new Battlegroup();
+            /*Battlegroup group = new Battlegroup();
 
             for(int i=0; i < count; count++)
             {
                 Minion minion = MinionGenotype.generateRandomMinion();
                 group.frontline.Add(minion);
-            }
+            }*/
 
-            return Json(group);
+            //return Json(group);
+            return Json(path);
+        }
+
+        public ActionResult RefreshMap(double lat, double lon)
+        {
+            var point = string.Format("POINT({1} {0})", lat, lon);
+            MapDataModel mdm = MapManager.GetMapData(point, 1000);
+            System.Diagnostics.Debug.WriteLine("TEST!: " + mdm.bgList.Count);
+            return Json(mdm.bgList.Count);
         }
     }
 }

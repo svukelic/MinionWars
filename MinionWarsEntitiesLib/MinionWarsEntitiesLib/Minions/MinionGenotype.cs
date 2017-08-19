@@ -17,7 +17,7 @@ namespace MinionWarsEntitiesLib.Minions
             
             Random r = new Random();
 
-            minion.mtype_id = r.Next(0, 15);
+            minion.mtype_id = r.Next(1, 16);
             minion.somatotype = SomatotypeGenerator(r);
 
             minion.strength = Convert.ToInt32(db.ModifierCoeficients.Find(18).value);
@@ -30,18 +30,18 @@ namespace MinionWarsEntitiesLib.Minions
 
             //minion.health = minion.vit * 3;
 
-            minion.behaviour = r.Next(0, 15);
+            minion.behaviour = r.Next(1, 16);
             minion.melee_ability = r.Next(0, 15) + 2; //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
             minion.ranged_ability = r.Next(0, 15) + 2; //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
             minion.passive = r.Next(0, 15);
 
             minion.speed = 1;
 
-            Minion checkMinion = null;
-            checkMinion = db.Minion.Where(x => x.behaviour == minion.behaviour && x.melee_ability == minion.melee_ability && x.ranged_ability == minion.ranged_ability && x.passive == minion.passive && x.mtype_id == minion.mtype_id && x.somatotype.Equals(minion.somatotype)).First();
-            if(checkMinion != null)
+            List<Minion> checkMinion = null;
+            checkMinion = db.Minion.Where(x => x.behaviour == minion.behaviour && x.melee_ability == minion.melee_ability && x.ranged_ability == minion.ranged_ability && x.passive == minion.passive && x.mtype_id == minion.mtype_id && x.somatotype.Equals(minion.somatotype)).ToList();
+            if(checkMinion.Count > 0)
             {
-                return checkMinion;
+                return checkMinion.First();
             }
             else
             {

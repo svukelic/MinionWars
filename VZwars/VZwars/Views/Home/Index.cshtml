@@ -1,5 +1,6 @@
 ﻿@using Jmelosegui.Mvc.GoogleMap
 @using System.Drawing
+@model VZwars.Models.UserDataModel
 
 @{
     ViewBag.Title = "Minion wars";
@@ -48,7 +49,30 @@
 
             $("#modalStats").hide();
             $("#modalMinions").hide();
+
+            setTimeout(executeMapRefresh, 5000);
         });
+
+        function executeMapRefresh() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RefreshMap")',
+                data: { 'lat': UserMarker.getPosition().lat(), 'lon': UserMarker.getPosition().lng() },
+                dataType: 'json',
+                success: function (jsonData) {
+                    if (jsonData != null) {
+                        if (jsonData.length > 0) {
+                            alert(jsonData);
+                        }
+                    }
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+
+            setTimeout(executeMapRefresh, 5000); // you could choose not to continue on failure...
+        }
 
         (function worker() {
             for (var i = 0; i < markerMovement.length; i++) {
@@ -132,6 +156,7 @@
                 if (status == google.maps.GeocoderStatus.OK) {
                     if (results[1]) {
                         $("#addressClick").text("Location: " + results[1].formatted_address);
+                        $("#locClick").text(UserMarker.getPosition().lat() + " " + UserMarker.getPosition().lng());
                         return results[1].formatted_address;
                     }
                 }

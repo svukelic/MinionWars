@@ -10,3 +10,6 @@ C:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsGeneratorConsole
 C:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsGeneratorConsole\WarsGeneratorConsole\bin\Debug\MinionWarsEntitiesLib.pdb
 C:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsGeneratorConsole\WarsGeneratorConsole\obj\Debug\WarsGeneratorConsole.exe
 C:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsGeneratorConsole\WarsGeneratorConsole\obj\Debug\WarsGeneratorConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Debug\WarsGeneratorConsole.exe.config
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\obj\Debug\WarsGeneratorConsole.exe
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\obj\Debug\WarsGeneratorConsole.pdb

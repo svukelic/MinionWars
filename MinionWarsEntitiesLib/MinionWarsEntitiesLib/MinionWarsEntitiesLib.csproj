@@ -56,12 +56,17 @@
     <Compile Include="Abilities\AbilityInstances\Heal.cs" />
     <Compile Include="Abilities\AttackInstances\MeleeAttack.cs" />
     <Compile Include="Abilities\Effect.cs" />
+    <Compile Include="AiManagers\OrdersManager.cs" />
     <Compile Include="Battlegroups\AssignmentGroupEntity.cs" />
     <Compile Include="Battlegroups\BattleGroupEntity.cs" />
     <Compile Include="Battlegroups\BattlegroupManager.cs" />
     <Compile Include="Combat\CombatManager.cs" />
     <Compile Include="Combat\GroupCombatStats.cs" />
+    <Compile Include="EntityManagers\UserDataManager.cs" />
+    <Compile Include="EntityManagers\UserEntity.cs" />
     <Compile Include="Geolocations\Geolocations.cs" />
+    <Compile Include="Geolocations\MapDataModel.cs" />
+    <Compile Include="Geolocations\MapManager.cs" />
     <Compile Include="Minions\MinionGenotype.cs" />
     <Compile Include="Minions\WildMinionGeneratorManager.cs" />
     <Compile Include="Models\AbilityStats.cs">
@@ -128,6 +133,7 @@
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="Structures\HiveManager.cs" />
     <Compile Include="EntityManagers\UsersManager.cs" />
+    <Compile Include="TestManagers\WildMinionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />

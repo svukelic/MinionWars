@@ -37,7 +37,8 @@ namespace MinionWarsEntitiesLib.Battlegroups
             stats.strength += Convert.ToInt32(this.minionData.strength + (this.minionData.strength * bg.str_mod));
             stats.dexterity += Convert.ToInt32(this.minionData.dexterity + (this.minionData.dexterity * bg.dex_mod));
             stats.vitality += Convert.ToInt32(this.minionData.vitality + (this.minionData.vitality * bg.vit_mod));
-            stats.health = stats.vitality * 5;
+            stats.health = stats.vitality * 5 * this.initialCount;
+            //stats.healthPerMinion = stats.vitality * 5;
             stats.power += Convert.ToInt32(this.minionData.power + (this.minionData.power * bg.pow_mod));
             stats.cooldown += Convert.ToInt32(this.minionData.cooldown);
             stats.duration += Convert.ToInt32(this.minionData.duration);

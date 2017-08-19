@@ -8,3 +8,6 @@ c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsMovementConsole\
 c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.csprojResolveAssemblyReference.cache
 c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.exe
 c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\WarsMovementConsole.exe.config
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.exe
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.pdb

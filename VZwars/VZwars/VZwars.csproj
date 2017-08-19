@@ -53,6 +53,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MinionWarsEntitiesLib">
+      <HintPath>..\..\MinionWarsEntitiesLib\MinionWarsEntitiesLib\bin\Debug\MinionWarsEntitiesLib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -178,18 +181,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Abilities\Ability.cs" />
-    <Compile Include="Models\Abilities\AbilityGenerator.cs" />
-    <Compile Include="Models\Abilities\AbilityInstances\Heal.cs" />
-    <Compile Include="Models\Abilities\Effect.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Entities\Battlegroup.cs" />
-    <Compile Include="Models\Entities\BattlegroupModifiers.cs" />
-    <Compile Include="Models\Entities\MinionType.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Entities\Minion.cs" />
-    <Compile Include="Models\Entities\MinionGenotype.cs" />
+    <Compile Include="Models\UserDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -262,7 +257,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\minions\" />
-    <Folder Include="Models\Structures\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
