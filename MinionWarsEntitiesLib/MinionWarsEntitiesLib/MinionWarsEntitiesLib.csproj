@@ -67,6 +67,7 @@
     <Compile Include="Geolocations\Geolocations.cs" />
     <Compile Include="Geolocations\MapDataModel.cs" />
     <Compile Include="Geolocations\MapManager.cs" />
+    <Compile Include="Geolocations\MapObject.cs" />
     <Compile Include="Minions\MinionGenotype.cs" />
     <Compile Include="Minions\WildMinionGeneratorManager.cs" />
     <Compile Include="Models\AbilityStats.cs">

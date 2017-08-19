@@ -12,7 +12,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
 {
     public static class BattlegroupManager
     {
-        static MinionWarsEntities db = new MinionWarsEntities();
+        //static MinionWarsEntities db = new MinionWarsEntities();
         public static Battlegroup ConstructBattlegroup(int? owner_id, int type)
         {
             Battlegroup bg = new Battlegroup();
@@ -20,15 +20,18 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
             if (owner_id != null)
             {
-                Users owner = db.Users.Find(owner_id);
-                if (owner != null)
+                using(var db = new MinionWarsEntities())
                 {
-                    bg.owner_id = owner_id.Value;
-                    GetTraitModifiers(owner, bg, type);
-                }
-                else
-                {
-                    return null;
+                    Users owner = db.Users.Find(owner_id);
+                    if (owner != null)
+                    {
+                        bg.owner_id = owner_id.Value;
+                        GetTraitModifiers(owner, bg, type);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
             else
@@ -36,36 +39,39 @@ namespace MinionWarsEntitiesLib.Battlegroups
                 bg.owner_id = null;
             }
 
-            db.Battlegroup.Add(bg);
-            db.SaveChanges();
+            /*db.Battlegroup.Add(bg);
+            db.SaveChanges();*/
 
             return bg;
         }
 
         public static bool AddMinions(int m_id, int count, int type, int bg_id)
         {
-            Minion minion = db.Minion.Find(m_id);
-            MinionWarsEntitiesLib.Models.Battlegroup bg = db.Battlegroup.Find(bg_id);
-            if (minion != null && bg != null)
+            using (var db = new MinionWarsEntities())
             {
-                BattlegroupAssignment assignment = new BattlegroupAssignment();
+                Minion minion = db.Minion.Find(m_id);
+                MinionWarsEntitiesLib.Models.Battlegroup bg = db.Battlegroup.Find(bg_id);
+                if (minion != null && bg != null)
+                {
+                    BattlegroupAssignment assignment = new BattlegroupAssignment();
 
-                assignment.battlegroup_id = bg_id;
-                assignment.minion_id = minion.id;
-                assignment.group_count = count;
-                assignment.line = type;
-                db.BattlegroupAssignment.Add(assignment);
+                    assignment.battlegroup_id = bg_id;
+                    assignment.minion_id = minion.id;
+                    assignment.group_count = count;
+                    assignment.line = type;
+                    db.BattlegroupAssignment.Add(assignment);
 
-                CalculateAdvancedModifiers(bg, count, minion.passive);
-                
-                db.SaveChanges();
+                    CalculateAdvancedModifiers(bg, count, minion.passive);
+
+                    db.SaveChanges();
+                }
+                else
+                {
+                    return false;
+                }
+
+                return true;
             }
-            else
-            {
-                return false;
-            }
-
-            return true;
         }
 
         public static Battlegroup GetLastAssigned(int lastAssigned)
@@ -74,8 +80,11 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
             while(newBg == null)
             {
-                newBg = db.Battlegroup.Find(lastAssigned);
-                lastAssigned++;
+                using (var db = new MinionWarsEntities())
+                {
+                    newBg = db.Battlegroup.Find(lastAssigned);
+                    lastAssigned++;
+                }
             }
 
             return newBg;
@@ -83,18 +92,31 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
         public static bool UpdatePosition(Battlegroup bg)
         {
-            //DbGeography currentLoc = db.Location.Find(bg.current_loc_id);
-            Orders orders = db.Orders.Find(bg.orders_id);
+            Orders orders = null;
+            using (var db = new MinionWarsEntities())
+            {
+                //DbGeography currentLoc = db.Location.Find(bg.current_loc_id);
+                orders = db.Orders.Find(bg.orders_id);
+            }
+
             bool arrived = false;
 
-            if(bg.location.Distance(orders.location).Value <= 10)
+            if (bg.location.Distance(orders.location).Value <= 10)
             {
                 arrived = true;
                 OrdersManager.ContinueOrders(bg, orders);
             }
-            else
+            /*else
             {
                 bg.location = Geolocations.Geolocations.PerformMovement(bg.location, orders.location, bg.group_speed);
+            }*/
+            bg.location = Geolocations.Geolocations.PerformMovement(bg.location, orders.location, bg.group_speed);
+
+            using (var db = new MinionWarsEntities())
+            {
+                db.Battlegroup.Attach(bg);
+                db.Entry(bg).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
             }
 
             return arrived;
@@ -102,18 +124,21 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
         private static void GetTraitModifiers(Users owner, Battlegroup bg, int type)
         {
-            UserTraits traits = db.UserTraits.Find(owner.traits_id);
-
-            if (traits != null)
+            using (var db = new MinionWarsEntities())
             {
-                bg.movement_mod += traits.cbg_speed * 0.1;
+                UserTraits traits = db.UserTraits.Find(owner.traits_id);
 
-                int sizeModifier = 0;
-                if (type == 0) sizeModifier = 20 + traits.pbg_size * 4;
-                else sizeModifier = 10 + traits.cbg_size * 2;
-                bg.size += sizeModifier;
+                if (traits != null)
+                {
+                    bg.movement_mod += traits.cbg_speed * 0.1;
 
-                bg.build_mod += traits.arch_speed * 0.1;
+                    int sizeModifier = 0;
+                    if (type == 0) sizeModifier = 20 + traits.pbg_size * 4;
+                    else sizeModifier = 10 + traits.cbg_size * 2;
+                    bg.size += sizeModifier;
+
+                    bg.build_mod += traits.arch_speed * 0.1;
+                }
             }
         }
 
@@ -198,55 +223,61 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
         private static double GetModifierCoeficients(int id)
         {
-            return db.ModifierCoeficients.Find(id).value;
+            using (var db = new MinionWarsEntities())
+            {
+                return db.ModifierCoeficients.Find(id).value;
+            }
         }
 
         public static BattleGroupEntity BuildBattleGroupEntity(int bg_id)
         {
-            BattleGroupEntity bge = new BattleGroupEntity();
-
-            bge.bg = db.Battlegroup.Find(bg_id);
-            if(bge.bg != null)
+            using (var db = new MinionWarsEntities())
             {
-                bge.frontline = new List<AssignmentGroupEntity>();
-                bge.backline = new List<AssignmentGroupEntity>();
-                bge.supportline = new List<AssignmentGroupEntity>();
+                BattleGroupEntity bge = new BattleGroupEntity();
 
-                List<BattlegroupAssignment> assignments = db.BattlegroupAssignment.Where(x => x.battlegroup_id == bg_id).ToList();
-                if(assignments != null)
+                bge.bg = db.Battlegroup.Find(bg_id);
+                if (bge.bg != null)
                 {
-                    foreach(BattlegroupAssignment a in assignments)
-                    {
-                        AssignmentGroupEntity age = new AssignmentGroupEntity();
-                        age.initialCount= a.group_count;
-                        age.remainingCount = a.group_count;
-                        age.turnStartCount = a.group_count;
-                        age.minionData = db.Minion.Find(a.minion_id);
-                        age.CalculateGroupStats(bge.bg, a.line);
-                        age.attack = AbilityGenerator.GenerateAttack(a.line, age.stats, age.minionData);
-                        age.ability = AbilityGenerator.GenerateAbility(a.line, age.stats, age.minionData);
+                    bge.frontline = new List<AssignmentGroupEntity>();
+                    bge.backline = new List<AssignmentGroupEntity>();
+                    bge.supportline = new List<AssignmentGroupEntity>();
 
-                        switch (a.line)
+                    List<BattlegroupAssignment> assignments = db.BattlegroupAssignment.Where(x => x.battlegroup_id == bg_id).ToList();
+                    if (assignments != null)
+                    {
+                        foreach (BattlegroupAssignment a in assignments)
                         {
-                            case 1:
-                                bge.frontline.Add(age);
-                                break;
-                            case 2:
-                                bge.backline.Add(age);
-                                break;
-                            case 3:
-                                bge.supportline.Add(age);
-                                break;
+                            AssignmentGroupEntity age = new AssignmentGroupEntity();
+                            age.initialCount = a.group_count;
+                            age.remainingCount = a.group_count;
+                            age.turnStartCount = a.group_count;
+                            age.minionData = db.Minion.Find(a.minion_id);
+                            age.CalculateGroupStats(bge.bg, a.line);
+                            age.attack = AbilityGenerator.GenerateAttack(a.line, age.stats, age.minionData);
+                            age.ability = AbilityGenerator.GenerateAbility(a.line, age.stats, age.minionData);
+
+                            switch (a.line)
+                            {
+                                case 1:
+                                    bge.frontline.Add(age);
+                                    break;
+                                case 2:
+                                    bge.backline.Add(age);
+                                    break;
+                                case 3:
+                                    bge.supportline.Add(age);
+                                    break;
+                            }
                         }
                     }
                 }
-            }
-            else
-            {
-                return null;
-            }
+                else
+                {
+                    return null;
+                }
 
-            return bge;
+                return bge;
+            }
         }
 
         /*private static void SetAdvancedModifiers(MinionWarsEntitiesLib.Models.Battlegroup bg, List<Minion> f, List<Minion> b, List<Minion> s)

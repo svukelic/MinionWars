@@ -8,6 +8,20 @@ c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsMovementConsole\
 c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.csprojResolveAssemblyReference.cache
 c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.exe
 c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\SqlServerTypes\x64\msvcr120.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\SqlServerTypes\x64\SqlServerSpatial140.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\SqlServerTypes\x86\msvcr120.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\SqlServerTypes\x86\SqlServerSpatial140.dll
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\WarsMovementConsole.exe.config
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\WarsMovementConsole.exe
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\WarsMovementConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\Microsoft.SqlServer.Types.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\MinionWarsEntitiesLib.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\EntityFramework.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\MinionWarsEntitiesLib.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\EntityFramework.xml
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.csprojResolveAssemblyReference.cache
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.exe
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\EntityFramework.SqlServer.xml

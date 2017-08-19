@@ -22,10 +22,15 @@ namespace MinionWarsEntitiesLib.Minions
             BattlegroupManager.AddMinions(WildMinion.id, r.Next(2, 13), 0, WildGroup.id);
             BattlegroupManager.AddMinions(WildMinion.id, r.Next(2, 13), 1, WildGroup.id);
             BattlegroupManager.AddMinions(WildMinion.id, r.Next(2, 13), 2, WildGroup.id);
+            //db.SaveChanges();
 
             //orders
-            OrdersManager.GiveNewOrders(WildGroup, "roam", null);
+            Orders o = OrdersManager.GiveNewOrders(WildGroup, "roam", null);
 
+            WildGroup.orders_id = o.id;
+            db.Battlegroup.Add(WildGroup);
+            //db.Battlegroup.Attach(WildGroup);
+            //db.Entry(WildGroup).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
         }
     }

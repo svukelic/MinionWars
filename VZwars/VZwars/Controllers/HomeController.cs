@@ -23,7 +23,7 @@ namespace VZwars.Controllers
                 return RedirectToAction("Login");
             }*/
             UserDataModel userModel = new UserDataModel(1);
-            //System.Diagnostics.Debug.WriteLine(userModel.userModel.user.username);
+            //System.Diagnostics.Debug.WriteLine("USERNAME: " + userModel.userModel.user.username);
             return View(userModel);
         }
 
@@ -67,8 +67,10 @@ namespace VZwars.Controllers
         {
             var point = string.Format("POINT({1} {0})", lat, lon);
             MapDataModel mdm = MapManager.GetMapData(point, 1000);
-            System.Diagnostics.Debug.WriteLine("TEST!: " + mdm.bgList.Count);
-            return Json(mdm.bgList.Count);
+            //System.Diagnostics.Debug.WriteLine("TEST!: " + mdm.bgList.Count);
+            //System.Diagnostics.Debug.WriteLine(Json(mdm.bgList));
+            System.Diagnostics.Debug.WriteLine(Json(mdm.objectList));
+            return Json(mdm.objectList);
         }
     }
 }

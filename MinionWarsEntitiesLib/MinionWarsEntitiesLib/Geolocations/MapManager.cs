@@ -17,7 +17,14 @@ namespace MinionWarsEntitiesLib.Geolocations
             DbGeography loc = DbGeography.FromText(point);
 
             //mdm.userList.AddRange(db.Users.Where(x => x.lo)
-            mdm.bgList.AddRange(db.Battlegroup.Where(x => x.location.Distance(loc) <= radius));
+            //mdm.bgList.AddRange(db.Battlegroup.Where(x => x.location.Distance(loc) <= radius));
+            List<Battlegroup> bg = db.Battlegroup.Where(x => x.location.Distance(loc) <= radius).ToList();
+            foreach(Battlegroup b in bg)
+            {
+                MapObject obj = new MapObject(b.id, "battlegroup", b.location);
+                mdm.objectList.Add(obj);
+                //mdm.locations.Add(b.location.ToString());
+            }
 
             return mdm;
         }

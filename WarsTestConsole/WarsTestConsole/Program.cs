@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using MinionWarsEntitiesLib;
 using MinionWarsEntitiesLib.TestManagers;
 using MinionWarsEntitiesLib.Geolocations;
+using MinionWarsEntitiesLib.EntityManagers;
+using System.Data.Entity.Spatial;
 
 namespace WarsTestConsole
 {
@@ -20,7 +22,16 @@ namespace WarsTestConsole
             var point = string.Format("POINT({1} {0})", 46.31856579999999, 16.34576590000006);
             MapDataModel mdm = MapManager.GetMapData(point, 1000);
 
-            Console.WriteLine(mdm.bgList.Count);
+            Console.WriteLine(UserDataManager.GetUserData(1).user.username);
+
+            /*var point2 = string.Format("POINT({1} {0})", 46.31856579999999, 17.34576590000006);
+            DbGeography l1 = DbGeography.FromText(point);
+            DbGeography l2 = DbGeography.FromText(point2);
+            Console.WriteLine(l1.ToString());
+            Console.WriteLine(l1.Distance(l2));*/
+
+            //Console.WriteLine(UserDataManager.GetUserData(1).user.username);
+            //Console.WriteLine(mdm.bgList.Count);
             //WildMinionsTest.Generate(point);
         }
     }

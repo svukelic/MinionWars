@@ -43,6 +43,7 @@
         var clickedMarker = null;
         var subscribedMarkers = new Array();
         var markerMovement = new Array();
+        var bgMarkersData = new Array();
    
         $(document).ready(function () {
             navigator.geolocation.watchPosition(savePosition);
@@ -62,7 +63,14 @@
                 success: function (jsonData) {
                     if (jsonData != null) {
                         if (jsonData.length > 0) {
-                            alert(jsonData);
+                            //alert(JSON.stringify(jsonData));
+                            for (var i = 0; i < bgMarkersData.length; i++) {
+                                bgMarkersData.setMap(null);
+                            }
+                            bgMarkersData = new Array();
+                            for (var i = 0; i < jsonData.length; i++) {
+                                refreshMarker(jsonData[i]);
+                            }
                         }
                     }
                 },
@@ -74,7 +82,25 @@
             setTimeout(executeMapRefresh, 5000); // you could choose not to continue on failure...
         }
 
-        (function worker() {
+        function refreshMarker(data) {
+            var pos = new google.maps.LatLng({ lat: data.latitude, lng: data.longitude });
+
+            var marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                id: data.id,
+                title: data.type,
+                icon: 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-helmet.png'
+            });
+
+            marker.addListener('click', function (e) {
+                alert("clicked");
+            });
+
+            bgMarkersData.push(marker);
+        }
+
+        /*(function worker() {
             for (var i = 0; i < markerMovement.length; i++) {
                 var result = subscribedMarkers.findIndex(x => x.id == markerMovement[i].id);
                 MoveMarker(markerMovement[i].destination, result, i);
@@ -111,7 +137,7 @@
                 var pos = new google.maps.LatLng({ lat: newLat, lng: newLng });
                 subscribedMarkers[index].setPosition(pos);
             }
-        }
+        }*/
 
         function mapClickEvent(args) {
             var adresa = GetAddress(args.latLng);

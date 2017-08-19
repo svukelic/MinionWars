@@ -10,20 +10,29 @@ namespace MinionWarsEntitiesLib.AiManagers
 {
     public static class OrdersManager
     {
-        static MinionWarsEntities db = new MinionWarsEntities();
+        //static MinionWarsEntities db = new MinionWarsEntities();
 
-        public static void GiveNewOrders(Battlegroup bg, string orders, DbGeography destination)
+        public static Orders GiveNewOrders(Battlegroup bg, string orders, DbGeography destination)
         {
             Orders o = new Orders();
             o.name = orders;
             o.desc_text = "test";
 
             if (destination != null) o.location = destination;
+            else
+            {
+                o.location = GiveRandomDestination(bg, 75);
+            }
 
-            db.Orders.Add(o);
-            db.SaveChanges();
+            using (var db = new MinionWarsEntities())
+            {
+                db.Orders.Add(o);
+                db.SaveChanges();
+            }
 
-            ContinueOrders(bg, o);
+            //ContinueOrders(bg, o);
+
+            return o;
         }
 
         public static void ContinueOrders(Battlegroup bg, Orders o)
@@ -42,10 +51,15 @@ namespace MinionWarsEntitiesLib.AiManagers
                     newLoc = GetReturnDestination(bg);
                     break;
             }
-
             o.location = newLoc;
-
-            db.SaveChanges();
+            Console.WriteLine("DOŠLO1");
+            using (var db = new MinionWarsEntities())
+            {
+                db.Orders.Attach(o);
+                db.Entry(o).State = System.Data.Entity.EntityState.Modified;
+                Console.WriteLine("DOŠLO2");
+                db.SaveChanges();
+            }
         }
 
         private static DbGeography GiveRandomDestination(Battlegroup bg, int distance)
@@ -63,7 +77,10 @@ namespace MinionWarsEntitiesLib.AiManagers
         
         private static DbGeography GetReturnDestination(Battlegroup bg)
         {
-            return db.UserMovementHistory.Where(x => x.users_id == bg.owner_id).OrderByDescending(x => x.occurence).First().location;
+            using (var db = new MinionWarsEntities())
+            {
+                return db.UserMovementHistory.Where(x => x.users_id == bg.owner_id).OrderByDescending(x => x.occurence).First().location;
+            }
         }
     }
 }
