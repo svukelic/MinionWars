@@ -1,6 +1,7 @@
 ﻿using MinionWarsEntitiesLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace MinionWarsEntitiesLib.Geolocations
 {
     public static class Geolocations
     {
-        public static double GetDistance(Location loc1, Location loc2)
+        /*public static double GetDistance(Location loc1, Location loc2)
         {
             double rlat1 = Math.PI * loc1.latitude / 180;
             double rlat2 = Math.PI * loc2.latitude / 180;
@@ -23,41 +24,46 @@ namespace MinionWarsEntitiesLib.Geolocations
             dist = dist * 1000;
 
             return dist;
-        }
+        }*/
 
-        public static Location PerformMovement(Location current, Location destination, int speed)
+        public static DbGeography PerformMovement(DbGeography current, DbGeography destination, int speed)
         {
-            Location newCurrent = new Location();
+            DbGeography newCurrent = null;
+            double newLat = 0;
+            double newLon = 0;
 
-            if(Math.Abs(destination.latitude - current.latitude) < 2)
+            if (Math.Abs(destination.Latitude.Value - current.Latitude.Value) < 2)
             {
-                newCurrent.latitude = current.latitude;
+                newLat = current.Latitude.Value;
             }
             else
             {
-                if (destination.latitude > current.latitude)
+                if (destination.Latitude.Value > current.Latitude.Value)
                 {
-                    newCurrent.latitude = current.latitude + speed / (1852 * 60);
+                    newLat = current.Latitude.Value + speed / (1852 * 60);
                 }
                 else {
-                    newCurrent.latitude = current.latitude - speed / (1852 * 60);
+                    newLat = current.Latitude.Value - speed / (1852 * 60);
                 }
             }
 
-            if (Math.Abs(destination.longitude - current.longitude) < 2)
+            if (Math.Abs(destination.Longitude.Value - current.Longitude.Value) < 2)
             {
-                newCurrent.longitude = current.longitude;
+                newLon = current.Longitude.Value;
             }
             else
             {
-                if (destination.longitude > current.longitude)
+                if (destination.Longitude.Value > current.Longitude.Value)
                 {
-                    newCurrent.longitude = current.longitude + speed / (1852 * 60);
+                    newLon = current.Longitude.Value + speed / (1852 * 60);
                 }
                 else {
-                    newCurrent.longitude = current.longitude - speed / (1852 * 60);
+                    newLon = current.Longitude.Value - speed / (1852 * 60);
                 }
             }
+
+            var point = string.Format("POINT({1} {0})", newLat, newLon);
+            newCurrent = DbGeography.FromText(point);
 
             return newCurrent;
         }

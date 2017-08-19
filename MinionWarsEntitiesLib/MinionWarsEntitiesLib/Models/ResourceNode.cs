@@ -15,10 +15,9 @@ namespace MinionWarsEntitiesLib.Models
     public partial class ResourceNode
     {
         public int id { get; set; }
-        public int location_id { get; set; }
         public int rtype_id { get; set; }
+        public System.Data.Entity.Spatial.DbGeography location { get; set; }
     
-        public virtual Location Location { get; set; }
         public virtual ResourceType ResourceType { get; set; }
     }
 }

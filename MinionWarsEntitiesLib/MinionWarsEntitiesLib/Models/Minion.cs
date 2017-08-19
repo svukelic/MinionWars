@@ -33,6 +33,9 @@ namespace MinionWarsEntitiesLib.Models
         public int dexterity { get; set; }
         public int vitality { get; set; }
         public int behaviour { get; set; }
+        public int power { get; set; }
+        public int cooldown { get; set; }
+        public int duration { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BattlegroupAssignment> BattlegroupAssignment { get; set; }

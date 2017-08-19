@@ -15,11 +15,12 @@ namespace MinionWarsEntitiesLib.Models
     public partial class BattlegroupMovementHistory
     {
         public int id { get; set; }
-        public int location_id { get; set; }
         public int battlegroup_id { get; set; }
         public System.DateTime occurence { get; set; }
+        public System.Data.Entity.Spatial.DbGeography location { get; set; }
+        public Nullable<double> activity_saturation { get; set; }
+        public Nullable<double> event_saturation { get; set; }
     
         public virtual Battlegroup Battlegroup { get; set; }
-        public virtual Location Location { get; set; }
     }
 }

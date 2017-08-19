@@ -7,10 +7,6 @@ namespace MinionWarsEntitiesLib.Abilities
 {
     public abstract class Effect
     {
-        public string name;
-        public int activationTurn;
-        public int duration;
-
-        public abstract void PerformEffect();
+        public abstract void PerformEffect(Ability abilityData);
     }
 }

@@ -1,0 +1,24 @@
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\WarsTestConsole.exe.config
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\WarsTestConsole.exe
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\WarsTestConsole.pdb
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\EntityFramework.dll
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\EntityFramework.SqlServer.dll
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\MinionWarsEntitiesLib.dll
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\EntityFramework.xml
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\EntityFramework.SqlServer.xml
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\bin\Debug\MinionWarsEntitiesLib.pdb
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.csprojResolveAssemblyReference.cache
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.exe
+c:\Users\The Director\Documents\Visual Studio 2015\Projects\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\WarsTestConsole.exe.config
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\WarsTestConsole.exe
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\WarsTestConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\EntityFramework.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\MinionWarsEntitiesLib.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\EntityFramework.xml
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\MinionWarsEntitiesLib.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.csprojResolveAssemblyReference.cache
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.exe
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.pdb

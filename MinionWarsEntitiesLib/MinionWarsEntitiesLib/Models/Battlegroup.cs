@@ -24,8 +24,6 @@ namespace MinionWarsEntitiesLib.Models
         public int id { get; set; }
         public Nullable<int> owner_id { get; set; }
         public int size { get; set; }
-        public int current_loc_id { get; set; }
-        public Nullable<int> destination_loc_id { get; set; }
         public Nullable<int> orders_id { get; set; }
         public int group_speed { get; set; }
         public double str_mod { get; set; }
@@ -44,11 +42,10 @@ namespace MinionWarsEntitiesLib.Models
         public int regen_mod { get; set; }
         public int resurrection_mod { get; set; }
         public int defense_mod { get; set; }
+        public System.Data.Entity.Spatial.DbGeography location { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BattlegroupAssignment> BattlegroupAssignment { get; set; }
-        public virtual Location Location { get; set; }
-        public virtual Location Location1 { get; set; }
         public virtual Orders Orders { get; set; }
         public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

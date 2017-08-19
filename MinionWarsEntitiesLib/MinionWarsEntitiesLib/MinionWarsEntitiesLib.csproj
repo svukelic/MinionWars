@@ -54,10 +54,19 @@
     <Compile Include="Abilities\Ability.cs" />
     <Compile Include="Abilities\AbilityGenerator.cs" />
     <Compile Include="Abilities\AbilityInstances\Heal.cs" />
+    <Compile Include="Abilities\AttackInstances\MeleeAttack.cs" />
     <Compile Include="Abilities\Effect.cs" />
+    <Compile Include="Battlegroups\AssignmentGroupEntity.cs" />
+    <Compile Include="Battlegroups\BattleGroupEntity.cs" />
     <Compile Include="Battlegroups\BattlegroupManager.cs" />
+    <Compile Include="Combat\CombatManager.cs" />
+    <Compile Include="Combat\GroupCombatStats.cs" />
     <Compile Include="Geolocations\Geolocations.cs" />
     <Compile Include="Minions\MinionGenotype.cs" />
+    <Compile Include="Minions\WildMinionGeneratorManager.cs" />
+    <Compile Include="Models\AbilityStats.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Battlegroup.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
@@ -68,9 +77,6 @@
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\HiveNode.cs">
-      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Location.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Minion.cs">
@@ -122,9 +128,6 @@
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="Structures\HiveManager.cs" />
     <Compile Include="EntityManagers\UsersManager.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Combat\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />

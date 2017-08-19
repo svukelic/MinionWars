@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="MinionWarsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AbilityStats">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="power" Type="int" Nullable="false" />
+          <Property Name="cooldown" Type="int" Nullable="false" />
+          <Property Name="duration" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Battlegroup">
           <Key>
             <PropertyRef Name="id" />
@@ -12,8 +22,6 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="owner_id" Type="int" />
           <Property Name="size" Type="int" Nullable="false" />
-          <Property Name="current_loc_id" Type="int" Nullable="false" />
-          <Property Name="destination_loc_id" Type="int" />
           <Property Name="orders_id" Type="int" />
           <Property Name="group_speed" Type="int" Nullable="false" />
           <Property Name="str_mod" Type="float" Nullable="false" />
@@ -32,6 +40,7 @@
           <Property Name="regen_mod" Type="int" Nullable="false" />
           <Property Name="resurrection_mod" Type="int" Nullable="false" />
           <Property Name="defense_mod" Type="int" Nullable="false" />
+          <Property Name="location" Type="geography" />
         </EntityType>
         <EntityType Name="BattlegroupAssignment">
           <Key>
@@ -48,27 +57,19 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="location_id" Type="int" Nullable="false" />
           <Property Name="battlegroup_id" Type="int" Nullable="false" />
           <Property Name="occurence" Type="datetime" Nullable="false" />
+          <Property Name="location" Type="geography" />
+          <Property Name="activity_saturation" Type="float" />
+          <Property Name="event_saturation" Type="float" />
         </EntityType>
         <EntityType Name="HiveNode">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="location_id" Type="int" Nullable="false" />
           <Property Name="minion_id" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Location">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="latitude" Type="float" Nullable="false" />
-          <Property Name="longitude" Type="float" Nullable="false" />
-          <Property Name="activity_saturation" Type="float" />
-          <Property Name="event_saturation" Type="float" />
+          <Property Name="location" Type="geography" />
         </EntityType>
         <EntityType Name="Minion">
           <Key>
@@ -85,6 +86,9 @@
           <Property Name="dexterity" Type="int" Nullable="false" />
           <Property Name="vitality" Type="int" Nullable="false" />
           <Property Name="behaviour" Type="int" Nullable="false" />
+          <Property Name="power" Type="int" Nullable="false" />
+          <Property Name="cooldown" Type="int" Nullable="false" />
+          <Property Name="duration" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="MinionOwnership">
           <Key>
@@ -105,6 +109,9 @@
           <Property Name="str_modifier" Type="int" Nullable="false" />
           <Property Name="dex_modifier" Type="int" Nullable="false" />
           <Property Name="vit_modifier" Type="int" Nullable="false" />
+          <Property Name="pow_modifier" Type="int" Nullable="false" />
+          <Property Name="cd_modifier" Type="int" Nullable="false" />
+          <Property Name="dur_modifier" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ModifierCoeficients">
           <Key>
@@ -121,14 +128,15 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="desc_text" Type="varchar" MaxLength="160" Nullable="false" />
+          <Property Name="location" Type="geography" />
         </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="location_id" Type="int" Nullable="false" />
           <Property Name="rtype_id" Type="int" Nullable="false" />
+          <Property Name="location" Type="geography" />
         </EntityType>
         <EntityType Name="ResourceType">
           <Key>
@@ -143,9 +151,11 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="location_id" Type="int" Nullable="false" />
           <Property Name="users_id" Type="int" Nullable="false" />
           <Property Name="occurence" Type="datetime" Nullable="false" />
+          <Property Name="location" Type="geography" />
+          <Property Name="activity_saturation" Type="float" />
+          <Property Name="event_saturation" Type="float" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -195,30 +205,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_bg_current">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Battlegroup">
-              <PropertyRef Name="current_loc_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_bg_destination">
-          <End Role="Location" Type="Self.Location" Multiplicity="0..1" />
-          <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Battlegroup">
-              <PropertyRef Name="destination_loc_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_bg_orders">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
           <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="*" />
@@ -252,30 +238,6 @@
             </Principal>
             <Dependent Role="BattlegroupMovementHistory">
               <PropertyRef Name="battlegroup_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_bgmove_loc">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="BattlegroupMovementHistory" Type="Self.BattlegroupMovementHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="BattlegroupMovementHistory">
-              <PropertyRef Name="location_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_hnode_loc">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="HiveNode" Type="Self.HiveNode" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="HiveNode">
-              <PropertyRef Name="location_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -327,18 +289,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_rnode_loc">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="ResourceNode" Type="Self.ResourceNode" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ResourceNode">
-              <PropertyRef Name="location_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_rnode_rtype">
           <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
           <End Role="ResourceNode" Type="Self.ResourceNode" Multiplicity="*" />
@@ -348,18 +298,6 @@
             </Principal>
             <Dependent Role="ResourceNode">
               <PropertyRef Name="rtype_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_usermove_loc">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="UserMovementHistory" Type="Self.UserMovementHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="UserMovementHistory">
-              <PropertyRef Name="location_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -388,11 +326,11 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MinionWarsModelStoreContainer">
+          <EntitySet Name="AbilityStats" EntityType="Self.AbilityStats" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Battlegroup" EntityType="Self.Battlegroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BattlegroupAssignment" EntityType="Self.BattlegroupAssignment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BattlegroupMovementHistory" EntityType="Self.BattlegroupMovementHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HiveNode" EntityType="Self.HiveNode" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Minion" EntityType="Self.Minion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MinionOwnership" EntityType="Self.MinionOwnership" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MinionType" EntityType="Self.MinionType" Schema="dbo" store:Type="Tables" />
@@ -411,14 +349,6 @@
             <End Role="Minion" EntitySet="Minion" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
           </AssociationSet>
-          <AssociationSet Name="fk_bg_current" Association="Self.fk_bg_current">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="Battlegroup" EntitySet="Battlegroup" />
-          </AssociationSet>
-          <AssociationSet Name="fk_bg_destination" Association="Self.fk_bg_destination">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="Battlegroup" EntitySet="Battlegroup" />
-          </AssociationSet>
           <AssociationSet Name="fk_bg_orders" Association="Self.fk_bg_orders">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Battlegroup" EntitySet="Battlegroup" />
@@ -430,14 +360,6 @@
           <AssociationSet Name="fk_bgmove_bg" Association="Self.fk_bgmove_bg">
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupMovementHistory" EntitySet="BattlegroupMovementHistory" />
-          </AssociationSet>
-          <AssociationSet Name="fk_bgmove_loc" Association="Self.fk_bgmove_loc">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="BattlegroupMovementHistory" EntitySet="BattlegroupMovementHistory" />
-          </AssociationSet>
-          <AssociationSet Name="fk_hnode_loc" Association="Self.fk_hnode_loc">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="HiveNode" EntitySet="HiveNode" />
           </AssociationSet>
           <AssociationSet Name="fk_hnode_minion" Association="Self.fk_hnode_minion">
             <End Role="Minion" EntitySet="Minion" />
@@ -455,17 +377,9 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="MinionOwnership" EntitySet="MinionOwnership" />
           </AssociationSet>
-          <AssociationSet Name="fk_rnode_loc" Association="Self.fk_rnode_loc">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="ResourceNode" EntitySet="ResourceNode" />
-          </AssociationSet>
           <AssociationSet Name="fk_rnode_rtype" Association="Self.fk_rnode_rtype">
             <End Role="ResourceType" EntitySet="ResourceType" />
             <End Role="ResourceNode" EntitySet="ResourceNode" />
-          </AssociationSet>
-          <AssociationSet Name="fk_usermove_loc" Association="Self.fk_usermove_loc">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="UserMovementHistory" EntitySet="UserMovementHistory" />
           </AssociationSet>
           <AssociationSet Name="fk_usermove_user" Association="Self.fk_usermove_user">
             <End Role="Users" EntitySet="Users" />
@@ -480,6 +394,16 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MinionWarsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AbilityStats">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="power" Type="Int32" Nullable="false" />
+          <Property Name="cooldown" Type="Int32" Nullable="false" />
+          <Property Name="duration" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="Battlegroup">
           <Key>
             <PropertyRef Name="id" />
@@ -487,8 +411,6 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="owner_id" Type="Int32" />
           <Property Name="size" Type="Int32" Nullable="false" />
-          <Property Name="current_loc_id" Type="Int32" Nullable="false" />
-          <Property Name="destination_loc_id" Type="Int32" />
           <Property Name="orders_id" Type="Int32" />
           <Property Name="group_speed" Type="Int32" Nullable="false" />
           <Property Name="str_mod" Type="Double" Nullable="false" />
@@ -507,9 +429,8 @@
           <Property Name="regen_mod" Type="Int32" Nullable="false" />
           <Property Name="resurrection_mod" Type="Int32" Nullable="false" />
           <Property Name="defense_mod" Type="Int32" Nullable="false" />
+          <Property Name="location" Type="Geography" />
           <NavigationProperty Name="BattlegroupAssignment" Relationship="Self.fk_assignment_bg" FromRole="Battlegroup" ToRole="BattlegroupAssignment" />
-          <NavigationProperty Name="Location" Relationship="Self.fk_bg_current" FromRole="Battlegroup" ToRole="Location" />
-          <NavigationProperty Name="Location1" Relationship="Self.fk_bg_destination" FromRole="Battlegroup" ToRole="Location" />
           <NavigationProperty Name="Orders" Relationship="Self.fk_bg_orders" FromRole="Battlegroup" ToRole="Orders" />
           <NavigationProperty Name="Users" Relationship="Self.fk_bg_user" FromRole="Battlegroup" ToRole="Users" />
           <NavigationProperty Name="BattlegroupMovementHistory" Relationship="Self.fk_bgmove_bg" FromRole="Battlegroup" ToRole="BattlegroupMovementHistory" />
@@ -531,37 +452,21 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="location_id" Type="Int32" Nullable="false" />
           <Property Name="battlegroup_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bgmove_bg" FromRole="BattlegroupMovementHistory" ToRole="Battlegroup" />
-          <NavigationProperty Name="Location" Relationship="Self.fk_bgmove_loc" FromRole="BattlegroupMovementHistory" ToRole="Location" />
           <Property Name="occurence" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="location" Type="Geography" />
+          <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bgmove_bg" FromRole="BattlegroupMovementHistory" ToRole="Battlegroup" />
+          <Property Name="activity_saturation" Type="Double" />
+          <Property Name="event_saturation" Type="Double" />
         </EntityType>
         <EntityType Name="HiveNode">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="location_id" Type="Int32" Nullable="false" />
           <Property Name="minion_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Location" Relationship="Self.fk_hnode_loc" FromRole="HiveNode" ToRole="Location" />
+          <Property Name="location" Type="Geography" />
           <NavigationProperty Name="Minion" Relationship="Self.fk_hnode_minion" FromRole="HiveNode" ToRole="Minion" />
-        </EntityType>
-        <EntityType Name="Location">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="latitude" Type="Double" Nullable="false" />
-          <Property Name="longitude" Type="Double" Nullable="false" />
-          <Property Name="activity_saturation" Type="Double" />
-          <Property Name="event_saturation" Type="Double" />
-          <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bg_current" FromRole="Location" ToRole="Battlegroup" />
-          <NavigationProperty Name="Battlegroup1" Relationship="Self.fk_bg_destination" FromRole="Location" ToRole="Battlegroup" />
-          <NavigationProperty Name="BattlegroupMovementHistory" Relationship="Self.fk_bgmove_loc" FromRole="Location" ToRole="BattlegroupMovementHistory" />
-          <NavigationProperty Name="HiveNode" Relationship="Self.fk_hnode_loc" FromRole="Location" ToRole="HiveNode" />
-          <NavigationProperty Name="ResourceNode" Relationship="Self.fk_rnode_loc" FromRole="Location" ToRole="ResourceNode" />
-          <NavigationProperty Name="UserMovementHistory" Relationship="Self.fk_usermove_loc" FromRole="Location" ToRole="UserMovementHistory" />
         </EntityType>
         <EntityType Name="Minion">
           <Key>
@@ -582,6 +487,9 @@
           <NavigationProperty Name="HiveNode" Relationship="Self.fk_hnode_minion" FromRole="Minion" ToRole="HiveNode" />
           <NavigationProperty Name="MinionType" Relationship="Self.fk_minion_mtype" FromRole="Minion" ToRole="MinionType" />
           <NavigationProperty Name="MinionOwnership" Relationship="Self.fk_ownership_minion" FromRole="Minion" ToRole="MinionOwnership" />
+          <Property Name="power" Type="Int32" Nullable="false" />
+          <Property Name="cooldown" Type="Int32" Nullable="false" />
+          <Property Name="duration" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="MinionOwnership">
           <Key>
@@ -604,6 +512,9 @@
           <Property Name="str_modifier" Type="Int32" Nullable="false" />
           <Property Name="dex_modifier" Type="Int32" Nullable="false" />
           <Property Name="vit_modifier" Type="Int32" Nullable="false" />
+          <Property Name="pow_modifier" Type="Int32" Nullable="false" />
+          <Property Name="cd_modifier" Type="Int32" Nullable="false" />
+          <Property Name="dur_modifier" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Minion" Relationship="Self.fk_minion_mtype" FromRole="MinionType" ToRole="Minion" />
         </EntityType>
         <EntityType Name="ModifierCoeficients">
@@ -621,6 +532,7 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="desc_text" Type="String" MaxLength="160" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="location" Type="Geography" />
           <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bg_orders" FromRole="Orders" ToRole="Battlegroup" />
         </EntityType>
         <EntityType Name="ResourceNode">
@@ -628,9 +540,8 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="location_id" Type="Int32" Nullable="false" />
           <Property Name="rtype_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Location" Relationship="Self.fk_rnode_loc" FromRole="ResourceNode" ToRole="Location" />
+          <Property Name="location" Type="Geography" />
           <NavigationProperty Name="ResourceType" Relationship="Self.fk_rnode_rtype" FromRole="ResourceNode" ToRole="ResourceType" />
         </EntityType>
         <EntityType Name="ResourceType">
@@ -647,11 +558,12 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="location_id" Type="Int32" Nullable="false" />
           <Property Name="users_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Location" Relationship="Self.fk_usermove_loc" FromRole="UserMovementHistory" ToRole="Location" />
-          <NavigationProperty Name="Users" Relationship="Self.fk_usermove_user" FromRole="UserMovementHistory" ToRole="Users" />
           <Property Name="occurence" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="location" Type="Geography" />
+          <NavigationProperty Name="Users" Relationship="Self.fk_usermove_user" FromRole="UserMovementHistory" ToRole="Users" />
+          <Property Name="activity_saturation" Type="Double" />
+          <Property Name="event_saturation" Type="Double" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -691,30 +603,6 @@
             </Principal>
             <Dependent Role="BattlegroupAssignment">
               <PropertyRef Name="battlegroup_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_bg_current">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Battlegroup">
-              <PropertyRef Name="current_loc_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_bg_destination">
-          <End Role="Location" Type="Self.Location" Multiplicity="0..1" />
-          <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Battlegroup">
-              <PropertyRef Name="destination_loc_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -766,30 +654,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_bgmove_loc">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="BattlegroupMovementHistory" Type="Self.BattlegroupMovementHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="BattlegroupMovementHistory">
-              <PropertyRef Name="location_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_hnode_loc">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="HiveNode" Type="Self.HiveNode" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="HiveNode">
-              <PropertyRef Name="location_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_hnode_minion">
           <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
           <End Role="HiveNode" Type="Self.HiveNode" Multiplicity="*" />
@@ -799,30 +663,6 @@
             </Principal>
             <Dependent Role="HiveNode">
               <PropertyRef Name="minion_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_rnode_loc">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="ResourceNode" Type="Self.ResourceNode" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="ResourceNode">
-              <PropertyRef Name="location_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_usermove_loc">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="UserMovementHistory" Type="Self.UserMovementHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="UserMovementHistory">
-              <PropertyRef Name="location_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -899,11 +739,11 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MinionWarsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AbilityStats" EntityType="Self.AbilityStats" />
           <EntitySet Name="Battlegroup" EntityType="Self.Battlegroup" />
           <EntitySet Name="BattlegroupAssignment" EntityType="Self.BattlegroupAssignment" />
           <EntitySet Name="BattlegroupMovementHistory" EntityType="Self.BattlegroupMovementHistory" />
           <EntitySet Name="HiveNode" EntityType="Self.HiveNode" />
-          <EntitySet Name="Location" EntityType="Self.Location" />
           <EntitySet Name="Minion" EntityType="Self.Minion" />
           <EntitySet Name="MinionOwnership" EntityType="Self.MinionOwnership" />
           <EntitySet Name="MinionType" EntityType="Self.MinionType" />
@@ -917,14 +757,6 @@
           <AssociationSet Name="fk_assignment_bg" Association="Self.fk_assignment_bg">
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
-          </AssociationSet>
-          <AssociationSet Name="fk_bg_current" Association="Self.fk_bg_current">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="Battlegroup" EntitySet="Battlegroup" />
-          </AssociationSet>
-          <AssociationSet Name="fk_bg_destination" Association="Self.fk_bg_destination">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="Battlegroup" EntitySet="Battlegroup" />
           </AssociationSet>
           <AssociationSet Name="fk_bg_orders" Association="Self.fk_bg_orders">
             <End Role="Orders" EntitySet="Orders" />
@@ -942,25 +774,9 @@
             <End Role="Minion" EntitySet="Minion" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
           </AssociationSet>
-          <AssociationSet Name="fk_bgmove_loc" Association="Self.fk_bgmove_loc">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="BattlegroupMovementHistory" EntitySet="BattlegroupMovementHistory" />
-          </AssociationSet>
-          <AssociationSet Name="fk_hnode_loc" Association="Self.fk_hnode_loc">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="HiveNode" EntitySet="HiveNode" />
-          </AssociationSet>
           <AssociationSet Name="fk_hnode_minion" Association="Self.fk_hnode_minion">
             <End Role="Minion" EntitySet="Minion" />
             <End Role="HiveNode" EntitySet="HiveNode" />
-          </AssociationSet>
-          <AssociationSet Name="fk_rnode_loc" Association="Self.fk_rnode_loc">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="ResourceNode" EntitySet="ResourceNode" />
-          </AssociationSet>
-          <AssociationSet Name="fk_usermove_loc" Association="Self.fk_usermove_loc">
-            <End Role="Location" EntitySet="Location" />
-            <End Role="UserMovementHistory" EntitySet="UserMovementHistory" />
           </AssociationSet>
           <AssociationSet Name="fk_minion_mtype" Association="Self.fk_minion_mtype">
             <End Role="MinionType" EntitySet="MinionType" />
@@ -993,14 +809,23 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="MinionWarsModelStoreContainer" CdmEntityContainer="MinionWarsEntities">
+          <EntitySetMapping Name="AbilityStats">
+            <EntityTypeMapping TypeName="MinionWarsModel.AbilityStats">
+              <MappingFragment StoreEntitySet="AbilityStats">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="power" ColumnName="power" />
+                <ScalarProperty Name="cooldown" ColumnName="cooldown" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Battlegroup">
             <EntityTypeMapping TypeName="MinionWarsModel.Battlegroup">
               <MappingFragment StoreEntitySet="Battlegroup">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="owner_id" ColumnName="owner_id" />
                 <ScalarProperty Name="size" ColumnName="size" />
-                <ScalarProperty Name="current_loc_id" ColumnName="current_loc_id" />
-                <ScalarProperty Name="destination_loc_id" ColumnName="destination_loc_id" />
                 <ScalarProperty Name="orders_id" ColumnName="orders_id" />
                 <ScalarProperty Name="group_speed" ColumnName="group_speed" />
                 <ScalarProperty Name="str_mod" ColumnName="str_mod" />
@@ -1019,6 +844,7 @@
                 <ScalarProperty Name="regen_mod" ColumnName="regen_mod" />
                 <ScalarProperty Name="resurrection_mod" ColumnName="resurrection_mod" />
                 <ScalarProperty Name="defense_mod" ColumnName="defense_mod" />
+                <ScalarProperty Name="location" ColumnName="location" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1036,10 +862,12 @@
           <EntitySetMapping Name="BattlegroupMovementHistory">
             <EntityTypeMapping TypeName="MinionWarsModel.BattlegroupMovementHistory">
               <MappingFragment StoreEntitySet="BattlegroupMovementHistory">
-                <ScalarProperty Name="occurence" ColumnName="occurence" />
+                <ScalarProperty Name="event_saturation" ColumnName="event_saturation" />
+                <ScalarProperty Name="activity_saturation" ColumnName="activity_saturation" />
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="location_id" ColumnName="location_id" />
                 <ScalarProperty Name="battlegroup_id" ColumnName="battlegroup_id" />
+                <ScalarProperty Name="occurence" ColumnName="occurence" />
+                <ScalarProperty Name="location" ColumnName="location" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1047,25 +875,17 @@
             <EntityTypeMapping TypeName="MinionWarsModel.HiveNode">
               <MappingFragment StoreEntitySet="HiveNode">
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="location_id" ColumnName="location_id" />
                 <ScalarProperty Name="minion_id" ColumnName="minion_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Location">
-            <EntityTypeMapping TypeName="MinionWarsModel.Location">
-              <MappingFragment StoreEntitySet="Location">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="latitude" ColumnName="latitude" />
-                <ScalarProperty Name="longitude" ColumnName="longitude" />
-                <ScalarProperty Name="activity_saturation" ColumnName="activity_saturation" />
-                <ScalarProperty Name="event_saturation" ColumnName="event_saturation" />
+                <ScalarProperty Name="location" ColumnName="location" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Minion">
             <EntityTypeMapping TypeName="MinionWarsModel.Minion">
               <MappingFragment StoreEntitySet="Minion">
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="cooldown" ColumnName="cooldown" />
+                <ScalarProperty Name="power" ColumnName="power" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="mtype_id" ColumnName="mtype_id" />
                 <ScalarProperty Name="somatotype" ColumnName="somatotype" />
@@ -1099,6 +919,9 @@
                 <ScalarProperty Name="str_modifier" ColumnName="str_modifier" />
                 <ScalarProperty Name="dex_modifier" ColumnName="dex_modifier" />
                 <ScalarProperty Name="vit_modifier" ColumnName="vit_modifier" />
+                <ScalarProperty Name="pow_modifier" ColumnName="pow_modifier" />
+                <ScalarProperty Name="cd_modifier" ColumnName="cd_modifier" />
+                <ScalarProperty Name="dur_modifier" ColumnName="dur_modifier" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1117,6 +940,7 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="desc_text" ColumnName="desc_text" />
+                <ScalarProperty Name="location" ColumnName="location" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1124,8 +948,8 @@
             <EntityTypeMapping TypeName="MinionWarsModel.ResourceNode">
               <MappingFragment StoreEntitySet="ResourceNode">
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="location_id" ColumnName="location_id" />
                 <ScalarProperty Name="rtype_id" ColumnName="rtype_id" />
+                <ScalarProperty Name="location" ColumnName="location" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1141,10 +965,12 @@
           <EntitySetMapping Name="UserMovementHistory">
             <EntityTypeMapping TypeName="MinionWarsModel.UserMovementHistory">
               <MappingFragment StoreEntitySet="UserMovementHistory">
-                <ScalarProperty Name="occurence" ColumnName="occurence" />
+                <ScalarProperty Name="event_saturation" ColumnName="event_saturation" />
+                <ScalarProperty Name="activity_saturation" ColumnName="activity_saturation" />
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="location_id" ColumnName="location_id" />
                 <ScalarProperty Name="users_id" ColumnName="users_id" />
+                <ScalarProperty Name="occurence" ColumnName="occurence" />
+                <ScalarProperty Name="location" ColumnName="location" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

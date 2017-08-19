@@ -25,6 +25,9 @@ namespace MinionWarsEntitiesLib.Models
         public int str_modifier { get; set; }
         public int dex_modifier { get; set; }
         public int vit_modifier { get; set; }
+        public int pow_modifier { get; set; }
+        public int cd_modifier { get; set; }
+        public int dur_modifier { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Minion> Minion { get; set; }

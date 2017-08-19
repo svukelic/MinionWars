@@ -14,15 +14,15 @@ namespace MinionWarsEntitiesLib.Minions
         public static Minion generateRandomMinion()
         {
             Minion minion = new Minion();
-
+            
             Random r = new Random();
 
             minion.mtype_id = r.Next(0, 15);
             minion.somatotype = SomatotypeGenerator(r);
 
-            minion.strength = 6;
-            minion.dexterity = 4;
-            minion.vitality = 5;
+            minion.strength = Convert.ToInt32(db.ModifierCoeficients.Find(18).value);
+            minion.dexterity = Convert.ToInt32(db.ModifierCoeficients.Find(19).value);
+            minion.vitality = Convert.ToInt32(db.ModifierCoeficients.Find(20).value);
 
             CalculateStatsByType(minion);
             CalculateStatsByBuild(minion);
@@ -31,8 +31,8 @@ namespace MinionWarsEntitiesLib.Minions
             //minion.health = minion.vit * 3;
 
             minion.behaviour = r.Next(0, 15);
-            minion.melee_ability = r.Next(0, 15); //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
-            minion.ranged_ability = r.Next(0, 15); //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
+            minion.melee_ability = r.Next(0, 15) + 2; //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
+            minion.ranged_ability = r.Next(0, 15) + 2; //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
             minion.passive = r.Next(0, 15);
 
             minion.speed = 1;
@@ -58,11 +58,27 @@ namespace MinionWarsEntitiesLib.Minions
             int dexMod = 0;
             int vitMod = 0;
 
+            int powMod = 0;
+            int cdMod = 0;
+            int durMod = 0;
+
             //get from db
+            MinionType mtype = db.MinionType.Find(m.mtype_id);
+            strMod += mtype.str_modifier;
+            dexMod += mtype.dex_modifier;
+            vitMod += mtype.vit_modifier;
+
+            powMod += mtype.pow_modifier;
+            cdMod += mtype.cd_modifier;
+            durMod += mtype.dur_modifier;
 
             m.strength += strMod;
             m.dexterity += dexMod;
             m.vitality += vitMod;
+
+            m.power += powMod;
+            m.cooldown += cdMod;
+            m.duration += durMod;
         }
 
         private static void CalculateStatsByBuild(Minion m)

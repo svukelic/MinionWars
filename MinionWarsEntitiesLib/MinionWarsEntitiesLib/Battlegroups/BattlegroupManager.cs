@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MinionWarsEntitiesLib.Abilities;
+using System.Data.Entity.Spatial;
 
 namespace MinionWarsEntitiesLib.Battlegroups
 {
@@ -12,7 +14,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
         static MinionWarsEntities db = new MinionWarsEntities();
         public static Battlegroup ConstructBattlegroup(int? owner_id, int type)
         {
-            MinionWarsEntitiesLib.Models.Battlegroup bg = new MinionWarsEntitiesLib.Models.Battlegroup();
+            Battlegroup bg = new Battlegroup();
             SetBasicModifiers(bg);
 
             if (owner_id != null)
@@ -80,36 +82,23 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
         public static bool UpdatePosition(Battlegroup bg)
         {
-            Location currentLoc = db.Location.Find(bg.current_loc_id);
-            Location destinationLoc = db.Location.Find(bg.destination_loc_id);
+            //DbGeography currentLoc = db.Location.Find(bg.current_loc_id);
+            Orders orders = db.Orders.Find(bg.orders_id);
             bool arrived = false;
 
-            if(Geolocations.Geolocations.GetDistance(currentLoc, destinationLoc) <= 10)
+            if(bg.location.Distance(orders.location).Value <= 10)
             {
                 arrived = true;
             }
             else
             {
-                Location newLoc = Geolocations.Geolocations.PerformMovement(currentLoc, destinationLoc, bg.group_speed);
-                Location checkLoc = null;
-                checkLoc = db.Location.Where(x => x.latitude == newLoc.latitude && x.longitude == newLoc.longitude).ToList().First();
-                if(checkLoc == null)
-                {
-                    db.Location.Add(newLoc);
-                    db.SaveChanges();
-
-                    bg.current_loc_id = newLoc.id;
-                }
-                else
-                {
-                    bg.current_loc_id = checkLoc.id;
-                }
+                bg.location = Geolocations.Geolocations.PerformMovement(bg.location, orders.location, bg.group_speed);
             }
 
             return arrived;
         }
 
-        private static void GetTraitModifiers(Users owner, MinionWarsEntitiesLib.Models.Battlegroup bg, int type)
+        private static void GetTraitModifiers(Users owner, Battlegroup bg, int type)
         {
             UserTraits traits = db.UserTraits.Find(owner.traits_id);
 
@@ -126,7 +115,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
             }
         }
 
-        private static void SetBasicModifiers(MinionWarsEntitiesLib.Models.Battlegroup bg)
+        private static void SetBasicModifiers(Battlegroup bg)
         {
             bg.str_mod = 0;
             bg.dex_mod = 0;
@@ -148,57 +137,57 @@ namespace MinionWarsEntitiesLib.Battlegroups
             bg.defense_mod = 0;
         }
 
-        private static void CalculateAdvancedModifiers(MinionWarsEntitiesLib.Models.Battlegroup bg, int count, int passive)
+        private static void CalculateAdvancedModifiers(Battlegroup bg, int count, int passive)
         {
             switch (passive)
             {
                 case 0:
-                    bg.str_mod += GetModifierCoeficients(passive) * count;
+                    bg.str_mod += GetModifierCoeficients(3) * count;
                     break;
                 case 1:
-                    bg.dex_mod += GetModifierCoeficients(passive) * count;
+                    bg.dex_mod += GetModifierCoeficients(1) * count;
                     break;
                 case 2:
-                    bg.vit_mod += GetModifierCoeficients(passive) * count;
+                    bg.vit_mod += GetModifierCoeficients(2) * count;
                     break;
                 case 3:
-                    bg.pow_mod += GetModifierCoeficients(passive) * count;
+                    bg.pow_mod += GetModifierCoeficients(7) * count;
                     break;
                 case 4:
-                    bg.res_mod += GetModifierCoeficients(passive) * count;
+                    bg.res_mod += GetModifierCoeficients(4) * count;
                     break;
                 case 5:
-                    bg.metal_mod += GetModifierCoeficients(passive) * count;
+                    bg.metal_mod += GetModifierCoeficients(13) * count;
                     break;
                 case 6:
-                    bg.stone_mod += GetModifierCoeficients(passive) * count;
+                    bg.stone_mod += GetModifierCoeficients(9) * count;
                     break;
                 case 7:
-                    bg.tree_mod += GetModifierCoeficients(passive) * count;
+                    bg.tree_mod += GetModifierCoeficients(10) * count;
                     break;
                 case 8:
-                    bg.food_mod += GetModifierCoeficients(passive) * count;
+                    bg.food_mod += GetModifierCoeficients(15) * count;
                     break;
                 case 9:
-                    bg.build_mod += GetModifierCoeficients(passive) * count;
+                    bg.build_mod += GetModifierCoeficients(12) * count;
                     break;
                 case 10:
-                    bg.movement_mod += GetModifierCoeficients(passive) * count;
+                    bg.movement_mod += GetModifierCoeficients(16) * count;
                     break;
                 case 11:
-                    bg.reproduction_mod += GetModifierCoeficients(passive) * count;
+                    bg.reproduction_mod += GetModifierCoeficients(14) * count;
                     break;
                 case 12:
-                    bg.loot_mod += GetModifierCoeficients(passive) * count;
+                    bg.loot_mod += GetModifierCoeficients(6) * count;
                     break;
                 case 13:
-                    bg.regen_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(passive) * count));
+                    bg.regen_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(11) * count));
                     break;
                 case 14:
-                    bg.resurrection_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(passive) * count));
+                    bg.resurrection_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(5) * count));
                     break;
                 case 15:
-                    bg.defense_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(passive) * count));
+                    bg.defense_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(17) * count));
                     break;
             }
 
@@ -208,6 +197,54 @@ namespace MinionWarsEntitiesLib.Battlegroups
         private static double GetModifierCoeficients(int id)
         {
             return db.ModifierCoeficients.Find(id).value;
+        }
+
+        public static BattleGroupEntity BuildBattleGroupEntity(int bg_id)
+        {
+            BattleGroupEntity bge = new BattleGroupEntity();
+
+            bge.bg = db.Battlegroup.Find(bg_id);
+            if(bge.bg != null)
+            {
+                bge.frontline = new List<AssignmentGroupEntity>();
+                bge.backline = new List<AssignmentGroupEntity>();
+                bge.supportline = new List<AssignmentGroupEntity>();
+
+                List<BattlegroupAssignment> assignments = db.BattlegroupAssignment.Where(x => x.battlegroup_id == bg_id).ToList();
+                if(assignments != null)
+                {
+                    foreach(BattlegroupAssignment a in assignments)
+                    {
+                        AssignmentGroupEntity age = new AssignmentGroupEntity();
+                        age.initialCount= a.group_count;
+                        age.remainingCount = a.group_count;
+                        age.turnStartCount = a.group_count;
+                        age.minionData = db.Minion.Find(a.minion_id);
+                        age.CalculateGroupStats(bge.bg, a.line);
+                        age.attack = AbilityGenerator.GenerateAttack(a.line, age.stats, age.minionData);
+                        age.ability = AbilityGenerator.GenerateAbility(a.line, age.stats, age.minionData);
+
+                        switch (a.line)
+                        {
+                            case 1:
+                                bge.frontline.Add(age);
+                                break;
+                            case 2:
+                                bge.backline.Add(age);
+                                break;
+                            case 3:
+                                bge.supportline.Add(age);
+                                break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+            return bge;
         }
 
         /*private static void SetAdvancedModifiers(MinionWarsEntitiesLib.Models.Battlegroup bg, List<Minion> f, List<Minion> b, List<Minion> s)

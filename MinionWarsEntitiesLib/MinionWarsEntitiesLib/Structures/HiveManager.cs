@@ -1,6 +1,7 @@
 ﻿using MinionWarsEntitiesLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,15 +12,37 @@ namespace MinionWarsEntitiesLib.Structures
     {
         static MinionWarsEntities db = new MinionWarsEntities();
 
-        public static HiveNode generateRandomHive(int loc)
+        public static HiveNode generateRandomHive(DbGeography loc)
         {
-            Random r = new Random();
+            if (!CheckIfHiveExists(loc))
+            {
+                Random r = new Random();
 
-            HiveNode newHive = new HiveNode();
-            newHive.location_id = loc;
-            newHive.minion_id = r.Next(1, db.Minion.ToList().Count());
+                HiveNode newHive = new HiveNode();
+                newHive.location = loc;
+                newHive.minion_id = r.Next(1, db.Minion.ToList().Count());
 
-            return newHive;
+                db.HiveNode.Add(newHive);
+                db.SaveChanges();
+
+                return newHive;
+            }
+            else return null;
+        }
+
+        private static bool CheckIfHiveExists(DbGeography loc)
+        {
+            bool exists = false;
+
+            int count = 0;
+            count = db.HiveNode.Where(x => x.location.Distance(loc) <= 250).ToList().Count;
+
+            if(count > 0)
+            {
+                exists = true;
+            }
+
+            return exists;
         }
     }
 }

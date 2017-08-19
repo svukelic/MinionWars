@@ -25,11 +25,11 @@ namespace MinionWarsEntitiesLib.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AbilityStats> AbilityStats { get; set; }
         public virtual DbSet<Battlegroup> Battlegroup { get; set; }
         public virtual DbSet<BattlegroupAssignment> BattlegroupAssignment { get; set; }
         public virtual DbSet<BattlegroupMovementHistory> BattlegroupMovementHistory { get; set; }
         public virtual DbSet<HiveNode> HiveNode { get; set; }
-        public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<Minion> Minion { get; set; }
         public virtual DbSet<MinionOwnership> MinionOwnership { get; set; }
         public virtual DbSet<MinionType> MinionType { get; set; }
