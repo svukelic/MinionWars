@@ -45,17 +45,17 @@ namespace MinionWarsEntitiesLib.Battlegroups
             return bg;
         }
 
-        public static bool AddMinions(int m_id, int count, int type, int bg_id)
+        public static Battlegroup AddMinions(int m_id, int count, int type, Battlegroup bg)
         {
             using (var db = new MinionWarsEntities())
             {
                 Minion minion = db.Minion.Find(m_id);
-                MinionWarsEntitiesLib.Models.Battlegroup bg = db.Battlegroup.Find(bg_id);
+                //MinionWarsEntitiesLib.Models.Battlegroup bg = db.Battlegroup.Find(bg_id);
                 if (minion != null && bg != null)
                 {
                     BattlegroupAssignment assignment = new BattlegroupAssignment();
 
-                    assignment.battlegroup_id = bg_id;
+                    assignment.battlegroup_id = bg.id;
                     assignment.minion_id = minion.id;
                     assignment.group_count = count;
                     assignment.line = type;
@@ -63,14 +63,17 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
                     CalculateAdvancedModifiers(bg, count, minion.passive);
 
+                    //db.Battlegroup.Attach(bg);
+                    //db.Entry(bg).State = System.Data.Entity.EntityState.Modified;
+
                     db.SaveChanges();
                 }
                 else
                 {
-                    return false;
+                    return null;
                 }
 
-                return true;
+                return bg;
             }
         }
 
@@ -90,12 +93,11 @@ namespace MinionWarsEntitiesLib.Battlegroups
             return newBg;
         }
 
-        public static bool UpdatePosition(Battlegroup bg)
+        public static Battlegroup UpdatePosition(Battlegroup bg)
         {
             Orders orders = null;
             using (var db = new MinionWarsEntities())
             {
-                //DbGeography currentLoc = db.Location.Find(bg.current_loc_id);
                 orders = db.Orders.Find(bg.orders_id);
             }
 
@@ -103,14 +105,13 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
             if (bg.location.Distance(orders.location).Value <= 10)
             {
+                Console.WriteLine("ARRIVED!");
                 arrived = true;
-                OrdersManager.ContinueOrders(bg, orders);
+                orders = OrdersManager.ContinueOrders(bg, orders);
             }
-            /*else
-            {
-                bg.location = Geolocations.Geolocations.PerformMovement(bg.location, orders.location, bg.group_speed);
-            }*/
-            bg.location = Geolocations.Geolocations.PerformMovement(bg.location, orders.location, bg.group_speed);
+
+            bg.location = Geolocations.Geolocations.PerformMovement(bg.location, bg.lastMovement.Value, orders, bg.group_speed);
+            bg.lastMovement = DateTime.Now;
 
             using (var db = new MinionWarsEntities())
             {
@@ -119,7 +120,8 @@ namespace MinionWarsEntitiesLib.Battlegroups
                 db.SaveChanges();
             }
 
-            return arrived;
+            //return arrived;
+            return bg;
         }
 
         private static void GetTraitModifiers(Users owner, Battlegroup bg, int type)
@@ -218,7 +220,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
                     break;
             }
 
-            bg.group_speed = Convert.ToInt32(Math.Floor(1 + 1 * bg.movement_mod));
+            bg.group_speed = Convert.ToInt32(Math.Floor(10 + 10 * bg.movement_mod));
         }
 
         private static double GetModifierCoeficients(int id)

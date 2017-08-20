@@ -20,9 +20,11 @@ namespace WarsTestConsole
             Console.WriteLine("TEST");
             //46.318565799999995 16.34576590000006
             var point = string.Format("POINT({1} {0})", 46.31856579999999, 16.34576590000006);
+            /*DbGeography loc = DbGeography.FromText(point);
             MapDataModel mdm = MapManager.GetMapData(point, 1000);
+            Console.WriteLine(mdm.objectList.Count);*/
 
-            Console.WriteLine(UserDataManager.GetUserData(1).user.username);
+            //Console.WriteLine(UserDataManager.GetUserData(1).user.username);
 
             /*var point2 = string.Format("POINT({1} {0})", 46.31856579999999, 17.34576590000006);
             DbGeography l1 = DbGeography.FromText(point);
@@ -31,8 +33,14 @@ namespace WarsTestConsole
             Console.WriteLine(l1.Distance(l2));*/
 
             //Console.WriteLine(UserDataManager.GetUserData(1).user.username);
-            //Console.WriteLine(mdm.bgList.Count);
-            //WildMinionsTest.Generate(point);
+            WildMinionsTest.Generate(point);
+
+            /*decimal movement = 1000m / (1852m * 60m);
+            double m = (double)movement;
+            Console.WriteLine("MOVEMENT: " + m);*/
+
+            Console.WriteLine("DONE");
+            Console.ReadKey();
         }
     }
 }

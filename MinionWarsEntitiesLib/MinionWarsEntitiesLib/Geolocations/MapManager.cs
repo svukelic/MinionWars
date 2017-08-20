@@ -10,23 +10,24 @@ namespace MinionWarsEntitiesLib.Geolocations
 {
     public static class MapManager
     {
-        static MinionWarsEntities db = new MinionWarsEntities();
         public static MapDataModel GetMapData(string point, int radius)
         {
             MapDataModel mdm = new MapDataModel();
             DbGeography loc = DbGeography.FromText(point);
 
-            //mdm.userList.AddRange(db.Users.Where(x => x.lo)
-            //mdm.bgList.AddRange(db.Battlegroup.Where(x => x.location.Distance(loc) <= radius));
-            List<Battlegroup> bg = db.Battlegroup.Where(x => x.location.Distance(loc) <= radius).ToList();
-            foreach(Battlegroup b in bg)
+            List<Battlegroup> bg = new List<Battlegroup>();
+            using (var db = new MinionWarsEntities())
             {
-                MapObject obj = new MapObject(b.id, "battlegroup", b.location);
-                mdm.objectList.Add(obj);
-                //mdm.locations.Add(b.location.ToString());
-            }
+                bg = db.Battlegroup.Where(x => x.location.Distance(loc) <= radius).ToList();
 
-            return mdm;
+                foreach (Battlegroup b in bg)
+                {
+                    MapObject obj = new MapObject(b.id, "Battlegroup", b.location);
+                    mdm.objectList.Add(obj);
+                }
+
+                return mdm;
+            }
         }
     }
 }

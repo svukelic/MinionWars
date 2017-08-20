@@ -9,15 +9,10 @@ namespace MinionWarsEntitiesLib.Geolocations
 {
     public class MapDataModel
     {
-        /*public List<Battlegroup> bgList;
-        public List<Users> userList;*/
-
         public List<MapObject> objectList;
 
         public MapDataModel()
         {
-            /*this.bgList = new List<Battlegroup>();
-            this.userList = new List<Users>();*/
             this.objectList = new List<MapObject>();
         }
     }

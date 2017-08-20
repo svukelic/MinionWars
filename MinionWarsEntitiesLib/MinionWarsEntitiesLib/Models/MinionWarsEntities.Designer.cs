@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\The Director\Documents\Visual Studio 2015\Projects\MinionWarsEntitiesLib\MinionWarsEntitiesLib\Models\MinionWarsEntities.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\The Director\Desktop\Minions Wars\MinionWars\MinionWarsEntitiesLib\MinionWarsEntitiesLib\Models\MinionWarsEntities.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

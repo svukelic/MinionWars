@@ -43,11 +43,12 @@ namespace WarsMovementConsole
                 //Console.WriteLine("Count: " + assignedBattlegroups[i].Count);
                 foreach (Battlegroup bg in assignedBattlegroups[i])
                 {
-                    if (MapMovementUpdater.UpdatePosition(bg))
+                    Battlegroup updatedObj = MapMovementUpdater.UpdatePosition(bg);
+                    /*if (MapMovementUpdater.UpdatePosition(bg))
                     {
                         //assignedBattlegroups[i].Remove(bg);
-                    }
-                    Console.WriteLine("BG POSITION: " + bg.location.ToString());
+                    }*/
+                    Console.WriteLine("BG POSITION: " +updatedObj.location.ToString());
                 }
 
                 /*if (i == 19) nextAssignment = 0;

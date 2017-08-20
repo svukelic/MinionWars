@@ -62,10 +62,10 @@
                 dataType: 'json',
                 success: function (jsonData) {
                     if (jsonData != null) {
+                        //alert(JSON.stringify(jsonData));
                         if (jsonData.length > 0) {
-                            //alert(JSON.stringify(jsonData));
                             for (var i = 0; i < bgMarkersData.length; i++) {
-                                bgMarkersData.setMap(null);
+                                bgMarkersData[i].setMap(null);
                             }
                             bgMarkersData = new Array();
                             for (var i = 0; i < jsonData.length; i++) {
@@ -79,7 +79,7 @@
                 }
             });
 
-            setTimeout(executeMapRefresh, 5000); // you could choose not to continue on failure...
+            setTimeout(executeMapRefresh, 5000);
         }
 
         function refreshMarker(data) {
@@ -96,7 +96,7 @@
             marker.addListener('click', function (e) {
                 alert("clicked");
             });
-
+            map.panTo(pos);
             bgMarkersData.push(marker);
         }
 

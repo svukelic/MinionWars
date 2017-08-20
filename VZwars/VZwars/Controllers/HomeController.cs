@@ -67,9 +67,9 @@ namespace VZwars.Controllers
         {
             var point = string.Format("POINT({1} {0})", lat, lon);
             MapDataModel mdm = MapManager.GetMapData(point, 1000);
-            //System.Diagnostics.Debug.WriteLine("TEST!: " + mdm.bgList.Count);
+            //System.Diagnostics.Debug.WriteLine("TEST!: " + mdm.objectList.Count);
             //System.Diagnostics.Debug.WriteLine(Json(mdm.bgList));
-            System.Diagnostics.Debug.WriteLine(Json(mdm.objectList));
+            //System.Diagnostics.Debug.WriteLine(Json(mdm.objectList));
             return Json(mdm.objectList);
         }
     }

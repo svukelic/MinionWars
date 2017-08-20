@@ -17,6 +17,7 @@ namespace MinionWarsEntitiesLib.AiManagers
             Orders o = new Orders();
             o.name = orders;
             o.desc_text = "test";
+            //o.lastMovement = DateTime.Now;
 
             if (destination != null) o.location = destination;
             else
@@ -35,13 +36,13 @@ namespace MinionWarsEntitiesLib.AiManagers
             return o;
         }
 
-        public static void ContinueOrders(Battlegroup bg, Orders o)
+        public static Orders ContinueOrders(Battlegroup bg, Orders o)
         {
             DbGeography newLoc = o.location;
             switch (o.name)
             {
                 case "roam":
-                    newLoc = GiveRandomDestination(bg, 75);
+                    newLoc = GiveRandomDestination(bg, 1000);
                     break;
                 case "complete_task":
                     o.name = "return";
@@ -52,14 +53,15 @@ namespace MinionWarsEntitiesLib.AiManagers
                     break;
             }
             o.location = newLoc;
-            Console.WriteLine("DOŠLO1");
+
             using (var db = new MinionWarsEntities())
             {
                 db.Orders.Attach(o);
                 db.Entry(o).State = System.Data.Entity.EntityState.Modified;
-                Console.WriteLine("DOŠLO2");
                 db.SaveChanges();
             }
+
+            return o;
         }
 
         private static DbGeography GiveRandomDestination(Battlegroup bg, int distance)
@@ -67,10 +69,14 @@ namespace MinionWarsEntitiesLib.AiManagers
             DbGeography newLoc = null;
 
             Random rand = new Random();
-            int move = rand.Next(-distance, distance);
-
-            var point = string.Format("POINT({1} {0})", (bg.location.Latitude+move/(1852 * 60)), (bg.location.Longitude + move / (1852 * 60)));
+            decimal moveDec = (decimal)distance / (1852m * 60m);
+            double move = (double)moveDec;
+            
+            var point = string.Format("POINT({1} {0})", (bg.location.Latitude + move), (bg.location.Longitude + move));
             newLoc = DbGeography.FromText(point);
+
+            /*Console.WriteLine("OLD ORDER LOC: " + bg.location.ToString());
+            Console.WriteLine("NEW ORDER LOC: " + newLoc.ToString());*/
 
             return newLoc;
         }

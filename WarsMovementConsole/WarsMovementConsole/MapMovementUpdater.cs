@@ -17,7 +17,12 @@ namespace WarsMovementConsole
             return newBg;
         }
 
-        public static bool UpdatePosition(Battlegroup bg)
+        /*public static bool UpdatePosition(Battlegroup bg)
+        {
+            return BattlegroupManager.UpdatePosition(bg);
+        }*/
+
+        public static Battlegroup UpdatePosition(Battlegroup bg)
         {
             return BattlegroupManager.UpdatePosition(bg);
         }

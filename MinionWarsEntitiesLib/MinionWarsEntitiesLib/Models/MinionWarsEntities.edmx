@@ -41,6 +41,7 @@
           <Property Name="resurrection_mod" Type="int" Nullable="false" />
           <Property Name="defense_mod" Type="int" Nullable="false" />
           <Property Name="location" Type="geography" />
+          <Property Name="lastMovement" Type="datetime" />
         </EntityType>
         <EntityType Name="BattlegroupAssignment">
           <Key>
@@ -434,6 +435,7 @@
           <NavigationProperty Name="Orders" Relationship="Self.fk_bg_orders" FromRole="Battlegroup" ToRole="Orders" />
           <NavigationProperty Name="Users" Relationship="Self.fk_bg_user" FromRole="Battlegroup" ToRole="Users" />
           <NavigationProperty Name="BattlegroupMovementHistory" Relationship="Self.fk_bgmove_bg" FromRole="Battlegroup" ToRole="BattlegroupMovementHistory" />
+          <Property Name="lastMovement" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="BattlegroupAssignment">
           <Key>
@@ -823,6 +825,7 @@
           <EntitySetMapping Name="Battlegroup">
             <EntityTypeMapping TypeName="MinionWarsModel.Battlegroup">
               <MappingFragment StoreEntitySet="Battlegroup">
+                <ScalarProperty Name="lastMovement" ColumnName="lastMovement" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="owner_id" ColumnName="owner_id" />
                 <ScalarProperty Name="size" ColumnName="size" />
