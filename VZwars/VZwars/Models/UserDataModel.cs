@@ -1,4 +1,5 @@
 ﻿using MinionWarsEntitiesLib.EntityManagers;
+using MinionWarsEntitiesLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,11 @@ namespace VZwars.Models
 {
     public class UserDataModel
     {
-        public UserEntity userModel;
+        public Users userModel;
 
         public UserDataModel(int id)
         {
-            this.userModel = UserDataManager.GetUserData(id);
+            this.userModel = UsersManager.GetUserData(id);
         }
     }
 }

@@ -10,49 +10,74 @@ namespace MinionWarsEntitiesLib.EntityManagers
 {
     public static class UsersManager
     {
-        static MinionWarsEntities db = new MinionWarsEntities();
-
         public static void UpdateUserPosition(int user_id, float longitude, float latitude)
         {
-            MinionWarsEntitiesLib.Models.Users user = null;
-            user = db.Users.Find(user_id);
-            
-            if(user != null)
+            using (var db = new MinionWarsEntities())
             {
-                UserMovementHistory newMovement = new UserMovementHistory();
-                newMovement.users_id = user_id;
-                newMovement.occurence = DateTime.Now;
-                var point = string.Format("POINT({1} {0})", latitude, longitude);
-                newMovement.location = DbGeography.FromText(point);
+                Users user = null;
+                user = db.Users.Find(user_id);
 
-                db.UserMovementHistory.Add(newMovement);
-                db.SaveChanges();
+                if (user != null)
+                {
+                    if (user.location != null)
+                    {
+                        UserMovementHistory newMovement = new UserMovementHistory();
+                        newMovement.users_id = user_id;
+                        newMovement.occurence = DateTime.Now;
+                        newMovement.location = user.location;
+                        db.UserMovementHistory.Add(newMovement);
+                    }
+
+                    var point = string.Format("POINT({1} {0})", latitude, longitude);
+                    user.location = DbGeography.FromText(point);
+                    db.Users.Attach(user);
+                    db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public static Users GetUserData(int id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                return db.Users.Find(id);
             }
         }
 
         public static List<UserMovementHistory> GetLatestLocations(int time)
         {
-            List<UserMovementHistory> umh = db.UserMovementHistory.Where(x => (x.occurence - DateTime.Now).TotalMinutes <= 15).ToList();
-            return umh;
+            using (var db = new MinionWarsEntities())
+            {
+                List<UserMovementHistory> umh = db.UserMovementHistory.Where(x => (x.occurence - DateTime.Now).TotalMinutes <= 15).ToList();
+                return umh;
+            }
         }
 
         public static List<UserMovementHistory> GetHighestEventSaturationLocations(double percentage)
         {
-            List<UserMovementHistory> umh = db.UserMovementHistory.OrderByDescending(x => x.event_saturation).ToList();
-            int toTake = Convert.ToInt32(percentage * umh.Count);
-            List<UserMovementHistory> limitedUmh = umh.Take(toTake).ToList();
+            using (var db = new MinionWarsEntities())
+            {
+                List<UserMovementHistory> umh = db.UserMovementHistory.OrderByDescending(x => x.event_saturation).ToList();
+                int toTake = Convert.ToInt32(percentage * umh.Count);
+                List<UserMovementHistory> limitedUmh = umh.Take(toTake).ToList();
 
-            return limitedUmh;
+                return limitedUmh;
+            }
         }
 
         public static void UpdateEventSaturations(DbGeography loc, double coef)
         {
-            List<UserMovementHistory> umh = db.UserMovementHistory.Where(x => x.location.Distance(loc).Value <= 500).ToList();
-            foreach(UserMovementHistory u in umh)
+            using (var db = new MinionWarsEntities())
             {
-                if (u.event_saturation == null) u.event_saturation = 0;
-                u.event_saturation += coef * (100 - u.location.Distance(loc) / 5);
-                if (u.event_saturation < 0) u.event_saturation = 0;
+                List<UserMovementHistory> umh = db.UserMovementHistory.Where(x => x.location.Distance(loc).Value <= 500).ToList();
+                foreach (UserMovementHistory u in umh)
+                {
+                    if (u.event_saturation == null) u.event_saturation = 0;
+                    u.event_saturation += coef * (100 - u.location.Distance(loc) / 5);
+                    if (u.event_saturation < 0) u.event_saturation = 0;
+                }
             }
         }
     }

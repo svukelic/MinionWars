@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using VZwars.Models;
 using MinionWarsEntitiesLib;
 using MinionWarsEntitiesLib.Geolocations;
+using MinionWarsEntitiesLib.Models;
+using MinionWarsEntitiesLib.EntityManagers;
 
 namespace VZwars.Controllers
 {
@@ -23,6 +25,8 @@ namespace VZwars.Controllers
                 return RedirectToAction("Login");
             }*/
             UserDataModel userModel = new UserDataModel(1);
+            Session["UserName"] = "TheDirector";
+            Session["UserId"] = 1;
             //System.Diagnostics.Debug.WriteLine("USERNAME: " + userModel.userModel.user.username);
             return View(userModel);
         }
@@ -34,10 +38,17 @@ namespace VZwars.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string username)
+        public ActionResult Login(string username, string password)
         {
-            Session["UserName"] = username;
-            return RedirectToAction("Index");
+            Users result = AccountManager.LoginUser(username, password);
+            if (result != null)
+            {
+                Session["UserName"] = result.username;
+                Session["UserId"] = result.id;
+
+                return RedirectToAction("Index", "Home");
+            }
+            else return View();
         }
 
         [HttpPost]
@@ -66,7 +77,7 @@ namespace VZwars.Controllers
         public ActionResult RefreshMap(double lat, double lon)
         {
             var point = string.Format("POINT({1} {0})", lat, lon);
-            MapDataModel mdm = MapManager.GetMapData(point, 1000);
+            MapDataModel mdm = MapManager.GetMapData(1, point, 1000);
             //System.Diagnostics.Debug.WriteLine("TEST!: " + mdm.objectList.Count);
             //System.Diagnostics.Debug.WriteLine(Json(mdm.bgList));
             //System.Diagnostics.Debug.WriteLine(Json(mdm.objectList));

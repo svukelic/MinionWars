@@ -14,7 +14,22 @@
 @Html.Partial("Partial_buildingModal")
 
 <!-- Dodatne tipke -->
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">User stuff</button>
+<!--<div class="row">
+    <div class="col-md-3">
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">User info</button>
+    </div>
+    <div class="col-md-3">
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">Battlegroups</button>
+    </div>
+    <div class="col-md-3">
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">Camps</button>
+    </div>
+    <div class="col-md-3">
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">Resources</button>
+    </div>
+</div>
+
+<hr />-->
 
 <!-- Mapa -->
 <div class="row">
@@ -99,45 +114,6 @@
             map.panTo(pos);
             bgMarkersData.push(marker);
         }
-
-        /*(function worker() {
-            for (var i = 0; i < markerMovement.length; i++) {
-                var result = subscribedMarkers.findIndex(x => x.id == markerMovement[i].id);
-                MoveMarker(markerMovement[i].destination, result, i);
-            }
-
-            setTimeout(worker, 100);
-        })();
-
-        function MoveMarker(destination, index, movementIndex) {
-            var currentLat = subscribedMarkers[index].getPosition().lat();
-            var currentLng = subscribedMarkers[index].getPosition().lng();
-
-            if (GetDistance(currentLat, currentLng, destination.lat(), destination.lng()) <= 10) {
-                alert("arrived");
-                markerMovement.splice(movementIndex, 1);
-            }
-            else {
-                var newLat = null;
-                if (destination.lat() > currentLat) {
-                    newLat = currentLat + 1 / (1852 * 60);
-                }
-                else {
-                    newLat = currentLat - 1 / (1852 * 60);
-                }
-
-                var newLng = null;
-                if (destination.lng() > currentLng) {
-                    newLng = currentLng + 1 / (1852 * 60);
-                }
-                else {
-                    newLng = currentLng - 1 / (1852 * 60);
-                }
-
-                var pos = new google.maps.LatLng({ lat: newLat, lng: newLng });
-                subscribedMarkers[index].setPosition(pos);
-            }
-        }*/
 
         function mapClickEvent(args) {
             var adresa = GetAddress(args.latLng);

@@ -26,7 +26,39 @@ namespace MinionWarsEntitiesLib.Battlegroups
                     if (owner != null)
                     {
                         bg.owner_id = owner_id.Value;
-                        GetTraitModifiers(owner, bg, type);
+                        //GetTraitModifiers(owner, bg, type);
+
+                        /* types
+                        * 1 - personal
+                        * 2 - remote
+                        * 3 - defensive
+                        */
+                        bg.type = type;
+
+                        bg.movement_mod += owner.trait_logistics * 0.1;
+
+                        int sizeModifier = 0;
+                        if (type == 1)
+                        {
+                            sizeModifier = 20 + owner.trait_leadership * 3;
+                            bg.loot_mod += owner.trait_leadership * 5;
+                            bg.res_mod += owner.trait_leadership * 5;
+                            bg.resurrection_mod += owner.trait_leadership;
+                        }
+                        else if(type == 2)
+                        {
+                            sizeModifier = 10 + owner.trait_logistics * 2;
+                            bg.loot_mod += owner.trait_logistics * 2.5;
+                            bg.res_mod += owner.trait_logistics * 2.5;
+                            bg.resurrection_mod += owner.trait_logistics;
+                        }
+                        else if(type == 3)
+                        {
+                            sizeModifier = 20 + owner.trait_architecture * 2;
+                            bg.defense_mod += owner.trait_architecture;
+                            bg.build_mod += owner.trait_architecture * 2;
+                        }
+                        bg.size = 0 + sizeModifier;
                     }
                     else
                     {
@@ -124,7 +156,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
             return bg;
         }
 
-        private static void GetTraitModifiers(Users owner, Battlegroup bg, int type)
+        /*private static void GetTraitModifiers(Users owner, Battlegroup bg, int type)
         {
             using (var db = new MinionWarsEntities())
             {
@@ -142,7 +174,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
                     bg.build_mod += traits.arch_speed * 0.1;
                 }
             }
-        }
+        }*/
 
         private static void SetBasicModifiers(Battlegroup bg)
         {
@@ -281,48 +313,5 @@ namespace MinionWarsEntitiesLib.Battlegroups
                 return bge;
             }
         }
-
-        /*private static void SetAdvancedModifiers(MinionWarsEntitiesLib.Models.Battlegroup bg, List<Minion> f, List<Minion> b, List<Minion> s)
-        {
-            bg.str_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.dex_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.vit_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.pow_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-
-            bg.res_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.metal_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.stone_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.tree_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.food_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.build_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.movement_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.reproduction_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-            bg.loot_mod += GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s);
-
-            bg.regen_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s)));
-            bg.resurrection_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s)));
-            bg.defense_mod += Convert.ToInt32(Math.Floor(GetModifierCoeficients(0) * CountPassiveModifiers(0, f, b, s)));
-
-            bg.group_speed = Convert.ToInt32(Math.Floor(1 + 1 * bg.movement_mod));
-        }
-
-        private static float CountPassiveModifiers(int passive, List<Minion> f, List<Minion> b, List<Minion> s)
-        {
-            return f.Where(x => x.passive == passive).Count() + b.Where(x => x.passive == passive).Count() + s.Where(x => x.passive == passive).Count();
-        }
-
-        private static List<Minion> SortMinions(List<int> m_id, int count, int type, int bg_id)
-        {
-            List<Minion> list = new List<Minion>();
-
-            foreach (int id in m_id)
-            {
-                Minion minion = db.Minion.Find(id);
-                //minion.battlegroup_id = bg_id;
-                //minion.line = type;
-            }
-
-            return list;
-        }*/
     }
 }

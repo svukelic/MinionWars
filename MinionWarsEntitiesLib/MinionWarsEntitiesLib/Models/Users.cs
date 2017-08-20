@@ -27,7 +27,12 @@ namespace MinionWarsEntitiesLib.Models
         public string pass { get; set; }
         public int experience { get; set; }
         public int lvl { get; set; }
-        public int traits_id { get; set; }
+        public System.Data.Entity.Spatial.DbGeography location { get; set; }
+        public Nullable<int> online { get; set; }
+        public int trait_leadership { get; set; }
+        public int trait_logistics { get; set; }
+        public int trait_architecture { get; set; }
+        public int trait_economics { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Battlegroup> Battlegroup { get; set; }
@@ -35,6 +40,5 @@ namespace MinionWarsEntitiesLib.Models
         public virtual ICollection<MinionOwnership> MinionOwnership { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserMovementHistory> UserMovementHistory { get; set; }
-        public virtual UserTraits UserTraits { get; set; }
     }
 }

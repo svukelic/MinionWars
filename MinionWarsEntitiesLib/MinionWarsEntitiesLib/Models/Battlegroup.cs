@@ -44,6 +44,7 @@ namespace MinionWarsEntitiesLib.Models
         public int defense_mod { get; set; }
         public System.Data.Entity.Spatial.DbGeography location { get; set; }
         public Nullable<System.DateTime> lastMovement { get; set; }
+        public int type { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BattlegroupAssignment> BattlegroupAssignment { get; set; }

@@ -69,16 +69,29 @@ namespace MinionWarsEntitiesLib.AiManagers
             DbGeography newLoc = null;
 
             Random rand = new Random();
-            decimal moveDec = (decimal)distance / (1852m * 60m);
-            double move = (double)moveDec;
+            double latMove = GenerateRandomDistance(rand, distance);
+            double lonMove = GenerateRandomDistance(rand, distance);
             
-            var point = string.Format("POINT({1} {0})", (bg.location.Latitude + move), (bg.location.Longitude + move));
+            var point = string.Format("POINT({1} {0})", (bg.location.Latitude + latMove), (bg.location.Longitude + lonMove));
             newLoc = DbGeography.FromText(point);
 
             /*Console.WriteLine("OLD ORDER LOC: " + bg.location.ToString());
             Console.WriteLine("NEW ORDER LOC: " + newLoc.ToString());*/
 
             return newLoc;
+        }
+
+        private static double GenerateRandomDistance(Random r, int distance)
+        {
+            int generatedDistance = r.Next(Convert.ToInt32(Math.Floor((decimal)distance / 2)), distance);
+            int orientation = r.Next(1, 100);
+            if (orientation <= 50) orientation = -1;
+            else orientation = 1;
+
+            decimal moveDec = orientation * (decimal)generatedDistance / (1852m * 60m);
+            double move = (double)moveDec;
+
+            return move;
         }
         
         private static DbGeography GetReturnDestination(Battlegroup bg)
