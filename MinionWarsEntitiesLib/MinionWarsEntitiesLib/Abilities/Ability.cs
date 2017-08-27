@@ -17,7 +17,7 @@ namespace MinionWarsEntitiesLib.Abilities
 
         public void AbilityActivation()
         {
-            effect.PerformEffect(this);
+            //effect.PerformEffect(this);
         }
 
         /*public Effect effect;

@@ -24,9 +24,9 @@ namespace VZwars.Controllers
             {
                 return RedirectToAction("Login");
             }*/
-            UserDataModel userModel = new UserDataModel(1);
-            Session["UserName"] = "TheDirector";
-            Session["UserId"] = 1;
+            UserDataModel userModel = new UserDataModel(2);
+            Session["UserName"] = userModel.userModel.username;
+            Session["UserId"] = userModel.userModel.id;
             //System.Diagnostics.Debug.WriteLine("USERNAME: " + userModel.userModel.user.username);
             return View(userModel);
         }
@@ -78,10 +78,12 @@ namespace VZwars.Controllers
         {
             var point = string.Format("POINT({1} {0})", lat, lon);
             MapDataModel mdm = MapManager.GetMapData(1, point, 1000);
-            //System.Diagnostics.Debug.WriteLine("TEST!: " + mdm.objectList.Count);
-            //System.Diagnostics.Debug.WriteLine(Json(mdm.bgList));
-            //System.Diagnostics.Debug.WriteLine(Json(mdm.objectList));
             return Json(mdm.objectList);
+        }
+
+        public ActionResult AddMinionsToGroup(int? o_id, int? amount, int? line, int? bg_id, string name)
+        {
+            return Json(true);
         }
     }
 }

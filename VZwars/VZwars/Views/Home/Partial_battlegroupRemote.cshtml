@@ -1,0 +1,22 @@
+﻿@model VZwars.Models.UserDataModel
+@using MinionWarsEntitiesLib.Models
+@using VZwars.Models
+
+<div class="row">
+    @{
+        foreach (BattlegroupModel bm in Model.remoteBgs)
+        {
+            <div class="row">
+                <p>Size: @bm.battlegroup.size</p>
+                <p>Speed: @bm.battlegroup.group_speed</p>
+                <p>Orders: @bm.battlegroup.orders_id</p>
+            </div>
+                <div class="row">
+                    <hr />
+                </div>
+        }
+    }
+</div>
+
+
+

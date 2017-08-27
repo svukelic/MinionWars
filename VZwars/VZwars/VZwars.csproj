@@ -195,8 +195,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BattlegroupModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MinionModel.cs" />
     <Compile Include="Models\UserDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -211,6 +213,7 @@
     <Content Include="Content\icons\camping-tent.png" />
     <Content Include="Content\icons\dwarf-helmet.png" />
     <Content Include="Content\icons\goblin-camp.png" />
+    <Content Include="Content\icons\goblin_minion.png" />
     <Content Include="Content\icons\king.png" />
     <Content Include="Content\icons\visored-helm.png" />
     <Content Include="favicon.ico" />
@@ -295,6 +298,12 @@
     <Content Include="Views\Home\Partial_buildingModal.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="Views\Home\Partial_resourcesPageModal.cshtml" />
+    <Content Include="Views\Home\Partial_battlegroupPageModal.cshtml" />
+    <Content Include="Views\Home\Partial_userCampsPageModal.cshtml" />
+    <Content Include="Views\Home\Partial_battlegroupPersonal.cshtml" />
+    <Content Include="Views\Home\Partial_battlegroupRemote.cshtml" />
+    <Content Include="Views\Home\Partial_groupCreationModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

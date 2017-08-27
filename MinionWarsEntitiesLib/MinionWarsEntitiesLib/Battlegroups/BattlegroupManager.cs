@@ -109,6 +109,21 @@ namespace MinionWarsEntitiesLib.Battlegroups
             }
         }
 
+        public static bool RemoveMinions(int a_id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                BattlegroupAssignment ba = db.BattlegroupAssignment.Find(a_id);
+                if (ba != null)
+                {
+                    db.BattlegroupAssignment.Remove(ba);
+
+                    return true;
+                }
+                else return false;
+            }
+        }
+
         public static Battlegroup GetLastAssigned(int lastAssigned)
         {
             Battlegroup newBg = null;
@@ -287,18 +302,19 @@ namespace MinionWarsEntitiesLib.Battlegroups
                             age.turnStartCount = a.group_count;
                             age.minionData = db.Minion.Find(a.minion_id);
                             age.CalculateGroupStats(bge.bg, a.line);
+                            age.remainingHealth = age.stats.health;
                             age.attack = AbilityGenerator.GenerateAttack(a.line, age.stats, age.minionData);
-                            age.ability = AbilityGenerator.GenerateAbility(a.line, age.stats, age.minionData);
+                            //age.ability = AbilityGenerator.GenerateAbility(a.line, age.stats, age.minionData);
 
                             switch (a.line)
                             {
-                                case 1:
+                                case 0:
                                     bge.frontline.Add(age);
                                     break;
-                                case 2:
+                                case 1:
                                     bge.backline.Add(age);
                                     break;
-                                case 3:
+                                case 2:
                                     bge.supportline.Add(age);
                                     break;
                             }

@@ -55,14 +55,17 @@
     <Compile Include="Abilities\AbilityGenerator.cs" />
     <Compile Include="Abilities\AbilityInstances\Heal.cs" />
     <Compile Include="Abilities\AttackInstances\MeleeAttack.cs" />
+    <Compile Include="Abilities\AttackInstances\RangedAttack.cs" />
     <Compile Include="Abilities\Effect.cs" />
     <Compile Include="AiManagers\OrdersManager.cs" />
     <Compile Include="Battlegroups\AssignmentGroupEntity.cs" />
     <Compile Include="Battlegroups\BattleGroupEntity.cs" />
     <Compile Include="Battlegroups\BattlegroupManager.cs" />
+    <Compile Include="Combat\CombatLog.cs" />
     <Compile Include="Combat\CombatManager.cs" />
     <Compile Include="Combat\GroupCombatStats.cs" />
     <Compile Include="EntityManagers\AccountManager.cs" />
+    <Compile Include="EntityManagers\OwnershipManager.cs" />
     <Compile Include="Geolocations\Geolocations.cs" />
     <Compile Include="Geolocations\MapDataModel.cs" />
     <Compile Include="Geolocations\MapManager.cs" />
@@ -130,6 +133,7 @@
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="Structures\HiveManager.cs" />
     <Compile Include="EntityManagers\UsersManager.cs" />
+    <Compile Include="Structures\CampManager.cs" />
     <Compile Include="TestManagers\WildMinionsTest.cs" />
   </ItemGroup>
   <ItemGroup>

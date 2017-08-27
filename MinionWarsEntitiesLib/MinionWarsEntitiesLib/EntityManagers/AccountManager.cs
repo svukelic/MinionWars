@@ -56,6 +56,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
                     newUser.lvl = 1;
                     newUser.online = 0;
                     newUser.location = null;
+                    newUser.personal_bg_id = null;
 
                     //traits
                     newUser.trait_leadership = 0;
@@ -65,6 +66,8 @@ namespace MinionWarsEntitiesLib.EntityManagers
 
                     db.Users.Add(newUser);
                     db.SaveChanges();
+
+                    OwnershipManager.GenerateNewUserOwnership(newUser.id);
 
                     return true;
                 }

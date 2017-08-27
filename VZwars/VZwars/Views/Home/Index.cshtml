@@ -9,9 +9,13 @@
 <!-- Modal -->
 @Html.Partial("Partial_userPageModal")
 
+@Html.Partial("Partial_battlegroupPageModal")
+
 @Html.Partial("Partial_clickModal")
 
 @Html.Partial("Partial_buildingModal")
+
+@Html.Partial("Partial_groupCreationModal")
 
 <!-- Dodatne tipke -->
 <!--<div class="row">
@@ -59,14 +63,19 @@
         var subscribedMarkers = new Array();
         var markerMovement = new Array();
         var bgMarkersData = new Array();
-   
+
         $(document).ready(function () {
             navigator.geolocation.watchPosition(savePosition);
 
             $("#modalStats").hide();
+
+            $("#modalPersonalBG").hide();
+            $("#modalRemoteBG").hide();
             $("#modalMinions").hide();
 
             setTimeout(executeMapRefresh, 5000);
+
+
         });
 
         function executeMapRefresh() {
@@ -177,6 +186,7 @@
 
         $(function () {
             $("#userTabs").tabs();
+            $("#bgTabs").tabs();
         });
 
         $("#btnBuildCamp").click(function () {
@@ -245,6 +255,47 @@
                     alert("Error");
                 }
             });
+        });
+
+        //battlegroup functions
+        function addMinions(id) {
+            alert(id);
+        }
+
+        function removeMinions(id) {
+            alert(id);
+        }
+
+        var groupToAdd = -1;
+        function addToGroup(id) {
+            groupToAdd = id;
+            $('#groupCreationModal').modal({
+                show: 'true'
+            });
+        }
+
+        function submitGroupAddition() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddMinionsToGroup")',
+                data: { 'o_id': groupToAdd, 'amount': $("#amount").val(), 'line': $("#groupCreationForm input[type='radio']:checked").val(), 'bg_id': $('#bgroupList :selected').text(), 'name': $("#additionName").val() },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert("success");
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        $("#additionName").change(function () {
+            if ($("#additionName").val() == "" || $("#additionName").val() == null) {
+                $('#bgroupList').removeAttr('disabled');
+            }
+            else {
+                $('#bgroupList').attr('disabled', 'disabled');
+            }
         });
     </script>
 }

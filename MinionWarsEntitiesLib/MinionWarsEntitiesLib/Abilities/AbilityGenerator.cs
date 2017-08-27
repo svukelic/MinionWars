@@ -12,7 +12,6 @@ namespace MinionWarsEntitiesLib.Abilities
 {
     public static class AbilityGenerator
     {
-        static MinionWarsEntities db = new MinionWarsEntities();
         public static Ability GenerateAbility(int line, GroupCombatStats gcs, Minion m)
         {
             Ability ability = new Ability();
@@ -45,52 +44,65 @@ namespace MinionWarsEntitiesLib.Abilities
             {
                 attackDesignation = 1;
                 ability.effect = new MeleeAttack();
-                GetAttackStats(ability, gcs, attackDesignation);
+                ability = GetAttackStats(ability, gcs, attackDesignation);
             }
             else if (line == 2)
             {
                 attackDesignation = 2;
-                ability.effect = new MeleeAttack();
-                GetAttackStats(ability, gcs, attackDesignation);
+                ability.effect = new RangedAttack();
+                ability = GetAttackStats(ability, gcs, attackDesignation);
             }
             else
             {
-                GetAbilityStats(ability, gcs, m.melee_ability);
+                //GetAbilityStats(ability, gcs, m.melee_ability);
+                attackDesignation = 1;
+                ability.effect = new MeleeAttack();
+                ability = GetAttackStats(ability, gcs, attackDesignation);
             }
 
             return ability;
         }
 
         //ability calculations
-        private static void GetAttackStats(Ability a, GroupCombatStats gcs, int attackDesignation)
+        private static Ability GetAttackStats(Ability a, GroupCombatStats gcs, int attackDesignation)
         {
-            AbilityStats ast = db.AbilityStats.Find(attackDesignation);
-            a.name = ast.name;
-            a.power = ast.power;
-            a.cooldown = 0; // ast.cooldown;
-            a.remainingCooldown = 0; // ast.cooldown;
+            using (var db = new MinionWarsEntities())
+            {
+                AbilityStats ast = db.AbilityStats.Find(attackDesignation);
+                a.name = ast.name;
+                a.power = ast.power;
+                a.cooldown = 0; // ast.cooldown;
+                a.remainingCooldown = 0; // ast.cooldown;
 
-            int powerModifier = 0;
+                int powerModifier = 0;
 
-            if (attackDesignation == 1) powerModifier = gcs.strength;
-            else powerModifier = gcs.dexterity;
+                if (attackDesignation == 1) powerModifier = gcs.strength;
+                else powerModifier = gcs.dexterity;
 
-            a.power += powerModifier;
+                a.power += powerModifier;
+
+                return a;
+            }
         }
 
-        private static void GetAbilityStats(Ability a, GroupCombatStats gcs, int attackDesignation)
+        private static Ability GetAbilityStats(Ability a, GroupCombatStats gcs, int attackDesignation)
         {
-            AbilityStats ast = db.AbilityStats.Find(attackDesignation);
-            a.name = ast.name;
-            a.power = ast.power;
-            a.cooldown = ast.cooldown;
-            a.duration = ast.duration;
+            using (var db = new MinionWarsEntities())
+            {
+                AbilityStats ast = db.AbilityStats.Find(attackDesignation);
+                a.name = ast.name;
+                a.power = ast.power;
+                a.cooldown = ast.cooldown;
+                a.duration = ast.duration;
 
-            a.power += gcs.power;
-            a.cooldown += gcs.cooldown;
-            a.duration += gcs.duration;
+                a.power += gcs.power;
+                a.cooldown += gcs.cooldown;
+                a.duration += gcs.duration;
 
-            a.remainingCooldown = a.cooldown;
+                a.remainingCooldown = a.cooldown;
+
+                return a;
+            }
         }
 
     }

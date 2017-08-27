@@ -10,75 +10,80 @@ namespace MinionWarsEntitiesLib.Minions
 {
     public static class MinionGenotype
     {
-        static MinionWarsEntities db = new MinionWarsEntities();
         public static Minion generateRandomMinion()
         {
-            Minion minion = new Minion();
-            
-            Random r = new Random();
-
-            minion.mtype_id = r.Next(1, 16);
-            minion.somatotype = SomatotypeGenerator(r);
-
-            minion.strength = Convert.ToInt32(db.ModifierCoeficients.Find(18).value);
-            minion.dexterity = Convert.ToInt32(db.ModifierCoeficients.Find(19).value);
-            minion.vitality = Convert.ToInt32(db.ModifierCoeficients.Find(20).value);
-
-            CalculateStatsByType(minion);
-            CalculateStatsByBuild(minion);
-            CalculateSpeed(minion);
-
-            //minion.health = minion.vit * 3;
-
-            minion.behaviour = r.Next(1, 16);
-            minion.melee_ability = r.Next(0, 15) + 2; //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
-            minion.ranged_ability = r.Next(0, 15) + 2; //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
-            minion.passive = r.Next(0, 15);
-
-            minion.speed = 1;
-
-            List<Minion> checkMinion = null;
-            checkMinion = db.Minion.Where(x => x.behaviour == minion.behaviour && x.melee_ability == minion.melee_ability && x.ranged_ability == minion.ranged_ability && x.passive == minion.passive && x.mtype_id == minion.mtype_id && x.somatotype.Equals(minion.somatotype)).ToList();
-            if(checkMinion.Count > 0)
+            using (var db = new MinionWarsEntities())
             {
-                return checkMinion.First();
-            }
-            else
-            {
-                db.Minion.Add(minion);
-                db.SaveChanges();
-            }
+                Minion minion = new Minion();
 
-            return minion;
+                Random r = new Random();
+
+                minion.mtype_id = r.Next(1, 16);
+                minion.somatotype = SomatotypeGenerator(r);
+
+                minion.strength = Convert.ToInt32(db.ModifierCoeficients.Find(18).value);
+                minion.dexterity = Convert.ToInt32(db.ModifierCoeficients.Find(19).value);
+                minion.vitality = Convert.ToInt32(db.ModifierCoeficients.Find(20).value);
+
+                CalculateStatsByType(minion);
+                CalculateStatsByBuild(minion);
+                CalculateSpeed(minion);
+
+                //minion.health = minion.vit * 3;
+
+                minion.behaviour = r.Next(1, 16);
+                minion.melee_ability = r.Next(1, 16) + 2; //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
+                minion.ranged_ability = r.Next(1, 16) + 2; //AbilityGenerator.GenerateAbility(r.Next(0, 15), minion);
+                minion.passive = r.Next(0, 15);
+
+                minion.speed = 1;
+
+                List<Minion> checkMinion = null;
+                checkMinion = db.Minion.Where(x => x.behaviour == minion.behaviour && x.melee_ability == minion.melee_ability && x.ranged_ability == minion.ranged_ability && x.passive == minion.passive && x.mtype_id == minion.mtype_id && x.somatotype.Equals(minion.somatotype)).ToList();
+                if (checkMinion.Count > 0)
+                {
+                    return checkMinion.First();
+                }
+                else
+                {
+                    db.Minion.Add(minion);
+                    db.SaveChanges();
+                }
+
+                return minion;
+            }
         }
 
         private static void CalculateStatsByType(Minion m)
         {
-            int strMod = 0;
-            int dexMod = 0;
-            int vitMod = 0;
+            using (var db = new MinionWarsEntities())
+            {
+                int strMod = 0;
+                int dexMod = 0;
+                int vitMod = 0;
 
-            int powMod = 0;
-            int cdMod = 0;
-            int durMod = 0;
+                int powMod = 0;
+                int cdMod = 0;
+                int durMod = 0;
 
-            //get from db
-            MinionType mtype = db.MinionType.Find(m.mtype_id);
-            strMod += mtype.str_modifier;
-            dexMod += mtype.dex_modifier;
-            vitMod += mtype.vit_modifier;
+                //get from db
+                MinionType mtype = db.MinionType.Find(m.mtype_id);
+                strMod += mtype.str_modifier;
+                dexMod += mtype.dex_modifier;
+                vitMod += mtype.vit_modifier;
 
-            powMod += mtype.pow_modifier;
-            cdMod += mtype.cd_modifier;
-            durMod += mtype.dur_modifier;
+                powMod += mtype.pow_modifier;
+                cdMod += mtype.cd_modifier;
+                durMod += mtype.dur_modifier;
 
-            m.strength += strMod;
-            m.dexterity += dexMod;
-            m.vitality += vitMod;
+                m.strength += strMod;
+                m.dexterity += dexMod;
+                m.vitality += vitMod;
 
-            m.power += powMod;
-            m.cooldown += cdMod;
-            m.duration += durMod;
+                m.power += powMod;
+                m.cooldown += cdMod;
+                m.duration += durMod;
+            }
         }
 
         private static void CalculateStatsByBuild(Minion m)

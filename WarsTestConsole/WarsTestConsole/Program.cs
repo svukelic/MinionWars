@@ -8,6 +8,8 @@ using MinionWarsEntitiesLib.TestManagers;
 using MinionWarsEntitiesLib.Geolocations;
 using MinionWarsEntitiesLib.EntityManagers;
 using System.Data.Entity.Spatial;
+using MinionWarsEntitiesLib.Models;
+using MinionWarsEntitiesLib.Combat;
 
 namespace WarsTestConsole
 {
@@ -33,11 +35,13 @@ namespace WarsTestConsole
             Console.WriteLine(l1.Distance(l2));*/
 
             //Console.WriteLine(UserDataManager.GetUserData(1).user.username);
-            WildMinionsTest.Generate(point);
+            //WildMinionsTest.Generate(point);
 
             /*decimal movement = 1000m / (1852m * 60m);
             double m = (double)movement;
             Console.WriteLine("MOVEMENT: " + m);*/
+            CombatLog log = CombatManager.StartCombat(32, 33);
+            Console.WriteLine("winner: " + log.winner.id);
 
             Console.WriteLine("DONE");
             Console.ReadKey();

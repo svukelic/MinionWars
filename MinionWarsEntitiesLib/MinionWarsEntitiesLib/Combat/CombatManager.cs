@@ -10,20 +10,26 @@ namespace MinionWarsEntitiesLib.Combat
 {
     public static class CombatManager
     {
-        public static Battlegroup StartCombat(int bg1_id, int bg2_id)
+        public static CombatLog StartCombat(int bg1_id, int bg2_id)
         {
             BattleGroupEntity bge1 = BattlegroupManager.BuildBattleGroupEntity(bg1_id);
             BattleGroupEntity bge2 = BattlegroupManager.BuildBattleGroupEntity(bg2_id);
 
-            return PerformCombat(bge1, bge2);
+            CombatLog log = PerformCombat(bge1, bge2);
+
+            return log;
         }
 
-        private static Battlegroup PerformCombat(BattleGroupEntity bge1, BattleGroupEntity bge2)
+        private static CombatLog PerformCombat(BattleGroupEntity bge1, BattleGroupEntity bge2)
         {
+            Console.WriteLine("Combat started");
+
+            CombatLog log = new CombatLog();
             bool combatEnd = false;
             Battlegroup winner = null;
 
             while(!combatEnd) {
+                Console.WriteLine("Turn start");
                 //turn start
                 TurnStartCountAdjustement(bge1);
                 TurnStartCountAdjustement(bge2);
@@ -42,47 +48,62 @@ namespace MinionWarsEntitiesLib.Combat
 
                 if (CheckIfGroupIsDead(bge1))
                 {
-                    combatEnd = !combatEnd;
+                    Console.WriteLine("WON 2");
+                    combatEnd = true;
                     winner = bge2.bg;
                 }
                 else if (CheckIfGroupIsDead(bge2))
                 {
-                    combatEnd = !combatEnd;
+                    Console.WriteLine("WON 1");
+                    combatEnd = true;
                     winner = bge1.bg;
                 }
             }
 
-            return winner;
+            log.winner = winner;
+
+            return log;
         }
 
         private static void CalculateLinePerformance(List<AssignmentGroupEntity> attacker, BattleGroupEntity target)
         {
             foreach (AssignmentGroupEntity age in attacker)
             {
-                if (age.ability.remainingCooldown == 0) age.UseAbility(target);
-                else age.UseAttack(target);
+                //if (age.ability.remainingCooldown == 0) age.UseAbility(target);
+                //else age.UseAttack(target);
+                age.UseAttack(target);
             }
         }
 
         private static void TurnStartCountAdjustement(BattleGroupEntity bge)
         {
+            //int totalCount = 0;
+
             foreach (AssignmentGroupEntity age in bge.frontline)
             {
                 age.turnStartCount = age.remainingCount;
+                //totalCount += age.turnStartCount;
+                Console.WriteLine(bge.bg.id + " F: " + age.turnStartCount);
             }
 
             foreach (AssignmentGroupEntity age in bge.backline)
             {
                 age.turnStartCount = age.remainingCount;
+                //totalCount += age.turnStartCount;
+                Console.WriteLine(bge.bg.id + " B: " + age.turnStartCount);
             }
 
             foreach (AssignmentGroupEntity age in bge.supportline)
             {
                 age.turnStartCount = age.remainingCount;
+                //totalCount += age.turnStartCount;
+                Console.WriteLine(bge.bg.id + " S: " + age.turnStartCount);
             }
+
+            //Console.WriteLine("Turn start (" + bge.bg.id + "): " + totalCount);
         }
 
-        private static bool CheckIfLineIsDead(List<AssignmentGroupEntity> line)
+        public static bool CheckIfLineIsDead(List<AssignmentGroupEntity> line)
         {
             bool isDead = true;
 

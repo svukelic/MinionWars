@@ -46,6 +46,14 @@ namespace MinionWarsEntitiesLib.EntityManagers
             }
         }
 
+        public static Battlegroup GetPersonalBattlegroup(int id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                return db.Battlegroup.Find(id);
+            }
+        }
+
         public static List<UserMovementHistory> GetLatestLocations(int time)
         {
             using (var db = new MinionWarsEntities())
@@ -77,7 +85,11 @@ namespace MinionWarsEntitiesLib.EntityManagers
                     if (u.event_saturation == null) u.event_saturation = 0;
                     u.event_saturation += coef * (100 - u.location.Distance(loc) / 5);
                     if (u.event_saturation < 0) u.event_saturation = 0;
+                    db.UserMovementHistory.Attach(u);
+                    db.Entry(u).State = System.Data.Entity.EntityState.Modified;
                 }
+
+                db.SaveChanges();
             }
         }
     }

@@ -1,0 +1,61 @@
+﻿@model VZwars.Models.UserDataModel
+@using MinionWarsEntitiesLib.Models
+@using VZwars.Models
+
+@if (Model.userModel.personal_bg_id != -1)
+{
+    <div class="row">
+        <div>
+            <p>Current size: @Model.personalBg.currentAmount</p>
+            <p>Maximum size: @Model.personalBg.battlegroup.size</p>
+            <p>Speed: @Model.personalBg.battlegroup.group_speed</p>
+            <p>Orders: @Model.personalBg.battlegroup.orders_id</p>
+            <hr />
+            <button onclick="addMinions(@Model.personalBg.battlegroup.id)">Add minions</button>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <hr />
+    </div>
+
+    <div class="row">
+        @{
+            foreach (MinionModel m in Model.personalBg.minions)
+            {
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>Type: @m.type.name</p>
+                        <p>Group count: @m.assignment.group_count</p>
+                        <p>Line: @m.assignment.line</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>Strength: @m.data.strength</p>
+                        <p>Dexterity: @m.data.dexterity</p>
+                        <p>Vitality: @m.data.vitality</p>
+                        <p>Power: @m.data.power</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>Melee Ability: @m.data.melee_ability</p>
+                        <p>Ranged Ability: @m.data.ranged_ability</p>
+                        <p>Passive: @m.data.passive</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <hr />
+                    <button onclick="removeMinions(@m.assignment.id)">Remove minions</button>
+                    <hr />
+                </div>
+            }
+        }
+    </div>
+
+            }
+            else
+            {
+                <div class="row">
+                    <p>No minions added to personal battlegroup</p>
+                </div>
+            }
+

@@ -10,39 +10,43 @@ namespace MinionWarsEntitiesLib.Structures
 {
     public static class HiveManager
     {
-        static MinionWarsEntities db = new MinionWarsEntities();
-
         public static HiveNode generateRandomHive(DbGeography loc)
         {
-            if (!CheckIfHiveExists(loc))
+            using (var db = new MinionWarsEntities())
             {
-                Random r = new Random();
+                if (!CheckIfHiveExists(loc))
+                {
+                    Random r = new Random();
 
-                HiveNode newHive = new HiveNode();
-                newHive.location = loc;
-                newHive.minion_id = r.Next(1, db.Minion.ToList().Count());
+                    HiveNode newHive = new HiveNode();
+                    newHive.location = loc;
+                    newHive.minion_id = r.Next(1, db.Minion.ToList().Count());
 
-                db.HiveNode.Add(newHive);
-                db.SaveChanges();
+                    db.HiveNode.Add(newHive);
+                    db.SaveChanges();
 
-                return newHive;
+                    return newHive;
+                }
+                else return null;
             }
-            else return null;
         }
 
         private static bool CheckIfHiveExists(DbGeography loc)
         {
-            bool exists = false;
-
-            int count = 0;
-            count = db.HiveNode.Where(x => x.location.Distance(loc) <= 250).ToList().Count;
-
-            if(count > 0)
+            using (var db = new MinionWarsEntities())
             {
-                exists = true;
-            }
+                bool exists = false;
 
-            return exists;
+                int count = 0;
+                count = db.HiveNode.Where(x => x.location.Distance(loc) <= 250).ToList().Count;
+
+                if (count > 0)
+                {
+                    exists = true;
+                }
+
+                return exists;
+            }
         }
     }
 }
