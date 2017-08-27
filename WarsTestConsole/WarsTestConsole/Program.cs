@@ -40,7 +40,8 @@ namespace WarsTestConsole
             /*decimal movement = 1000m / (1852m * 60m);
             double m = (double)movement;
             Console.WriteLine("MOVEMENT: " + m);*/
-            CombatLog log = CombatManager.StartCombat(32, 33);
+
+            CombatLog log = CombatManager.StartCombat(32, 34);
             Console.WriteLine("winner: " + log.winner.id);
 
             Console.WriteLine("DONE");

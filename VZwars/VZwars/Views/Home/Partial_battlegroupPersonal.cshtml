@@ -2,17 +2,12 @@
 @using MinionWarsEntitiesLib.Models
 @using VZwars.Models
 
-@if (Model.userModel.personal_bg_id != -1)
-{
     <div class="row">
-        <div>
+        <div class="col-md-3">
             <p>Current size: @Model.personalBg.currentAmount</p>
+        </div>
+        <div class="col-md-3">
             <p>Maximum size: @Model.personalBg.battlegroup.size</p>
-            <p>Speed: @Model.personalBg.battlegroup.group_speed</p>
-            <p>Orders: @Model.personalBg.battlegroup.orders_id</p>
-            <hr />
-            <button onclick="addMinions(@Model.personalBg.battlegroup.id)">Add minions</button>
-            <hr />
         </div>
     </div>
 
@@ -20,7 +15,7 @@
         <hr />
     </div>
 
-    <div class="row">
+    <div>
         @{
             foreach (MinionModel m in Model.personalBg.minions)
             {
@@ -29,6 +24,7 @@
                         <p>Type: @m.type.name</p>
                         <p>Group count: @m.assignment.group_count</p>
                         <p>Line: @m.assignment.line</p>
+                        <button class="btn btn-default" onclick="removeMinions(@m.assignment.id)">Remove</button>
                     </div>
                     <div class="col-md-4">
                         <p>Strength: @m.data.strength</p>
@@ -44,18 +40,8 @@
                 </div>
                 <div class="row">
                     <hr />
-                    <button onclick="removeMinions(@m.assignment.id)">Remove minions</button>
-                    <hr />
                 </div>
             }
         }
     </div>
-
-            }
-            else
-            {
-                <div class="row">
-                    <p>No minions added to personal battlegroup</p>
-                </div>
-            }
 

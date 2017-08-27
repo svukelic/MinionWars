@@ -17,6 +17,8 @@
 
 @Html.Partial("Partial_groupCreationModal")
 
+@Html.Partial("Partial_bgClickModal")
+
 <!-- Dodatne tipke -->
 <!--<div class="row">
     <div class="col-md-3">
@@ -63,6 +65,9 @@
         var subscribedMarkers = new Array();
         var markerMovement = new Array();
         var bgMarkersData = new Array();
+
+        var targetId = null;
+        var targetLoc = null;
 
         $(document).ready(function () {
             navigator.geolocation.watchPosition(savePosition);
@@ -118,9 +123,20 @@
             });
 
             marker.addListener('click', function (e) {
-                alert("clicked");
+                //alert("clicked - " + this.getPosition());
+                targetLoc = this.getPosition();
+                targetId = this.id;
+                var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
+                $("#target_distance").text("Distance: " + distance);
+                if (distance > 75) {
+                    $("#btnInitiateAttack").prop("disabled", true);
+                }
+                else {
+                    $("#btnInitiateAttack").prop("disabled", false);
+                }
+                $("#bgClickModal").modal();
             });
-            map.panTo(pos);
+            //map.panTo(pos);
             bgMarkersData.push(marker);
         }
 
@@ -144,21 +160,32 @@
 
         function savePosition(position) {
             var pos = new google.maps.LatLng({ lat: position.coords.latitude, lng: position.coords.longitude });
-            if(map != null){
-                if (UserMarker == null) {
-                    UserMarker = new google.maps.Marker({
-                        position: pos,
-                        map: map,
-                        id: 'UserMaker',
-                        title: 'User',
-                        icon: 'http://minion-wars.azurewebsites.net/Content/icons/barbute.png'
-                    });
-                    map.panTo(pos);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddMinionsToGroup")',
+                data: { 'lat': position.coords.latitude, 'lon': position.coords.longitude },
+                dataType: 'json',
+                success: function (jsonData) {
+                    if(map != null){
+                        if (UserMarker == null) {
+                            UserMarker = new google.maps.Marker({
+                                position: pos,
+                                map: map,
+                                id: 'UserMaker',
+                                title: 'User',
+                                icon: 'http://minion-wars.azurewebsites.net/Content/icons/barbute.png'
+                            });
+                            map.panTo(pos);
+                        }
+                        else {
+                            UserMarker.setPosition(pos);
+                        }
+                    }
+                },
+                error: function (jsonData) {
+                    alert("Error");
                 }
-                else {
-                    UserMarker.setPosition(pos);
-                }
-            }
+            });
         }
 
         function GetAddress(latlng) {
@@ -258,12 +285,17 @@
         });
 
         //battlegroup functions
-        function addMinions(id) {
+        function removeMinions(id) {
             alert(id);
         }
 
-        function removeMinions(id) {
+        function deleteGroup(id) {
             alert(id);
+            alert(document.cookie);
+        }
+
+        function displayGroupDetails(id) {
+            document.cookie = "bgDetails = " + id;
         }
 
         var groupToAdd = -1;
@@ -278,10 +310,11 @@
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("AddMinionsToGroup")',
-                data: { 'o_id': groupToAdd, 'amount': $("#amount").val(), 'line': $("#groupCreationForm input[type='radio']:checked").val(), 'bg_id': $('#bgroupList :selected').text(), 'name': $("#additionName").val() },
+                data: { 'o_id': groupToAdd, 'amount': $("#amount").val(), 'line': $("#groupCreationForm input[type='radio']:checked").val(), 'bg_id': $('#bgroupList :selected').val(), 'name': $("#additionName").val() },
                 dataType: 'json',
                 success: function (jsonData) {
-                    alert("success");
+                    //alert("success - " + JSON.stringify(jsonData));
+                    location.reload();
                 },
                 error: function (jsonData) {
                     alert("Error");
@@ -297,5 +330,20 @@
                 $('#bgroupList').attr('disabled', 'disabled');
             }
         });
+
+        function InitiateAttack() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("InitiateCombat")',
+                data: { 'pbg_id': @Model.personalBg.battlegroup.id, 'target_id': targetId },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert("success - " + JSON.stringify(jsonData));
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
     </script>
 }

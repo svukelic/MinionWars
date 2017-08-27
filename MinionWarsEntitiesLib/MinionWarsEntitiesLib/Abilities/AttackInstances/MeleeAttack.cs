@@ -23,11 +23,14 @@ namespace MinionWarsEntitiesLib.Abilities.AttackInstances
                 targetLine = targetGroup.backline;
                 Console.WriteLine("Target M: BACK");
             }
-            else if(!CombatManager.CheckIfLineIsDead(targetGroup.supportline))
+            else if (!CombatManager.CheckIfLineIsDead(targetGroup.supportline))
             {
                 targetLine = targetGroup.supportline;
                 Console.WriteLine("Target M: SUPPORT");
             }
+            else return;
+
+            List<int> usedTargets = new List<int>();
 
             if(targetLine.Count > 0)
             {
@@ -36,8 +39,8 @@ namespace MinionWarsEntitiesLib.Abilities.AttackInstances
 
                 do
                 {
-                    target = r.Next(0, targetLine.Count - 1);
-                } while (targetLine[target].turnStartCount == 0 || targetLine[target].remainingCount == 0);
+                    target = r.Next(0, targetLine.Count);
+                } while (targetLine[target].turnStartCount == 0);
 
                 targetLine[target].TakeDamage(abilityData.power * count);
             }

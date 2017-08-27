@@ -68,6 +68,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
                     db.SaveChanges();
 
                     OwnershipManager.GenerateNewUserOwnership(newUser.id);
+                    OwnershipManager.CreateNewPersonalBattlegroup(newUser.id);
 
                     return true;
                 }

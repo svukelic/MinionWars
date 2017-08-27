@@ -51,7 +51,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
         public void TakeDamage(int dmg)
         {
-            Console.WriteLine("TURN START: " + this.turnStartCount);
+            Console.WriteLine("TURN START count: " + this.turnStartCount);
             Console.WriteLine("START remainingHealth: " + this.remainingHealth);
             Console.WriteLine("START remainingCount: " + this.remainingCount);
 

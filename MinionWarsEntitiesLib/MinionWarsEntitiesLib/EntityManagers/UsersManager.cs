@@ -10,7 +10,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
 {
     public static class UsersManager
     {
-        public static void UpdateUserPosition(int user_id, float longitude, float latitude)
+        public static void UpdateUserPosition(int user_id, double longitude, double latitude)
         {
             using (var db = new MinionWarsEntities())
             {

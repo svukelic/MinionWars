@@ -16,7 +16,7 @@ namespace MinionWarsEntitiesLib.Minions
         {
             Random r = new Random();
             Minion WildMinion = MinionGenotype.generateRandomMinion();
-            Battlegroup WildGroup = BattlegroupManager.ConstructBattlegroup(null, 0);
+            Battlegroup WildGroup = BattlegroupManager.ConstructBattlegroup(null, 0, "Wild Group");
             WildGroup.location = location;
 
             using (var db = new MinionWarsEntities())

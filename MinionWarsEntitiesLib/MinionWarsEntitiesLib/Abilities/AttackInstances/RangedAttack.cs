@@ -36,8 +36,8 @@ namespace MinionWarsEntitiesLib.Abilities.AttackInstances
                 int target = -1;
                 do
                 {
-                    target = r.Next(0, targetLine.Count - 1);
-                } while (targetLine[target].turnStartCount == 0 || targetLine[target].remainingCount == 0);
+                    target = r.Next(0, targetLine.Count);
+                } while (targetLine[target].turnStartCount == 0);
                 targetLine[target].TakeDamage(abilityData.power * count);
             }
         }

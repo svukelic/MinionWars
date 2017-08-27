@@ -13,7 +13,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
     public static class BattlegroupManager
     {
         //static MinionWarsEntities db = new MinionWarsEntities();
-        public static Battlegroup ConstructBattlegroup(int? owner_id, int type)
+        public static Battlegroup ConstructBattlegroup(int? owner_id, int type, string name)
         {
             Battlegroup bg = new Battlegroup();
             SetBasicModifiers(bg);
@@ -73,6 +73,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
             /*db.Battlegroup.Add(bg);
             db.SaveChanges();*/
+            bg.name = name;
 
             return bg;
         }
@@ -95,8 +96,8 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
                     CalculateAdvancedModifiers(bg, count, minion.passive);
 
-                    //db.Battlegroup.Attach(bg);
-                    //db.Entry(bg).State = System.Data.Entity.EntityState.Modified;
+                    db.Battlegroup.Attach(bg);
+                    db.Entry(bg).State = System.Data.Entity.EntityState.Modified;
 
                     db.SaveChanges();
                 }

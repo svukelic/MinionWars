@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">User character</h4>
+                <h4 class="modal-title">Battlegroups</h4>
             </div>
             <div class="modal-body">
                 <div id="bgTabs">
@@ -18,8 +18,17 @@
                     </ul>
 
                     <!-- Personal Battlegroup-->
-                    <div class="row" id="modalPersonalBG">
-                        @Html.Partial("Partial_battlegroupPersonal")
+                    <div id="modalPersonalBG">
+                        @if (Model.userModel.personal_bg_id != -1)
+                        {
+                            @Html.Partial("Partial_battlegroupPersonal")
+                        }
+                        else
+                        {
+                        <div class="row">
+                            <p>No minions added to personal battlegroup</p>
+                        </div>
+                        }
                     </div>
                     <!-- Remote Battlegroups-->
                     <div class="row" id="modalRemoteBG">
@@ -32,8 +41,8 @@
                             {
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <img src="http://minion-wars.azurewebsites.net/Content/icons/goblin_minion.png" alt="minion" />
-                                        <button type="button" class="btn btn-default" onclick="addToGroup(@m.ownership.id)">Add minion to group</button>
+                                        <img width="50" src="http://minion-wars.azurewebsites.net/Content/icons/goblin_minion.png" alt="minion" />
+                                        <button type="button" class="btn btn-default" onclick="addToGroup(@m.ownership.id)">Add to group</button>
                                     </div>
                                 <div class="col-md-3">
                                     <p>Type: @m.type.name</p>

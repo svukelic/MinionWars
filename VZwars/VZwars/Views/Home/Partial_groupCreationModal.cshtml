@@ -1,4 +1,8 @@
-﻿<div id="groupCreationModal" class="modal fade" role="dialog">
+﻿@model VZwars.Models.UserDataModel
+@using MinionWarsEntitiesLib.Models
+@using VZwars.Models
+
+<div id="groupCreationModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <div class="modal-content">
@@ -10,8 +14,16 @@
                 <form id="groupCreationForm">
                     <label for="bgroupList">Battlegroup: </label>
                     <select id="bgroupList" name="bgroupList">
-                        <option value="0">Margaritha</option>
-                        <option value="1">Hawai</option>
+                        @if (Model.personalBg != null)
+                        {
+                            <option value="@Model.personalBg.battlegroup.id">@Model.personalBg.battlegroup.name</option>
+                        }
+                        @if (Model.remoteBgs.Count > 0) {
+                            foreach (BattlegroupModel bm in Model.remoteBgs)
+                            {
+                                <option value="@bm.battlegroup.id">@bm.battlegroup.name</option>
+                            }
+                        }
                     </select><br />
                     
                     <label for="amount">Amount: </label>

@@ -304,6 +304,7 @@
     <Content Include="Views\Home\Partial_battlegroupPersonal.cshtml" />
     <Content Include="Views\Home\Partial_battlegroupRemote.cshtml" />
     <Content Include="Views\Home\Partial_groupCreationModal.cshtml" />
+    <Content Include="Views\Home\Partial_bgClickModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

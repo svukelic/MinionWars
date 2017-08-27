@@ -43,6 +43,7 @@
           <Property Name="location" Type="geography" />
           <Property Name="lastMovement" Type="datetime" />
           <Property Name="type" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="BattlegroupAssignment">
           <Key>
@@ -414,6 +415,7 @@
           <NavigationProperty Name="Users" Relationship="Self.fk_bg_user" FromRole="Battlegroup" ToRole="Users" />
           <NavigationProperty Name="BattlegroupMovementHistory" Relationship="Self.fk_bgmove_bg" FromRole="Battlegroup" ToRole="BattlegroupMovementHistory" />
           <Property Name="type" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BattlegroupAssignment">
           <Key>
@@ -777,6 +779,7 @@
           <EntitySetMapping Name="Battlegroup">
             <EntityTypeMapping TypeName="MinionWarsModel.Battlegroup">
               <MappingFragment StoreEntitySet="Battlegroup">
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="owner_id" ColumnName="owner_id" />

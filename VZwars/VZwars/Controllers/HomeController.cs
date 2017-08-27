@@ -9,6 +9,7 @@ using MinionWarsEntitiesLib;
 using MinionWarsEntitiesLib.Geolocations;
 using MinionWarsEntitiesLib.Models;
 using MinionWarsEntitiesLib.EntityManagers;
+using MinionWarsEntitiesLib.Combat;
 
 namespace VZwars.Controllers
 {
@@ -16,19 +17,20 @@ namespace VZwars.Controllers
     {
         public ActionResult Index()
         {
-            /*if (Session["UserName"] != null)
+            if (Session["UserName"] != null)
             {
-                return View();
+                UserDataModel userModel = new UserDataModel(Convert.ToInt32(Session["UserId"]));
+                return View(userModel);
             }
             else
             {
                 return RedirectToAction("Login");
-            }*/
-            UserDataModel userModel = new UserDataModel(2);
+            }
+            /*UserDataModel userModel = new UserDataModel(2);
             Session["UserName"] = userModel.userModel.username;
-            Session["UserId"] = userModel.userModel.id;
+            Session["UserId"] = userModel.userModel.id;*/
             //System.Diagnostics.Debug.WriteLine("USERNAME: " + userModel.userModel.user.username);
-            return View(userModel);
+            //return View(userModel);
         }
 
         public ActionResult Login()
@@ -74,6 +76,12 @@ namespace VZwars.Controllers
             return Json(path);
         }
 
+        public ActionResult UpdateUserPosition(double lat, double lon)
+        {
+            UsersManager.UpdateUserPosition(Convert.ToInt32(Session["UserId"]), lon, lat);
+            return Json(true);
+        }
+
         public ActionResult RefreshMap(double lat, double lon)
         {
             var point = string.Format("POINT({1} {0})", lat, lon);
@@ -83,7 +91,21 @@ namespace VZwars.Controllers
 
         public ActionResult AddMinionsToGroup(int? o_id, int? amount, int? line, int? bg_id, string name)
         {
-            return Json(true);
+            string result = OwnershipManager.ProcessAddition(o_id, amount, line, bg_id, name);
+            /*if (result.Equals("ok"))
+            {
+                UserDataModel userModel = new UserDataModel(Convert.ToInt32(Session["UserId"]));
+                return View("Index", userModel);
+            }
+            else*/
+            return Json(result);
+        }
+
+        public ActionResult InitiateCombat(int pbg_id, int target_id)
+        {
+            CombatLog log = CombatManager.StartCombat(pbg_id, target_id);
+
+            return Json(log.winner.id);
         }
     }
 }

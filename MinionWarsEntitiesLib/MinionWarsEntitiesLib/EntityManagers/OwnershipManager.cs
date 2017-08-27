@@ -1,4 +1,5 @@
-﻿using MinionWarsEntitiesLib.Minions;
+﻿using MinionWarsEntitiesLib.Battlegroups;
+using MinionWarsEntitiesLib.Minions;
 using MinionWarsEntitiesLib.Models;
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
-                return db.Battlegroup.Where(x => x.owner_id == id && x.id != personal_id).ToList();
+                return db.Battlegroup.Where(x => x.owner_id == id && x.type != 1).ToList();
             }
         }
 
@@ -84,6 +85,45 @@ namespace MinionWarsEntitiesLib.EntityManagers
             {
                 return db.AbilityStats.Find(id);
             }
+        }
+
+        public static string ProcessAddition(int? o_id, int? amount, int? line, int? bg_id, string name)
+        {
+            if (amount == null) return "amount is null";
+            else if (line == null) return "line is null";
+            else if (o_id == null) return "ownership is null";
+            else if (bg_id == null && (name == null || name == "")) return "bg error";
+            else
+            {
+                Battlegroup bg = null;
+                MinionOwnership mo = null;
+                using (var db = new MinionWarsEntities())
+                {
+                    mo = db.MinionOwnership.Find(o_id);
+                    if (mo.available < amount) return "Too much minions";
+                    else
+                    {
+                        if (name != null && name != "")
+                        {
+                            bg = BattlegroupManager.ConstructBattlegroup(mo.owner_id, 2, name);
+                            db.Battlegroup.Add(bg);
+                        }
+                        else if (bg_id != null)
+                        {
+                            bg = db.Battlegroup.Find(bg_id.Value);
+                        }
+
+                        mo.available -= amount;
+                        db.MinionOwnership.Attach(mo);
+                        db.Entry(mo).State = System.Data.Entity.EntityState.Modified;
+
+                        db.SaveChanges();
+                    }
+                }
+                if(bg != null && mo != null) BattlegroupManager.AddMinions(mo.minion_id, amount.Value, line.Value, bg);
+            }
+
+            return "ok";
         }
 
         public static void GenerateNewUserOwnership(int id)
@@ -103,6 +143,24 @@ namespace MinionWarsEntitiesLib.EntityManagers
                     db.MinionOwnership.Add(mo);
                     db.SaveChanges();
                 }
+            }
+        }
+
+        public static void CreateNewPersonalBattlegroup(int id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                Battlegroup bg = BattlegroupManager.ConstructBattlegroup(id, 1, "Personal Battlegroup");
+                Users user = db.Users.Find(id);
+
+                db.Battlegroup.Add(bg);
+                db.SaveChanges();
+
+                user.personal_bg_id = bg.id;
+
+                db.Users.Attach(user);
+                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
             }
         }
     }

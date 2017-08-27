@@ -2,14 +2,20 @@
 @using MinionWarsEntitiesLib.Models
 @using VZwars.Models
 
-<div class="row">
+<div>
     @{
         foreach (BattlegroupModel bm in Model.remoteBgs)
         {
             <div class="row">
-                <p>Size: @bm.battlegroup.size</p>
-                <p>Speed: @bm.battlegroup.group_speed</p>
-                <p>Orders: @bm.battlegroup.orders_id</p>
+                <div class="col-md-3">
+                    <p>Name: @bm.battlegroup.name</p>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-default" onclick="displayGroupDetails(@bm.battlegroup.id)">Group details</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-default" onclick="deleteGroup(@bm.battlegroup.id)">Delete group</button>
+                </div>
             </div>
                 <div class="row">
                     <hr />
