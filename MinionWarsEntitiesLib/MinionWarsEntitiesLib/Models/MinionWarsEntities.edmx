@@ -133,6 +133,7 @@
           <Property Name="desc_text" Type="varchar" MaxLength="160" Nullable="false" />
           <Property Name="location" Type="geography" />
           <Property Name="directions" Type="varchar" MaxLength="2000" />
+          <Property Name="current_step" Type="geography" />
         </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
@@ -178,6 +179,19 @@
           <Property Name="trait_economics" Type="int" Nullable="false" />
           <Property Name="personal_bg_id" Type="int" />
           <Property Name="points" Type="int" />
+        </EntityType>
+        <EntityType Name="UserTraits">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cbg_size" Type="int" Nullable="false" />
+          <Property Name="cbg_count" Type="int" Nullable="false" />
+          <Property Name="cbg_speed" Type="float" Nullable="false" />
+          <Property Name="arch_speed" Type="float" Nullable="false" />
+          <Property Name="arch_def" Type="int" Nullable="false" />
+          <Property Name="arch_count" Type="int" Nullable="false" />
+          <Property Name="pbg_size" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="fk_assignment_bg">
           <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="1" />
@@ -326,6 +340,7 @@
           <EntitySet Name="ResourceType" EntityType="Self.ResourceType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMovementHistory" EntityType="Self.UserMovementHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTraits" EntityType="Self.UserTraits" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="fk_assignment_bg" Association="Self.fk_assignment_bg">
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
@@ -519,6 +534,7 @@
           <Property Name="location" Type="Geography" />
           <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bg_orders" FromRole="Orders" ToRole="Battlegroup" />
           <Property Name="directions" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="current_step" Type="Geography" />
         </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
@@ -762,7 +778,21 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="UserMovementHistory" EntitySet="UserMovementHistory" />
           </AssociationSet>
+          <EntitySet Name="UserTraits" EntityType="MinionWarsModel.UserTraits" />
         </EntityContainer>
+        <EntityType Name="UserTraits">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cbg_size" Type="Int32" Nullable="false" />
+          <Property Name="cbg_count" Type="Int32" Nullable="false" />
+          <Property Name="cbg_speed" Type="Double" Nullable="false" />
+          <Property Name="arch_speed" Type="Double" Nullable="false" />
+          <Property Name="arch_def" Type="Int32" Nullable="false" />
+          <Property Name="arch_count" Type="Int32" Nullable="false" />
+          <Property Name="pbg_size" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -900,6 +930,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="MinionWarsModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="current_step" ColumnName="current_step" />
                 <ScalarProperty Name="directions" ColumnName="directions" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -954,6 +985,20 @@
                 <ScalarProperty Name="trait_logistics" ColumnName="trait_logistics" />
                 <ScalarProperty Name="trait_architecture" ColumnName="trait_architecture" />
                 <ScalarProperty Name="trait_economics" ColumnName="trait_economics" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTraits">
+            <EntityTypeMapping TypeName="MinionWarsModel.UserTraits">
+              <MappingFragment StoreEntitySet="UserTraits">
+                <ScalarProperty Name="pbg_size" ColumnName="pbg_size" />
+                <ScalarProperty Name="arch_count" ColumnName="arch_count" />
+                <ScalarProperty Name="arch_def" ColumnName="arch_def" />
+                <ScalarProperty Name="arch_speed" ColumnName="arch_speed" />
+                <ScalarProperty Name="cbg_speed" ColumnName="cbg_speed" />
+                <ScalarProperty Name="cbg_count" ColumnName="cbg_count" />
+                <ScalarProperty Name="cbg_size" ColumnName="cbg_size" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

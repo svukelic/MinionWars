@@ -22,3 +22,5 @@ C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestCo
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.csprojResolveAssemblyReference.cache
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.exe
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\obj\Debug\WarsTestConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\Newtonsoft.Json.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsTestConsole\WarsTestConsole\bin\Debug\Newtonsoft.Json.xml

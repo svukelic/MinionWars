@@ -80,9 +80,87 @@ namespace MinionWarsEntitiesLib.Geolocations
             return CallApi(apiCall + call);
         }
 
-        public static DbGeography PerformDirectionMovement()
+        public static string GetNewDirections(DbGeography current, Orders orders)
         {
-            return null;
+            return OrdersParser.ParseDirections(GetDirections(orders.location.Latitude.Value, orders.location.Longitude.Value, current.Latitude.Value, current.Longitude.Value).Result);
+        }
+
+        public static DbGeography GetDirectionMovement(DbGeography current, Orders orders)
+        {
+            if (orders.directions == null) orders.directions = OrdersParser.ParseDirections(GetDirections(orders.location.Latitude.Value, orders.location.Longitude.Value, current.Latitude.Value, current.Longitude.Value).Result);
+
+            string directions = OrdersParser.UpdateNextLoc(orders.directions);
+
+            using (var db = new MinionWarsEntities())
+            {
+                orders.directions = directions;
+
+                db.Orders.Attach(orders);
+                db.Entry(orders).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            return OrdersParser.GetNextLoc(directions);
+        }
+
+        public static DbGeography PerformDirectionMovement(DbGeography current, DbGeography next, DateTime lastMovement, int speed)
+        {
+            DbGeography newLoc = null;
+            double newLat = 0;
+            double newLon = 0;
+
+            var diffInSeconds = (DateTime.Now - lastMovement).TotalSeconds;
+            var distance = (double)speed * diffInSeconds;
+
+            if (distance > current.Distance(next))
+            {
+                newLoc = next;
+            }
+            else
+            {
+                var axisDistance = Math.Sqrt(Math.Pow(distance, 2) / 2);
+                var totalAxisDistance = Math.Sqrt(Math.Pow(current.Distance(next).Value, 2) / 2);
+
+                if (totalAxisDistance < axisDistance) axisDistance = totalAxisDistance;
+
+                double toMove = (double)((decimal)axisDistance / (1852m * 60m));
+                double checkDiff = (double)(2m / (1852m * 60m));
+
+                if (Math.Abs(next.Latitude.Value - current.Latitude.Value) < checkDiff)
+                {
+                    newLat = current.Latitude.Value;
+                }
+                else
+                {
+                    if (next.Latitude.Value > current.Latitude.Value)
+                    {
+                        newLat = current.Latitude.Value + toMove;
+                    }
+                    else {
+                        newLat = current.Latitude.Value - toMove;
+                    }
+                }
+
+                if (Math.Abs(next.Longitude.Value - current.Longitude.Value) < checkDiff)
+                {
+                    newLon = current.Longitude.Value;
+                }
+                else
+                {
+                    if (next.Longitude.Value > current.Longitude.Value)
+                    {
+                        newLon = current.Longitude.Value + toMove;
+                    }
+                    else {
+                        newLon = current.Longitude.Value - toMove;
+                    }
+                }
+
+                var point = string.Format("POINT({1} {0})", newLat, newLon);
+                newLoc = DbGeography.FromText(point);
+            }
+
+            return newLoc;
         }
 
         public static Task<string> GetDirections(double lat, double lon, double clat, double clon)

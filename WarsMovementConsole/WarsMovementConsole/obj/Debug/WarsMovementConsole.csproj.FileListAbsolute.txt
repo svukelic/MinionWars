@@ -25,3 +25,5 @@ C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMo
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\obj\Debug\WarsMovementConsole.pdb
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\EntityFramework.SqlServer.dll
 C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\Newtonsoft.Json.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsMovementConsole\WarsMovementConsole\bin\Debug\Newtonsoft.Json.xml

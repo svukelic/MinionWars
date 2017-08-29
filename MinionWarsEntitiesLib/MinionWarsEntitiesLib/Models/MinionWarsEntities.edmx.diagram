@@ -30,6 +30,7 @@
         <AssociationConnector Association="MinionWarsModel.fk_ownership_users" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_rnode_rtype" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_usermove_user" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MinionWarsModel.UserTraits" Width="1.5" PointX="10.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

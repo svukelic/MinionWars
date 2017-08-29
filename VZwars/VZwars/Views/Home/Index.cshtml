@@ -85,35 +85,6 @@
             if(availablePoints > 0){
                 $("#traitBtns").show();
             }
-
-            $.ajax({
-                type: "POST",
-                url: '@Url.Action("GetDirections")',
-                data: {},
-                dataType: 'json',
-                success: function (jsonData) {
-                    if (jsonData != null) {
-                        //alert(JSON.stringify(jsonData.routes[0].overview_polyline.points));
-                        var testMarker = new Array();
-                        var legs = jsonData.routes[0].legs;
-                        for (i=0;i<legs.length;i++) {
-                            var steps = legs[i].steps;
-                            for (j=0;j<steps.length;j++) {
-                                var marker = new google.maps.Marker({
-                                    position: steps[j].end_location,
-                                    map: map,
-                                    id: steps[j].polyline.points,
-                                    title: steps[j].polyline.points,
-                                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/goblin-camp.png'
-                                });
-                            }
-                        }
-                    }
-                },
-                error: function (jsonData) {
-                    alert("Error");
-                }
-            });
         });
 
         function executeMapRefresh() {
@@ -169,7 +140,7 @@
                 }
                 $("#bgClickModal").modal();
             });
-            //map.panTo(pos);
+            map.panTo(pos);
             bgMarkersData.push(marker);
         }
 

@@ -83,20 +83,8 @@ namespace VZwars.Controllers
         public ActionResult RefreshMap(double lat, double lon)
         {
             var point = string.Format("POINT({1} {0})", lat, lon);
-            MapDataModel mdm = MapManager.GetMapData(1, point, 1000);
+            MapDataModel mdm = MapManager.GetMapData(Convert.ToInt32(Session["UserId"]), point, 1000);
             return Json(mdm.objectList);
-        }
-
-        /*public Task<string> GetPlaces()
-        {
-            //var result = StructuresManager.GetPlaces(46.31856579999999, 16.34576590000006, 5000, "restaurant");
-            //return result;
-        }*/
-
-        public Task<string> GetDirections()
-        {
-            var result = Geolocations.GetDirections(46.31856579999999, 16.34576590000006, 46.310833627601156, 16.332077980041504);
-            return result;
         }
 
         public ActionResult AddMinionsToGroup(int? o_id, int? amount, int? line, int? bg_id, string name)

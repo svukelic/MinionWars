@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MinionWarsEntitiesLib.Abilities;
 using System.Data.Entity.Spatial;
 using MinionWarsEntitiesLib.AiManagers;
+using MinionWarsEntitiesLib.Geolocations;
 
 namespace MinionWarsEntitiesLib.Battlegroups
 {
@@ -94,10 +95,10 @@ namespace MinionWarsEntitiesLib.Battlegroups
                     assignment.line = type;
                     db.BattlegroupAssignment.Add(assignment);
 
-                    CalculateAdvancedModifiers(bg, count, minion.passive);
+                    /*CalculateAdvancedModifiers(bg, count, minion.passive);
 
                     db.Battlegroup.Attach(bg);
-                    db.Entry(bg).State = System.Data.Entity.EntityState.Modified;
+                    db.Entry(bg).State = System.Data.Entity.EntityState.Modified;*/
 
                     db.SaveChanges();
                 }
@@ -174,33 +175,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
         public static Battlegroup UpdatePosition(Battlegroup bg)
         {
-            Orders orders = null;
-            using (var db = new MinionWarsEntities())
-            {
-                orders = db.Orders.Find(bg.orders_id);
-            }
-
-            bool arrived = false;
-
-            if (bg.location.Distance(orders.location).Value <= 10)
-            {
-                Console.WriteLine("ARRIVED!");
-                arrived = true;
-                orders = OrdersManager.ContinueOrders(bg, orders);
-            }
-
-            bg.location = Geolocations.Geolocations.PerformMovement(bg.location, bg.lastMovement.Value, orders, bg.group_speed);
-            bg.lastMovement = DateTime.Now;
-
-            using (var db = new MinionWarsEntities())
-            {
-                db.Battlegroup.Attach(bg);
-                db.Entry(bg).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
-            }
-
-            //return arrived;
-            return bg;
+            return PositionManager.UpdatePosition(bg);
         }
 
         /*private static void GetTraitModifiers(Users owner, Battlegroup bg, int type)
@@ -245,7 +220,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
             bg.defense_mod = 0;
         }
 
-        private static void CalculateAdvancedModifiers(Battlegroup bg, int count, int passive)
+        public static void CalculateAdvancedModifiers(Battlegroup bg, int count, int passive)
         {
             switch (passive)
             {

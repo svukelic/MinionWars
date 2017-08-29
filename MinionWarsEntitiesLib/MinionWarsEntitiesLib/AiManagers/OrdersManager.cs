@@ -23,6 +23,7 @@ namespace MinionWarsEntitiesLib.AiManagers
             else
             {
                 o.location = GiveRandomDestination(bg, 75);
+                o.directions = Geolocations.Geolocations.GetNewDirections(bg.location, o);
             }
 
             using (var db = new MinionWarsEntities())
@@ -65,6 +66,8 @@ namespace MinionWarsEntitiesLib.AiManagers
                     break;
             }
             o.location = newLoc;
+            o.directions = Geolocations.Geolocations.GetNewDirections(bg.location, o);
+            o.current_step = Geolocations.Geolocations.GetDirectionMovement(bg.location, o);
 
             using (var db = new MinionWarsEntities())
             {

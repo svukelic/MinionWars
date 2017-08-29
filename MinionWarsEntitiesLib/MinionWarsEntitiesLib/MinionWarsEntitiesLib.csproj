@@ -38,6 +38,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -71,6 +75,8 @@
     <Compile Include="Geolocations\MapDataModel.cs" />
     <Compile Include="Geolocations\MapManager.cs" />
     <Compile Include="Geolocations\MapObject.cs" />
+    <Compile Include="Geolocations\OrdersParser.cs" />
+    <Compile Include="Geolocations\PositionManager.cs" />
     <Compile Include="Minions\MinionGenotype.cs" />
     <Compile Include="Minions\WildMinionGeneratorManager.cs" />
     <Compile Include="Models\AbilityStats.cs">
@@ -128,6 +134,9 @@
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Users.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserTraits.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

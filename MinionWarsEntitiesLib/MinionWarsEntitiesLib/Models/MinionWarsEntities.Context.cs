@@ -39,5 +39,6 @@ namespace MinionWarsEntitiesLib.Models
         public virtual DbSet<ResourceType> ResourceType { get; set; }
         public virtual DbSet<UserMovementHistory> UserMovementHistory { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<UserTraits> UserTraits { get; set; }
     }
 }

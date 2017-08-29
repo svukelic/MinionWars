@@ -29,6 +29,16 @@ namespace MinionWarsEntitiesLib.Minions
             BattlegroupManager.AddMinions(WildMinion.id, r.Next(2, 13), 1, WildGroup);
             BattlegroupManager.AddMinions(WildMinion.id, r.Next(2, 13), 2, WildGroup);
 
+            using (var db = new MinionWarsEntities())
+            {
+                List<BattlegroupAssignment> bgaList = db.BattlegroupAssignment.Where(x => x.battlegroup_id == WildGroup.id).ToList();
+                foreach(BattlegroupAssignment bga in bgaList)
+                {
+                    BattlegroupManager.CalculateAdvancedModifiers(WildGroup, bga.id, WildMinion.passive);
+                }
+            }
+            //CalculateAdvancedModifiers(bg, count, minion.passive);
+
             //orders
             Orders o = OrdersManager.GiveNewOrders(WildGroup, "roam", null);
             WildGroup.lastMovement = DateTime.Now;

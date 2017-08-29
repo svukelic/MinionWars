@@ -48,7 +48,7 @@ namespace WarsMovementConsole
                     {
                         //assignedBattlegroups[i].Remove(bg);
                     }*/
-                    Console.WriteLine("BG POSITION: " +updatedObj.location.ToString());
+                    //Console.WriteLine("BG POSITION: " +updatedObj.location.ToString());
                 }
 
                 /*if (i == 19) nextAssignment = 0;
@@ -62,7 +62,7 @@ namespace WarsMovementConsole
         {
             while (true)
             {
-                Console.WriteLine("Test - " + nextAssignment);
+                //Console.WriteLine("Test - " + nextAssignment);
                 Battlegroup newBg = MapMovementUpdater.GetNewAssignment(lastAssigned);
                 if (newBg != null)
                 {
