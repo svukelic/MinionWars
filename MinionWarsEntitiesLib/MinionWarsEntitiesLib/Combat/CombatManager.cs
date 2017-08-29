@@ -27,14 +27,10 @@ namespace MinionWarsEntitiesLib.Combat
 
         private static CombatLog PerformCombat(BattleGroupEntity bge1, BattleGroupEntity bge2)
         {
-            Console.WriteLine("Combat started");
-
             CombatLog log = new CombatLog();
             bool combatEnd = false;
-            //Battlegroup winner = null;
 
             while(!combatEnd) {
-                Console.WriteLine("Turn start");
                 //turn start
                 TurnStartCountAdjustement(bge1);
                 TurnStartCountAdjustement(bge2);
@@ -53,21 +49,18 @@ namespace MinionWarsEntitiesLib.Combat
 
                 if (CheckIfGroupIsDead(bge1))
                 {
-                    Console.WriteLine("WON 2");
                     combatEnd = true;
                     log.winner = bge2.bg;
                     log.loser = bge1.bg;
                 }
                 else if (CheckIfGroupIsDead(bge2))
                 {
-                    Console.WriteLine("WON 1");
                     combatEnd = true;
                     log.winner = bge1.bg;
                     log.loser = bge2.bg;
                 }
             }
 
-            //log.winner = winner;
             log.SaveLog();
             RewardGenerator.CombatReward(log);
 
@@ -92,21 +85,18 @@ namespace MinionWarsEntitiesLib.Combat
             {
                 age.turnStartCount = age.remainingCount;
                 //totalCount += age.turnStartCount;
-                Console.WriteLine(bge.bg.id + " F: " + age.turnStartCount);
             }
 
             foreach (AssignmentGroupEntity age in bge.backline)
             {
                 age.turnStartCount = age.remainingCount;
                 //totalCount += age.turnStartCount;
-                Console.WriteLine(bge.bg.id + " B: " + age.turnStartCount);
             }
 
             foreach (AssignmentGroupEntity age in bge.supportline)
             {
                 age.turnStartCount = age.remainingCount;
                 //totalCount += age.turnStartCount;
-                Console.WriteLine(bge.bg.id + " S: " + age.turnStartCount);
             }
 
             //Console.WriteLine("Turn start (" + bge.bg.id + "): " + totalCount);

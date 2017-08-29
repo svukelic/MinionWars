@@ -16,20 +16,17 @@ namespace MinionWarsEntitiesLib.Geolocations
 
             obj.last_id = obj.next_id;
             obj.next_id++;
-            Console.WriteLine("Update next loc: " + obj.last_id + " | " + obj.next_id);
             return JsonConvert.SerializeObject(obj);
         }
 
         public static DbGeography GetNextLoc(string directions)
         {
             OrderDirections obj = JsonConvert.DeserializeObject<OrderDirections>(directions);
-            Console.WriteLine("List count: " + obj.list.Count);
             if (obj.last_id == obj.list.Count) return null;
             else
             {
                 string lat = obj.list.Where(x => x.id == obj.next_id).First().lat;
                 string lon = obj.list.Where(x => x.id == obj.next_id).First().lon;
-                Console.WriteLine("Next loc: " + lat + " | " + lon);
                 var point = string.Format("POINT({1} {0})", lat, lon);
                 DbGeography loc = DbGeography.FromText(point);
 

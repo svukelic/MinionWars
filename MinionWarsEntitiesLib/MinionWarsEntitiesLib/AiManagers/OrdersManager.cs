@@ -90,9 +90,6 @@ namespace MinionWarsEntitiesLib.AiManagers
             var point = string.Format("POINT({1} {0})", (bg.location.Latitude + latMove), (bg.location.Longitude + lonMove));
             newLoc = DbGeography.FromText(point);
 
-            /*Console.WriteLine("OLD ORDER LOC: " + bg.location.ToString());
-            Console.WriteLine("NEW ORDER LOC: " + newLoc.ToString());*/
-
             return newLoc;
         }
 

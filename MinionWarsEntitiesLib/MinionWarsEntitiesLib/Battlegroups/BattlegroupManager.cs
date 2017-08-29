@@ -13,7 +13,6 @@ namespace MinionWarsEntitiesLib.Battlegroups
 {
     public static class BattlegroupManager
     {
-        //static MinionWarsEntities db = new MinionWarsEntities();
         public static Battlegroup ConstructBattlegroup(int? owner_id, int type, string name)
         {
             Battlegroup bg = new Battlegroup();
@@ -27,7 +26,6 @@ namespace MinionWarsEntitiesLib.Battlegroups
                     if (owner != null)
                     {
                         bg.owner_id = owner_id.Value;
-                        //GetTraitModifiers(owner, bg, type);
 
                         /* types
                         * 1 - personal
@@ -72,8 +70,6 @@ namespace MinionWarsEntitiesLib.Battlegroups
                 bg.owner_id = null;
             }
 
-            /*db.Battlegroup.Add(bg);
-            db.SaveChanges();*/
             bg.name = name;
 
             return bg;
@@ -84,7 +80,6 @@ namespace MinionWarsEntitiesLib.Battlegroups
             using (var db = new MinionWarsEntities())
             {
                 Minion minion = db.Minion.Find(m_id);
-                //MinionWarsEntitiesLib.Models.Battlegroup bg = db.Battlegroup.Find(bg_id);
                 if (minion != null && bg != null)
                 {
                     BattlegroupAssignment assignment = new BattlegroupAssignment();

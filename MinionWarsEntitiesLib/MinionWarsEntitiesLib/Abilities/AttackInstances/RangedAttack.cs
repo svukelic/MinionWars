@@ -16,18 +16,15 @@ namespace MinionWarsEntitiesLib.Abilities.AttackInstances
             if (!CombatManager.CheckIfLineIsDead(targetGroup.frontline))
             {
                 targetLine.AddRange(targetGroup.frontline);
-                Console.WriteLine("Target R: FRONT");
             }
             else if(!CombatManager.CheckIfLineIsDead(targetGroup.supportline))
             {
                 targetLine.AddRange(targetGroup.supportline);
-                Console.WriteLine("Target R: SUPPORT");
             }
 
             if (!CombatManager.CheckIfLineIsDead(targetGroup.backline))
             {
                 targetLine.AddRange(targetGroup.backline);
-                Console.WriteLine("Target R: BACK");
             }
 
             if(targetLine.Count > 0)

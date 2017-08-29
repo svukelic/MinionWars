@@ -51,10 +51,6 @@ namespace MinionWarsEntitiesLib.Battlegroups
 
         public void TakeDamage(int dmg)
         {
-            Console.WriteLine("TURN START count: " + this.turnStartCount);
-            Console.WriteLine("START remainingHealth: " + this.remainingHealth);
-            Console.WriteLine("START remainingCount: " + this.remainingCount);
-
             this.remainingHealth -= dmg;
             if (this.remainingHealth < 0)
             {
@@ -65,11 +61,6 @@ namespace MinionWarsEntitiesLib.Battlegroups
             {
                 this.remainingCount = Convert.ToInt32(Math.Ceiling((decimal)this.remainingHealth / (decimal)this.stats.healthPerMinion));
             }
-
-            Console.WriteLine("dmg: " + dmg);
-            Console.WriteLine("health: " + this.stats.healthPerMinion);
-            Console.WriteLine("END remainingHealth: " + this.remainingHealth);
-            Console.WriteLine("END remainingCount: " + this.remainingCount);
         }
     }
 }

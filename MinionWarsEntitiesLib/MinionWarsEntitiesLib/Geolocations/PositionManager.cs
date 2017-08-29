@@ -22,7 +22,6 @@ namespace MinionWarsEntitiesLib.Geolocations
 
             if (bg.location.Distance(orders.location).Value <= 10)
             {
-                Console.WriteLine("ARRIVED!");
                 arrived = true;
                 orders = OrdersManager.ContinueOrders(bg, orders);
             }
@@ -30,7 +29,6 @@ namespace MinionWarsEntitiesLib.Geolocations
             //bg.location = Geolocations.Geolocations.PerformMovement(bg.location, bg.lastMovement.Value, orders, bg.group_speed);
             if(orders.current_step == null)
             {
-                Console.WriteLine("new current step");
                 orders.current_step = Geolocations.GetDirectionMovement(bg.location, orders);
                 if(orders.current_step == null)
                 {
@@ -48,9 +46,6 @@ namespace MinionWarsEntitiesLib.Geolocations
             }
             if (bg.location.Distance(orders.current_step) <= 10)
             {
-                Console.WriteLine("Arrived at step");
-                //orders.current_step = null;
-                //orders.directions = Geolocations.GetNewDirections(bg.location, orders);
                 orders.current_step = Geolocations.GetDirectionMovement(bg.location, orders);
                 if (orders.current_step == null)
                 {
@@ -66,8 +61,7 @@ namespace MinionWarsEntitiesLib.Geolocations
                     }
                 }
             }
-            Console.WriteLine("Bg loc: " + bg.location.Latitude + " | " + bg.location.Longitude);
-            Console.WriteLine("Current step: " + orders.current_step.Latitude + " | " + orders.current_step.Longitude);
+
             bg.location = Geolocations.PerformDirectionMovement(bg.location, orders.current_step, bg.lastMovement.Value, bg.group_speed);
 
             bg.lastMovement = DateTime.Now;
@@ -79,7 +73,6 @@ namespace MinionWarsEntitiesLib.Geolocations
                 db.SaveChanges();
             }
 
-            //return arrived;
             return bg;
         }
     }

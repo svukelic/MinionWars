@@ -31,7 +31,7 @@ namespace MinionWarsEntitiesLib.Geolocations
                 {
                     if(u.id != id)
                     {
-                        MapObject obj = new MapObject(u.id, u.username, u.location);
+                        MapObject obj = new MapObject(u.id, "Player - " + u.username, u.location);
                         mdm.objectList.Add(obj);
                     }
                 }

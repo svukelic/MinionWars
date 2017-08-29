@@ -145,7 +145,6 @@
     <Compile Include="Structures\HiveManager.cs" />
     <Compile Include="EntityManagers\UsersManager.cs" />
     <Compile Include="Structures\CampManager.cs" />
-    <Compile Include="Structures\StructuresManager.cs" />
     <Compile Include="TestManagers\WildMinionsTest.cs" />
   </ItemGroup>
   <ItemGroup>

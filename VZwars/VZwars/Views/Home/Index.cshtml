@@ -117,14 +117,27 @@
 
         function refreshMarker(data) {
             var pos = new google.maps.LatLng({ lat: data.latitude, lng: data.longitude });
+            var marker;
 
-            var marker = new google.maps.Marker({
-                position: pos,
-                map: map,
-                id: data.id,
-                title: data.type,
-                icon: 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-helmet.png'
-            });
+            var userCheck = "Player";
+            if(data.type.indexOf(userCheck) != -1){
+                marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    id: data.id,
+                    title: data.type,
+                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-face.png'
+                });
+            }
+            else{
+                marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    id: data.id,
+                    title: data.type,
+                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-helmet.png'
+                });
+            }
 
             marker.addListener('click', function (e) {
                 //alert("clicked - " + this.getPosition());
