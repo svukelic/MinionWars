@@ -110,6 +110,29 @@ namespace MinionWarsEntitiesLib.Battlegroups
             }
         }
 
+        public static bool SendRemoteGroup(int bg_id, string point, string currentPoint)
+        {
+            Battlegroup bg = null;
+            using (var db = new MinionWarsEntities())
+            {
+                bg = db.Battlegroup.Find(bg_id);
+            }
+            DbGeography loc = DbGeography.FromText(point);
+            DbGeography currentLoc = DbGeography.FromText(currentPoint);
+            Orders o = OrdersManager.GiveNewOrders(bg, "complete_task", loc);
+
+            using (var db = new MinionWarsEntities())
+            {
+                bg.orders_id = o.id;
+                bg.location = currentLoc;
+                db.Battlegroup.Attach(bg);
+                db.Entry(bg).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            return true;
+        }
+
         public static bool RemoveMinions(int a_id)
         {
             using (var db = new MinionWarsEntities())
@@ -117,7 +140,15 @@ namespace MinionWarsEntitiesLib.Battlegroups
                 BattlegroupAssignment ba = db.BattlegroupAssignment.Find(a_id);
                 if (ba != null)
                 {
+                    MinionOwnership mo = null;
+                    Battlegroup bg = db.Battlegroup.Find(ba.battlegroup_id);
+                    mo = db.MinionOwnership.Where(x => x.minion_id == ba.minion_id && x.owner_id == bg.owner_id).First();
+                    mo.available += ba.group_count;
+
                     db.BattlegroupAssignment.Remove(ba);
+                    db.MinionOwnership.Attach(mo);
+                    db.Entry(mo).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
 
                     return true;
                 }

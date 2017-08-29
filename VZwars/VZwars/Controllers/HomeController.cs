@@ -10,6 +10,9 @@ using MinionWarsEntitiesLib.Geolocations;
 using MinionWarsEntitiesLib.Models;
 using MinionWarsEntitiesLib.EntityManagers;
 using MinionWarsEntitiesLib.Combat;
+using MinionWarsEntitiesLib.Battlegroups;
+using MinionWarsEntitiesLib.Structures;
+using System.Threading.Tasks;
 
 namespace VZwars.Controllers
 {
@@ -61,19 +64,14 @@ namespace VZwars.Controllers
             return RedirectToAction("Login");
         }
 
-        public ActionResult SendMinions(int count)
+        public ActionResult SendMinions(int bg_id, double lat, double lon, double clat, double clon)
         {
-            string path = Server.MapPath("~/Content/");
-            /*Battlegroup group = new Battlegroup();
+            //string path = Server.MapPath("~/Content/");
+            var point = string.Format("POINT({1} {0})", lat, lon);
+            var cpoint = string.Format("POINT({1} {0})", clat, clon);
+            bool result = BattlegroupManager.SendRemoteGroup(bg_id, point, cpoint);
 
-            for(int i=0; i < count; count++)
-            {
-                Minion minion = MinionGenotype.generateRandomMinion();
-                group.frontline.Add(minion);
-            }*/
-
-            //return Json(group);
-            return Json(path);
+            return Json(result);
         }
 
         public ActionResult UpdateUserPosition(double lat, double lon)
@@ -89,23 +87,46 @@ namespace VZwars.Controllers
             return Json(mdm.objectList);
         }
 
+        /*public Task<string> GetPlaces()
+        {
+            //var result = StructuresManager.GetPlaces(46.31856579999999, 16.34576590000006, 5000, "restaurant");
+            //return result;
+        }*/
+
+        public Task<string> GetDirections()
+        {
+            var result = Geolocations.GetDirections(46.31856579999999, 16.34576590000006, 46.310833627601156, 16.332077980041504);
+            return result;
+        }
+
         public ActionResult AddMinionsToGroup(int? o_id, int? amount, int? line, int? bg_id, string name)
         {
             string result = OwnershipManager.ProcessAddition(o_id, amount, line, bg_id, name);
-            /*if (result.Equals("ok"))
-            {
-                UserDataModel userModel = new UserDataModel(Convert.ToInt32(Session["UserId"]));
-                return View("Index", userModel);
-            }
-            else*/
+            return Json(result);
+        }
+
+        public ActionResult RemoveMinions(int a_id)
+        {
+            bool result = BattlegroupManager.RemoveMinions(a_id);
+            return Json(result);
+        }
+
+        public ActionResult IncreaseTrait(int trait)
+        {
+            bool result = ExperienceManager.IncreaseTrait(Convert.ToInt32(Session["UserId"]), trait);
             return Json(result);
         }
 
         public ActionResult InitiateCombat(int pbg_id, int target_id)
         {
             CombatLog log = CombatManager.StartCombat(pbg_id, target_id);
+            string message = "";
 
-            return Json(log.winner.id);
+            if (log == null) message = "You cannot attack your own minions!";
+            else if (log.winner.id == Convert.ToInt32(Session["UserId"])) message = "You won! +50 exp";
+            else message = "You lost!";
+
+            return Json(message);
         }
     }
 }

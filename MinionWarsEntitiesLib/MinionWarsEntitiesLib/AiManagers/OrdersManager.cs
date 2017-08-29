@@ -50,6 +50,18 @@ namespace MinionWarsEntitiesLib.AiManagers
                     break;
                 case "return":
                     newLoc = GetReturnDestination(bg);
+                    if (bg.location.Distance(newLoc) < 10)
+                    {
+                        bg.location = null;
+                        newLoc = null;
+
+                        using (var db = new MinionWarsEntities())
+                        {
+                            db.Battlegroup.Attach(bg);
+                            db.Entry(bg).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
                     break;
             }
             o.location = newLoc;

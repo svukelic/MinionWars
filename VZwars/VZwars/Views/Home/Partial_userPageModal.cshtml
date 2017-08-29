@@ -5,25 +5,41 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">User character</h4>
+                <h4 class="modal-title">User info</h4>
             </div>
             <div class="modal-body">
                 <div id="userTabs">
                     <ul>
-                        <li><a href="#modalInfo">User info</a></li>
-                        <li><a href="#modalStats">Stats</a></li>
+                        <li><a href="#modalInfo">Personal stats</a></li>
+                        <li><a href="#modalHistory">History</a></li>
                     </ul>
                     <!-- User info -->
-                    <div class="row" id="modalInfo">
-                        <h2>User info</h2>
-                        <hr />
-                        <p>Username: @Html.DisplayTextFor(model => model.userModel.username) </p>
+                    <div id="modalInfo">
+                        <div class="row">
+                            <p>Username: @Html.DisplayTextFor(model => model.userModel.username) </p>
+                            <p>Level: @Model.userModel.lvl</p>
+                            <p>Experience: @Model.userModel.experience</p>
+                            <p>Available points: @Model.userModel.points</p>
+                            <hr />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p>Leadership: @Model.userModel.trait_leadership </p>
+                                <p>Logistics: @Model.userModel.trait_logistics </p>
+                                <p>Architecture: @Model.userModel.trait_architecture </p>
+                                <p>Economics: @Model.userModel.trait_economics </p>
+                            </div>
+                            <div id="traitBtns" class="col-md-3">
+                                <p><button type="button" class="btn-default" onclick="increaseTrait(1)">+</button> </p>
+                                <p><button type="button" class="btn-default" onclick="increaseTrait(2)">+</button> </p>
+                                <p><button type="button" class="btn-default" onclick="increaseTrait(3)">+</button> </p>
+                                <p><button type="button" class="btn-default" onclick="increaseTrait(4)">+</button> </p>
+                            </div>
+                         </div>
                     </div>
-                    <!-- Stats -->
-                    <div class="row" id="modalStats">
-                        <h2>Stats</h2>
-                        <hr />
-                        <table>
+                    <!-- History -->
+                    <div class="row" id="modalHistory">
+                        <!--<table>
                             <tr>
                                 <td>Economy</td>
                                 <td><button type="button" class="btn-default">+</button></td>
@@ -44,7 +60,7 @@
                                 <td>Leadership</td>
                                 <td><button type="button" class="btn-default">+</button></td>
                             </tr>
-                        </table>
+                        </table>-->
                     </div>
                     
                 </div>

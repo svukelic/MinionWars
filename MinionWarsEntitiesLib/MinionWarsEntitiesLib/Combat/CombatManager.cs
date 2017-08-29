@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MinionWarsEntitiesLib.Models;
 using MinionWarsEntitiesLib.Battlegroups;
+using MinionWarsEntitiesLib.RewardManagers;
 
 namespace MinionWarsEntitiesLib.Combat
 {
@@ -12,12 +13,16 @@ namespace MinionWarsEntitiesLib.Combat
     {
         public static CombatLog StartCombat(int bg1_id, int bg2_id)
         {
-            BattleGroupEntity bge1 = BattlegroupManager.BuildBattleGroupEntity(bg1_id);
-            BattleGroupEntity bge2 = BattlegroupManager.BuildBattleGroupEntity(bg2_id);
+            if (CheckForOwnership(bg1_id, bg2_id))
+            {
+                BattleGroupEntity bge1 = BattlegroupManager.BuildBattleGroupEntity(bg1_id);
+                BattleGroupEntity bge2 = BattlegroupManager.BuildBattleGroupEntity(bg2_id);
 
-            CombatLog log = PerformCombat(bge1, bge2);
+                CombatLog log = PerformCombat(bge1, bge2);
 
-            return log;
+                return log;
+            }
+            else return null;
         }
 
         private static CombatLog PerformCombat(BattleGroupEntity bge1, BattleGroupEntity bge2)
@@ -26,7 +31,7 @@ namespace MinionWarsEntitiesLib.Combat
 
             CombatLog log = new CombatLog();
             bool combatEnd = false;
-            Battlegroup winner = null;
+            //Battlegroup winner = null;
 
             while(!combatEnd) {
                 Console.WriteLine("Turn start");
@@ -50,17 +55,21 @@ namespace MinionWarsEntitiesLib.Combat
                 {
                     Console.WriteLine("WON 2");
                     combatEnd = true;
-                    winner = bge2.bg;
+                    log.winner = bge2.bg;
+                    log.loser = bge1.bg;
                 }
                 else if (CheckIfGroupIsDead(bge2))
                 {
                     Console.WriteLine("WON 1");
                     combatEnd = true;
-                    winner = bge1.bg;
+                    log.winner = bge1.bg;
+                    log.loser = bge2.bg;
                 }
             }
 
-            log.winner = winner;
+            //log.winner = winner;
+            log.SaveLog();
+            RewardGenerator.CombatReward(log);
 
             return log;
         }
@@ -122,6 +131,18 @@ namespace MinionWarsEntitiesLib.Combat
             if (CheckIfLineIsDead(bge.frontline) && CheckIfLineIsDead(bge.backline) && CheckIfLineIsDead(bge.supportline)) isDead = true;
 
             return isDead;
+        }
+
+        private static bool CheckForOwnership(int bg1_id, int bg2_id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                Battlegroup bg1 = db.Battlegroup.Find(bg1_id);
+                Battlegroup bg2 = db.Battlegroup.Find(bg2_id);
+
+                if (bg1.owner_id == bg2.owner_id) return false;
+                else return true;
+            }
         }
     }
 }

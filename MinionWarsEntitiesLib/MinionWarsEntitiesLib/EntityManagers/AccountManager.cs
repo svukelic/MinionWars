@@ -57,6 +57,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
                     newUser.online = 0;
                     newUser.location = null;
                     newUser.personal_bg_id = null;
+                    newUser.points = 1;
 
                     //traits
                     newUser.trait_leadership = 0;

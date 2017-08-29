@@ -77,10 +77,43 @@
             $("#modalPersonalBG").hide();
             $("#modalRemoteBG").hide();
             $("#modalMinions").hide();
+            $("#traitBtns").hide();
 
             setTimeout(executeMapRefresh, 5000);
 
+            var availablePoints = @Model.userModel.points;
+            if(availablePoints > 0){
+                $("#traitBtns").show();
+            }
 
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetDirections")',
+                data: {},
+                dataType: 'json',
+                success: function (jsonData) {
+                    if (jsonData != null) {
+                        //alert(JSON.stringify(jsonData.routes[0].overview_polyline.points));
+                        var testMarker = new Array();
+                        var legs = jsonData.routes[0].legs;
+                        for (i=0;i<legs.length;i++) {
+                            var steps = legs[i].steps;
+                            for (j=0;j<steps.length;j++) {
+                                var marker = new google.maps.Marker({
+                                    position: steps[j].end_location,
+                                    map: map,
+                                    id: steps[j].polyline.points,
+                                    title: steps[j].polyline.points,
+                                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/goblin-camp.png'
+                                });
+                            }
+                        }
+                    }
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
         });
 
         function executeMapRefresh() {
@@ -162,7 +195,7 @@
             var pos = new google.maps.LatLng({ lat: position.coords.latitude, lng: position.coords.longitude });
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("AddMinionsToGroup")',
+                url: '@Url.Action("UpdateUserPosition")',
                 data: { 'lat': position.coords.latitude, 'lon': position.coords.longitude },
                 dataType: 'json',
                 success: function (jsonData) {
@@ -194,7 +227,7 @@
                 if (status == google.maps.GeocoderStatus.OK) {
                     if (results[1]) {
                         $("#addressClick").text("Location: " + results[1].formatted_address);
-                        $("#locClick").text(UserMarker.getPosition().lat() + " " + UserMarker.getPosition().lng());
+                        $("#locClick").text(clickedPosition.lat() + " " + clickedPosition.lng());
                         return results[1].formatted_address;
                     }
                 }
@@ -246,35 +279,11 @@
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("SendMinions")',
-                data: { 'count': 10 },
+                data: { 'bg_id': $('#sendList :selected').val(), 'lat': clickedPosition.lat(), 'lon': clickedPosition.lng(), 'clat': UserMarker.getPosition().lat(), 'clon': UserMarker.getPosition().lng() },
                 dataType: 'json',
                 success: function (jsonData) {
                     if (jsonData != null) {
-                        if (jsonData.length > 0) {
-                            for(var i = 0; i<jsonData.length; i++){
-                            if (clickedPosition != null) {
-                                var marker = new google.maps.Marker({
-                                    position: UserMarker.getPosition(),
-                                    map: map,
-                                    id: jsonData[i].id,
-                                    title: 'Minion group',
-                                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-helmet.png'
-                                });
-
-                                var markerData = {
-                                    id: jsonData[i].id,
-                                    destination: clickedPosition
-                                };
-
-                                marker.addListener('click', function (e) {
-                                    alert("clicked");
-                                });
-
-                                subscribedMarkers.push(marker);
-                                markerMovement.push(markerData);
-                            }
-                        }
-                        }
+                        alert(JSON.stringify(jsonData));
                     }
                     $("#clickModal").modal('hide');
                 },
@@ -284,9 +293,38 @@
             });
         });
 
+        //user traits
+        function increaseTrait(trait){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("IncreaseTrait")',
+                data: { 'trait': trait },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                    location.reload();
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
         //battlegroup functions
         function removeMinions(id) {
-            alert(id);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RemoveMinions")',
+                data: { 'a_id': id },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                    location.reload();
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
         }
 
         function deleteGroup(id) {
@@ -338,7 +376,8 @@
                 data: { 'pbg_id': @Model.personalBg.battlegroup.id, 'target_id': targetId },
                 dataType: 'json',
                 success: function (jsonData) {
-                    alert("success - " + JSON.stringify(jsonData));
+                    alert(JSON.stringify(jsonData));
+                    location.reload();
                 },
                 error: function (jsonData) {
                     alert("Error");

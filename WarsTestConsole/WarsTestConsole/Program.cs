@@ -10,6 +10,7 @@ using MinionWarsEntitiesLib.EntityManagers;
 using System.Data.Entity.Spatial;
 using MinionWarsEntitiesLib.Models;
 using MinionWarsEntitiesLib.Combat;
+using MinionWarsEntitiesLib.Structures;
 
 namespace WarsTestConsole
 {
@@ -41,8 +42,11 @@ namespace WarsTestConsole
             double m = (double)movement;
             Console.WriteLine("MOVEMENT: " + m);*/
 
-            CombatLog log = CombatManager.StartCombat(32, 34);
-            Console.WriteLine("winner: " + log.winner.id);
+            /*CombatLog log = CombatManager.StartCombat(32, 34);
+            Console.WriteLine("winner: " + log.winner.id);*/
+
+            //Console.WriteLine(StructuresManager.GetPlaces(46.31856579999999, 16.34576590000006, 5000, "restaurant").Result);
+            Console.WriteLine(Geolocations.GetDirections(46.31856579999999, 16.34576590000006, 46.3186731, 16.345813499999963).Result);
 
             Console.WriteLine("DONE");
             Console.ReadKey();

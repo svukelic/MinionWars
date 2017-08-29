@@ -34,6 +34,7 @@ namespace MinionWarsEntitiesLib.Models
         public int trait_architecture { get; set; }
         public int trait_economics { get; set; }
         public Nullable<int> personal_bg_id { get; set; }
+        public Nullable<int> points { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Battlegroup> Battlegroup { get; set; }

@@ -211,6 +211,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\icons\barbute.png" />
     <Content Include="Content\icons\camping-tent.png" />
+    <Content Include="Content\icons\dwarf-face.png" />
     <Content Include="Content\icons\dwarf-helmet.png" />
     <Content Include="Content\icons\goblin-camp.png" />
     <Content Include="Content\icons\goblin_minion.png" />

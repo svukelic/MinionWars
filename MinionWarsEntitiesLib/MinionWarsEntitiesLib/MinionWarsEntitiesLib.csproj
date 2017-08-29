@@ -65,6 +65,7 @@
     <Compile Include="Combat\CombatManager.cs" />
     <Compile Include="Combat\GroupCombatStats.cs" />
     <Compile Include="EntityManagers\AccountManager.cs" />
+    <Compile Include="EntityManagers\ExperienceManager.cs" />
     <Compile Include="EntityManagers\OwnershipManager.cs" />
     <Compile Include="Geolocations\Geolocations.cs" />
     <Compile Include="Geolocations\MapDataModel.cs" />
@@ -131,9 +132,11 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
+    <Compile Include="RewardManagers\RewardGenerator.cs" />
     <Compile Include="Structures\HiveManager.cs" />
     <Compile Include="EntityManagers\UsersManager.cs" />
     <Compile Include="Structures\CampManager.cs" />
+    <Compile Include="Structures\StructuresManager.cs" />
     <Compile Include="TestManagers\WildMinionsTest.cs" />
   </ItemGroup>
   <ItemGroup>

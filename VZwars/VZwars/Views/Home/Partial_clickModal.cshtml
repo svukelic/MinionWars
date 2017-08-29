@@ -1,4 +1,8 @@
-﻿<div id="clickModal" class="modal fade" role="dialog">
+﻿@model VZwars.Models.UserDataModel
+@using MinionWarsEntitiesLib.Models
+@using VZwars.Models
+
+<div id="clickModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <div class="modal-content">
@@ -11,9 +15,28 @@
                 <p id="locClick"></p>
                 <p id="distanceClick"></p>
                 <hr />
-                <button id="btnSendMinions" type="button" class="btn btn-primary">Send minions</button>
-                <button id="btnBuildCamp" type="button" class="btn btn-primary">Build camp</button>
-
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="btnSendMinions" type="button" class="btn btn-primary">Send minions</button>
+                        <hr />
+                        <label for="sendList">Battlegroup: </label>
+                        <select id="sendList" name="sendList">
+                            @if (Model.remoteBgs.Count > 0)
+                            {
+                                foreach (BattlegroupModel bm in Model.remoteBgs)
+                                {
+                                    if (bm.battlegroup.location == null)
+                                    {
+                                        <option value="@bm.battlegroup.id">@bm.battlegroup.name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="btnBuildCamp" type="button" class="btn btn-primary">Build camp</button>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

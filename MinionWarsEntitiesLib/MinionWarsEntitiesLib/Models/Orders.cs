@@ -24,6 +24,7 @@ namespace MinionWarsEntitiesLib.Models
         public string name { get; set; }
         public string desc_text { get; set; }
         public System.Data.Entity.Spatial.DbGeography location { get; set; }
+        public string directions { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Battlegroup> Battlegroup { get; set; }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -64,6 +65,59 @@ namespace MinionWarsEntitiesLib.Geolocations
             Console.WriteLine("NEW LOC: " + newLoc.ToString());*/
 
             return newLoc;
+        }
+
+        public static Task<string> GetPlaces(double lat, double lon, int radius, string type)
+        {
+            string apiCall = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+            string location = "&location=" + lat.ToString() + "," + lon.ToString();
+            string radiusCall = "&radius=" + radius.ToString();
+            string typeCall = "&type=" + type;
+            string apiKey = "&key=AIzaSyCS8CA5fO7JvUk_s4hV7tMsDJkeY5cvhIo";
+
+            string call = location + radiusCall + typeCall + apiKey;
+
+            return CallApi(apiCall + call);
+        }
+
+        public static DbGeography PerformDirectionMovement()
+        {
+            return null;
+        }
+
+        public static Task<string> GetDirections(double lat, double lon, double clat, double clon)
+        {
+            string apiCall = "https://maps.googleapis.com/maps/api/directions/json?";
+            string origin = "&origin=" + clat.ToString() + "," + clon.ToString();
+            string destination = "&destination=" + lat.ToString() + "," + lon.ToString();
+            string mode = "&mode=walking";
+            string units = "&units=metric";
+            string apiKey = "&key=AIzaSyCS8CA5fO7JvUk_s4hV7tMsDJkeY5cvhIo";
+
+            string call = origin + destination + mode + units + apiKey;
+
+            return CallApi(apiCall + call);
+        }
+
+        private static async Task<string> CallApi(string call)
+        {
+            using (HttpClient client = new HttpClient())
+            using (HttpResponseMessage response = await client.GetAsync(call))
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+
+                if (result != null)
+                {
+                    return result;
+                }
+                else return null;
+            }
+        }
+
+        public static void CheckForDiscovery()
+        {
+
         }
 
         /*public static double GetDistance(Location loc1, Location loc2)

@@ -132,6 +132,7 @@
           <Property Name="name" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="desc_text" Type="varchar" MaxLength="160" Nullable="false" />
           <Property Name="location" Type="geography" />
+          <Property Name="directions" Type="varchar" MaxLength="2000" />
         </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
@@ -176,6 +177,7 @@
           <Property Name="trait_architecture" Type="int" Nullable="false" />
           <Property Name="trait_economics" Type="int" Nullable="false" />
           <Property Name="personal_bg_id" Type="int" />
+          <Property Name="points" Type="int" />
         </EntityType>
         <Association Name="fk_assignment_bg">
           <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="1" />
@@ -516,6 +518,7 @@
           <Property Name="desc_text" Type="String" MaxLength="160" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="location" Type="Geography" />
           <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bg_orders" FromRole="Orders" ToRole="Battlegroup" />
+          <Property Name="directions" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
@@ -566,6 +569,7 @@
           <NavigationProperty Name="MinionOwnership" Relationship="Self.fk_ownership_users" FromRole="Users" ToRole="MinionOwnership" />
           <NavigationProperty Name="UserMovementHistory" Relationship="Self.fk_usermove_user" FromRole="Users" ToRole="UserMovementHistory" />
           <Property Name="personal_bg_id" Type="Int32" />
+          <Property Name="points" Type="Int32" />
         </EntityType>
         <Association Name="fk_assignment_bg">
           <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="1" />
@@ -896,6 +900,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="MinionWarsModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="directions" ColumnName="directions" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="desc_text" ColumnName="desc_text" />
@@ -936,6 +941,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="MinionWarsModel.Users">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="points" ColumnName="points" />
                 <ScalarProperty Name="personal_bg_id" ColumnName="personal_bg_id" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="username" ColumnName="username" />

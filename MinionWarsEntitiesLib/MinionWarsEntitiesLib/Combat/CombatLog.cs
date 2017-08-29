@@ -10,6 +10,7 @@ namespace MinionWarsEntitiesLib.Combat
     public class CombatLog
     {
         public Battlegroup winner;
+        public Battlegroup loser;
         public List<string> log;
 
         public void SaveLog()
