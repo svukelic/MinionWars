@@ -74,6 +74,14 @@ namespace VZwars.Controllers
             return Json(result);
         }
 
+        public ActionResult BuildCamp(double lat, double lon)
+        {
+            var point = string.Format("POINT({1} {0})", lat, lon);
+            Camp c = CampManager.CreateUserCamp(point, Convert.ToInt32(Session["UserId"]));
+            if (c == null) return Json("Camp couldn't be built!");
+            else return Json("Camp built!");
+        }
+
         public ActionResult UpdateUserPosition(double lat, double lon)
         {
             UsersManager.UpdateUserPosition(Convert.ToInt32(Session["UserId"]), lon, lat);

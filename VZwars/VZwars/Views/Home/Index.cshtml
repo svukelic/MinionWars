@@ -11,6 +11,8 @@
 
 @Html.Partial("Partial_battlegroupPageModal")
 
+@Html.Partial("Partial_campPageModal")
+
 @Html.Partial("Partial_resourcesPageModal")
 
 @Html.Partial("Partial_clickModal")
@@ -20,6 +22,8 @@
 @Html.Partial("Partial_groupCreationModal")
 
 @Html.Partial("Partial_bgClickModal")
+
+@Html.Partial("Partial_campClickModal")
 
 <!-- Mapa -->
 <div class="row">
@@ -121,10 +125,10 @@
                 icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-n.png';
             }
             else if(data.type.indexOf(ycampCheck) != -1){
-                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-p.png';
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-y.png';
             }
             else if(data.type.indexOf(pcampCheck) != -1){
-                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-y.png';
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-p.png';
             }
             else{
                 icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-helmet.png';
@@ -138,20 +142,67 @@
                 icon: icon_location
             });
 
-            marker.addListener('click', function (e) {
-                //alert("clicked - " + this.getPosition());
-                targetLoc = this.getPosition();
-                targetId = this.id;
-                var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
-                $("#target_distance").text("Distance: " + distance);
-                if (distance > 75) {
-                    $("#btnInitiateAttack").prop("disabled", true);
-                }
-                else {
-                    $("#btnInitiateAttack").prop("disabled", false);
-                }
-                $("#bgClickModal").modal();
-            });
+            if(data.type.indexOf(userCheck) != -1){
+                marker.addListener('click', function (e) {
+                    targetLoc = this.getPosition();
+                    targetId = this.id;
+                    var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
+                    $("#target_distance").text("Distance: " + distance);
+                    if (distance > 75) {
+                        $("#btnInitiateAttack").prop("disabled", true);
+                    }
+                    else {
+                        $("#btnInitiateAttack").prop("disabled", false);
+                    }
+                    $("#bgClickModal").modal();
+                });
+            }
+            else if(data.type.indexOf(ncampCheck) != -1){
+                marker.addListener('click', function (e) {
+                    targetLoc = this.getPosition();
+                    targetId = this.id;
+                    var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
+                    $("#campDistance").text("Distance: " + distance);
+                    $("#campDetails").text("Camp details - Neutral camp");
+                    $("#campClickModal").modal();
+                });
+            }
+            else if(data.type.indexOf(ycampCheck) != -1){
+                marker.addListener('click', function (e) {
+                    targetLoc = this.getPosition();
+                    targetId = this.id;
+                    var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
+                    $("#campDistance").text("Distance: " + distance);
+                    $("#campDetails").text("Camp details - Your camp");
+                    $("#campClickModal").modal();
+                });
+            }
+            else if(data.type.indexOf(pcampCheck) != -1){
+                marker.addListener('click', function (e) {
+                    targetLoc = this.getPosition();
+                    targetId = this.id;
+                    var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
+                    $("#campDistance").text("Distance: " + distance);
+                    $("#campDetails").text("Camp details - Player camp");
+                    $("#campClickModal").modal();
+                });
+            }
+            else{
+                marker.addListener('click', function (e) {
+                    targetLoc = this.getPosition();
+                    targetId = this.id;
+                    var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
+                    $("#target_distance").text("Distance: " + distance);
+                    if (distance > 100) {
+                        $("#btnInitiateAttack").prop("disabled", true);
+                    }
+                    else {
+                        $("#btnInitiateAttack").prop("disabled", false);
+                    }
+                    $("#bgClickModal").modal();
+                });
+            }
+
             //map.panTo(pos);
             bgMarkersData.push(marker);
         }
@@ -230,32 +281,26 @@
         $(function () {
             $("#userTabs").tabs();
             $("#bgTabs").tabs();
+            $("#campTabs").tabs();
+            $("#campDetailTabs").tabs();
         });
 
         $("#btnBuildCamp").click(function () {
-            if(clickedPosition != null){
-                var marker = new google.maps.Marker({
-                    position: clickedPosition,
-                    map: map,
-                    id: 'test1',
-                    title: 'Camp',
-                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/camping-tent.png'
-                });
-
-                marker.addListener('click', function (e) {
-                    clickedMarker = marker;
-                    $("#buildingModal").modal();
-                });
-            }
-            $("#clickModal").modal('hide');
-        });
-
-        $("#btnUpgradeCamp").click(function () {
-            if (clickedMarker != null) {
-                $("#buildingModal").modal('hide');
-                clickedMarker.setIcon("http://minion-wars.azurewebsites.net/Content/icons/goblin-camp.png");
-                clickedMarker.setTitle("Outpost");
-            }
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BuildCamp")',
+                data: { 'lat': clickedPosition.lat(), 'lon': clickedPosition.lng() },
+                dataType: 'json',
+                success: function (jsonData) {
+                    if (jsonData != null) {
+                        alert(JSON.stringify(jsonData));
+                    }
+                    $("#clickModal").modal('hide');
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
         });
 
         $("#btnSendMinions").click(function () {
@@ -293,6 +338,15 @@
             });
         }
 
+        //camps
+        function panToLocation(lat, lon){
+            var pos = new google.maps.LatLng({ lat: lat, lng: lon });
+            $('#campPageModal').modal({
+                show: 'false'
+            });
+            map.panTo(pos);
+        }
+
         //battlegroup functions
         function removeMinions(id) {
             $.ajax({
@@ -313,10 +367,6 @@
         function deleteGroup(id) {
             alert(id);
             alert(document.cookie);
-        }
-
-        function displayGroupDetails(id) {
-            document.cookie = "bgDetails = " + id;
         }
 
         var groupToAdd = -1;

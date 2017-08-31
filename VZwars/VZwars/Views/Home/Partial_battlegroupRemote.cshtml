@@ -8,19 +8,51 @@
         {
             <div class="row">
                 <div class="col-md-3">
-                    <p>Name: @bm.battlegroup.name</p>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-default" onclick="displayGroupDetails(@bm.battlegroup.id)">Group details</button>
-                    <button class="btn btn-default" onclick="deleteGroup(@bm.battlegroup.id)">Delete group</button>
-                </div>
-                <div class="col-md-3">
                     <img src="~/Content/icons/sword-spade.png" />
                 </div>
-            </div>
-                <div class="row">
-                    <hr />
+                <div class="col-md-3">
+                    <p>Name: @bm.battlegroup.name</p>
+                    <p>Type: @bm.battlegroup.type</p>
+                    <button class="btn btn-default" data-toggle="collapse" data-target="#bgr-@bm.battlegroup.id">Group details</button>
                 </div>
+                <div class="col-md-3">
+                    <p>Current size: @bm.currentAmount</p>
+                    <p>Maximum size: @bm.battlegroup.size</p>
+                    <button class="btn btn-default" onclick="deleteGroup(@bm.battlegroup.id)">Delete group</button>
+                </div>
+            </div>
+            <div class="row">
+                <hr />
+            </div>
+            <div id="bgr-@bm.battlegroup.id" class="collapse">
+                @{
+                    foreach (MinionModel m in bm.minions)
+                    {
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p>Type: @m.type.name</p>
+                                <p>Group count: @m.assignment.group_count</p>
+                                <p>Line: @m.assignment.line</p>
+                                <button class="btn btn-default" onclick="removeMinions(@m.assignment.id)">Remove</button>
+                            </div>
+                            <div class="col-md-4">
+                                <p>Strength: @m.data.strength</p>
+                                <p>Dexterity: @m.data.dexterity</p>
+                                <p>Vitality: @m.data.vitality</p>
+                                <p>Power: @m.data.power</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>Melee Ability: @m.data.melee_ability</p>
+                                <p>Ranged Ability: @m.data.ranged_ability</p>
+                                <p>Passive: @m.data.passive</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <hr />
+                        </div>
+                    }
+                }
+            </div>
         }
     }
 </div>

@@ -39,6 +39,8 @@ namespace MinionWarsEntitiesLib.Geolocations
                 }
 
                 //camps
+                CampManager.CheckForDiscovery(loc, radius);
+
                 camps = db.Camp.Where(x=>x.location.Distance(loc) <= radius && x.owner_id == null).ToList(); //CampManager.ReturnCamps(loc, radius);
                 foreach(Camp c in camps)
                 {

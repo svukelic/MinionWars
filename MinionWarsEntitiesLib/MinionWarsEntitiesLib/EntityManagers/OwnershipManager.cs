@@ -23,6 +23,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 List<Minion> minions = new List<Minion>();
 
                 foreach(MinionOwnership mo in moList)
@@ -40,6 +41,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 Minion m = new Minion();
                 m = db.Minion.Find(id);
 
@@ -51,6 +53,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 return db.MinionType.Find(id);
             }
         }
@@ -59,6 +62,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 return db.Battlegroup.Find(id);
             }
         }
@@ -67,6 +71,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 return db.BattlegroupAssignment.Where(x => x.battlegroup_id == id).ToList();
             }
         }
@@ -75,7 +80,26 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 return db.Battlegroup.Where(x => x.owner_id == id && x.type != 1).ToList();
+            }
+        }
+
+        public static List<Camp> GetUserCamps(int id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                return db.Camp.Where(x => x.owner_id == id).ToList();
+            }
+        }
+
+        public static List<Reputation> GetUserReputation(int id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                return db.Reputation.Where(x => x.user_id == id).ToList();
             }
         }
 
@@ -83,6 +107,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 return db.AbilityStats.Find(id);
             }
         }

@@ -60,9 +60,7 @@ namespace WarsTestConsole
             /*List<Camp> camps = CampManager.ReturnCamps(loc, 1000);
             Console.WriteLine(camps.Count);*/
 
-            List<UserTreasury> ut = ResourceManager.GetUserTreasury(8);
-            Console.WriteLine(ut[0].ResourceType.name);
-            Console.WriteLine(ut[0].amount);
+            
 
             Console.WriteLine("DONE");
             Console.ReadKey();

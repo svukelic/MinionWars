@@ -26,10 +26,25 @@ namespace MinionWarsEntitiesLib.Structures
             }
         }
 
+        public static void CheckForDiscovery(DbGeography loc, int radius)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                List<Camp> camps = db.Camp.Where(x => x.location.Distance(loc) <= radius).ToList();
+                //Check for discovery - max 16, check if at least 10
+                if (camps.Count <= 10)
+                {
+                    camps.AddRange(Geolocations.Geolocations.InitiateDiscovery(loc));
+                }
+                camps = null;
+            }
+        }
+
         public static Camp GetCampInfo(int camp_id)
         {
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 return db.Camp.Find(camp_id);
             }
         }
@@ -116,6 +131,27 @@ namespace MinionWarsEntitiesLib.Structures
                 source.richness++;
                 destination.richness++;
 
+                if(source.owner_id != null)
+                {
+                    Reputation rep = null;
+                    List<Reputation> list = db.Reputation.Where(x => x.user_id == source.owner_id && x.camp_id == destination.id).ToList();
+                    if(list.Count > 0)
+                    {
+                        rep = list.First();
+                        rep.value++;
+
+                        db.Reputation.Attach(rep);
+                        db.Entry(rep).State = System.Data.Entity.EntityState.Modified;
+                    }
+                    else
+                    {
+                        rep = new Reputation();
+                        rep.value = 1;
+
+                        db.Reputation.Add(rep);
+                    }
+                }
+
                 db.Caravan.Attach(car);
                 db.Entry(car).State = System.Data.Entity.EntityState.Modified;
                 db.Camp.Attach(source);
@@ -129,14 +165,20 @@ namespace MinionWarsEntitiesLib.Structures
             return car;
         }
 
-        public static Camp CreateUserCamp(DbGeography loc, int owner_id)
+        public static Camp CreateUserCamp(string point, int owner_id)
         {
+            DbGeography loc = DbGeography.FromText(point);
             using (var db = new MinionWarsEntities())
             {
                 Camp camp = null;
 
-                List<Camp> list = db.Camp.Where(x => x.location.Distance(loc) <= 250).ToList();
-                if (list.Count == 0) camp = CreateCamp(owner_id, loc);
+                Users owner = db.Users.Find(owner_id);
+                List<Camp> ownedCamps = db.Camp.Where(x => x.owner_id == owner_id).ToList();
+                if(ownedCamps.Count < owner.trait_architecture + 1)
+                {
+                    List<Camp> list = db.Camp.Where(x => x.location.Distance(loc) <= 250).ToList();
+                    if (list.Count == 0) camp = CreateCamp(owner_id, loc);
+                }
 
                 return camp;
             }

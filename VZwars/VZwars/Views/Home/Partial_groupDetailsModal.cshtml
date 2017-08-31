@@ -1,0 +1,38 @@
+﻿@model VZwars.Models.UserDataModel
+@using MinionWarsEntitiesLib.Models
+@using VZwars.Models
+
+<div id="groupDetailsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Battlegroup Details</h4>
+            </div>
+            <div class="modal-body">
+                <div id="bgDetails">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="~/Content/icons/sword-spade.png" />
+                        </div>
+                        <div class="col-md-3">
+                            <p id="bgrd_cs">Current size: </p>
+                            <p id="bgrd_ms">Maximum size: </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <hr />
+                    </div>
+                    <div id="bgrd_assignments">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

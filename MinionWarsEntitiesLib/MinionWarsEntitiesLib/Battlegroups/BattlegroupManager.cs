@@ -153,6 +153,17 @@ namespace MinionWarsEntitiesLib.Battlegroups
             }
         }
 
+        /*public static Battlegroup GetGroupDetails(int bg_id)
+        {
+            Battlegroup bg = null;
+            using (var db = new MinionWarsEntities())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                bg = db.Battlegroup.Find(bg_id);
+            }
+            return bg;
+        }*/
+
         public static Battlegroup GetLastAssigned(int lastAssigned)
         {
             Battlegroup newBg = null;
