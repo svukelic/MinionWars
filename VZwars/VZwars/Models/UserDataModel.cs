@@ -1,5 +1,6 @@
 ﻿using MinionWarsEntitiesLib.EntityManagers;
 using MinionWarsEntitiesLib.Models;
+using MinionWarsEntitiesLib.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace VZwars.Models
         public List<MinionModel> minions;
         public BattlegroupModel personalBg;
         public List<BattlegroupModel> remoteBgs;
+        public List<TreasuryModel> treasury;
 
         public UserDataModel(int id)
         {
@@ -37,6 +39,15 @@ namespace VZwars.Models
             foreach(Battlegroup b in remote_bgs)
             {
                 remoteBgs.Add(new BattlegroupModel(b.id));
+            }
+
+            this.treasury = new List<TreasuryModel>();
+            List<UserTreasury> ut = ResourceManager.GetUserTreasury(userModel.id);
+            foreach(UserTreasury u in ut)
+            {
+                //ResourceType rt = ResourceManager.
+                TreasuryModel tm = new TreasuryModel(u.ResourceType.name, u.amount.Value, u.ResourceType.category);
+                this.treasury.Add(tm);
             }
         }
     }

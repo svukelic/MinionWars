@@ -4,33 +4,47 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="79b264e293c34ba996c0bcdfd4b94ce7" Name="Diagram1">
-        <EntityTypeShape EntityType="MinionWarsModel.AbilityStats" Width="1.5" PointX="7.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.Battlegroup" Width="1.5" PointX="3" PointY="9.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.BattlegroupAssignment" Width="1.5" PointX="5.25" PointY="4" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.BattlegroupMovementHistory" Width="1.5" PointX="5.25" PointY="11" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.HiveNode" Width="1.5" PointX="5.25" PointY="7.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.Minion" Width="1.5" PointX="3" PointY="3" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.MinionOwnership" Width="1.5" PointX="8.25" PointY="4" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.MinionType" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.ModifierCoeficients" Width="1.5" PointX="9.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.Orders" Width="1.5" PointX="0.75" PointY="9" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.ResourceNode" Width="1.5" PointX="8" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.ResourceType" Width="1.5" PointX="5.75" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.UserMovementHistory" Width="1.5" PointX="3" PointY="16.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="MinionWarsModel.Users" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+      <Diagram DiagramId="fe10cc80c19f41188b1d70a9f8543027" Name="Diagram1">
+        <EntityTypeShape EntityType="MinionWarsModel.AbilityStats" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Battlegroup" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.BattlegroupAssignment" Width="1.5" PointX="8.25" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.BattlegroupMovementHistory" Width="1.5" PointX="5.25" PointY="22.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Camp" Width="1.5" PointX="3" PointY="19.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.CampTreasury" Width="1.5" PointX="5.25" PointY="19.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Caravan" Width="1.5" PointX="5.25" PointY="15.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.HiveNode" Width="1.5" PointX="6" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Minion" Width="1.5" PointX="3.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.MinionOwnership" Width="1.5" PointX="6" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.MinionType" Width="1.5" PointX="1.5" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.ModifierCoeficients" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Orders" Width="1.5" PointX="0.75" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Reputation" Width="1.5" PointX="8.25" PointY="16.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.ResourceNode" Width="1.5" PointX="6" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.ResourceType" Width="1.5" PointX="3.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.UserMovementHistory" Width="1.5" PointX="3" PointY="26.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.Users" Width="1.5" PointX="0.75" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MinionWarsModel.UserTreasury" Width="1.5" PointX="6" PointY="9.625" IsExpanded="true" />
         <AssociationConnector Association="MinionWarsModel.fk_assignment_bg" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_bg_orders" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_bg_user" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_bgmove_bg" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_assignment_minion" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_camp_user" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_caravan_destination" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_caravan_source" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_ctreasury_camp" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_rep_camp" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_ctreasury_res" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_caravan_user" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_hnode_minion" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_minion_mtype" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_ownership_minion" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_ownership_users" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_rep_user" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_rnode_rtype" ManuallyRouted="false" />
+        <AssociationConnector Association="MinionWarsModel.fk_rtreasury_res" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_usermove_user" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="MinionWarsModel.UserTraits" Width="1.5" PointX="10.375" PointY="0.75" />
+        <AssociationConnector Association="MinionWarsModel.fk_utreasury_user" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

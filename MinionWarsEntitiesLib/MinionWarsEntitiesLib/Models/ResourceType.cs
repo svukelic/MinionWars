@@ -17,7 +17,9 @@ namespace MinionWarsEntitiesLib.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ResourceType()
         {
+            this.CampTreasury = new HashSet<CampTreasury>();
             this.ResourceNode = new HashSet<ResourceNode>();
+            this.UserTreasury = new HashSet<UserTreasury>();
         }
     
         public int id { get; set; }
@@ -25,6 +27,10 @@ namespace MinionWarsEntitiesLib.Models
         public string category { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CampTreasury> CampTreasury { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ResourceNode> ResourceNode { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserTreasury> UserTreasury { get; set; }
     }
 }

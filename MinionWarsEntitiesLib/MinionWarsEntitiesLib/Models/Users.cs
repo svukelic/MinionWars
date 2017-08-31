@@ -18,8 +18,12 @@ namespace MinionWarsEntitiesLib.Models
         public Users()
         {
             this.Battlegroup = new HashSet<Battlegroup>();
+            this.Camp = new HashSet<Camp>();
+            this.Caravan = new HashSet<Caravan>();
             this.MinionOwnership = new HashSet<MinionOwnership>();
+            this.Reputation = new HashSet<Reputation>();
             this.UserMovementHistory = new HashSet<UserMovementHistory>();
+            this.UserTreasury = new HashSet<UserTreasury>();
         }
     
         public int id { get; set; }
@@ -39,8 +43,16 @@ namespace MinionWarsEntitiesLib.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Battlegroup> Battlegroup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Camp> Camp { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Caravan> Caravan { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MinionOwnership> MinionOwnership { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Reputation> Reputation { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserMovementHistory> UserMovementHistory { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserTreasury> UserTreasury { get; set; }
     }
 }

@@ -1,38 +1,55 @@
 ﻿
 @{
     ViewBag.Title = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInitial.cshtml";
 }
+<div style="width:100%">
+    @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+    {
+        <div style="display:table; margin: 0 auto;">
+            <fieldset>
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @if (@ViewBag.Message != null)
+                {
+                    <div style="border: 1px solid red">
+                        @ViewBag.Message
+                    </div>
+                }
 
-<h2>Login</h2>
+                <div style="margin: 0 auto; margin-top: 25%;">
+                    <div class="row">
+                        <img src="~/Content/icons/overlord-helm.png" style="display: block; margin: 0 auto;" />
+                        <br />
+                    </div>
+                    <div class="row">
+                        <h2 stlye="font-family: aniron, Verdana">Minion Wars</h2>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 10%;">
+                    <div class="row">
+                        <br />
+                        @Html.TextBox("username", null, new { @class = "form-control", @placeholder = "Username" })
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 10%;">
+                    <div class="row">
+                        <br />
+                        @Html.Password("password", null, new { @class = "form-control", @placeholder = "Password" })
+                    </div>
+                </div>
+                <div style="margin-top: 10%;">
+                    <div class="row" style="text-align: center;">
+                        <input type="submit" class="btn btn-default" value="Login"/>
+                    </div>
+                </div>
+                <div style="margin-top: 30%;">
+                    <div class="row" style="text-align: center;">
+                        @Html.ActionLink("Register", "Register", "Account", new { id = "registerLink" }, new { @class = "btn btn-default" })
+                    </div>
+                </div>
 
-@using (Html.BeginForm("Login", "Home", FormMethod.Post))
-{
-    <fieldset>
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
-        @if (@ViewBag.Message != null)
-        {
-            <div style="border: 1px solid red">
-                @ViewBag.Message
-            </div>
-        }
-        <table>
-            <tr>
-                <td class = "col-md-2 control-label">Username</td>
-                <td class = "form-control">@Html.TextBox("username")</td>
-            </tr>
-            <tr>
-                <td class = "col-md-2 control-label">Password</td>
-                <td class = "form-control">@Html.Password("password")</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input class="btn btn-default" type="submit" value="Login" />
-                </td>
-                <td></td>
-            </tr>
-        </table>
-    </fieldset>
-}  
+            </fieldset>
+        </div>
+    }
+</div>

@@ -28,5 +28,48 @@ namespace MinionWarsEntitiesLib.Resources
                 return newRes;
             }
         }
+
+        public static List<ResourceType> getRandomRes()
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                Random r = new Random();
+                List<ResourceType> list = db.ResourceType.ToList();
+                list = list.OrderBy(a => r.Next()).ToList();
+                return list;
+            }
+        }
+
+        public static void GenerateNewUserResources(int id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                List<ResourceType> list = db.ResourceType.ToList();
+                foreach(ResourceType rt in list)
+                {
+                    UserTreasury ut = new UserTreasury();
+                    ut.user_id = id;
+                    ut.res_id = rt.id;
+                    ut.amount = 50;
+
+                    db.UserTreasury.Add(ut);
+                }
+                db.SaveChanges();
+            }
+        }
+
+        public static List<UserTreasury> GetUserTreasury(int id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                List<UserTreasury> ut = db.UserTreasury.Where(x => x.user_id == id).ToList();
+                foreach(UserTreasury u in ut)
+                {
+                    u.ResourceType = db.ResourceType.Find(u.res_id);
+                }
+
+                return ut;
+            }
+        }
     }
 }

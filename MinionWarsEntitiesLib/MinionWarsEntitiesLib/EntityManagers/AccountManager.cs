@@ -1,4 +1,5 @@
 ﻿using MinionWarsEntitiesLib.Models;
+using MinionWarsEntitiesLib.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,7 @@ namespace MinionWarsEntitiesLib.EntityManagers
 
                     OwnershipManager.GenerateNewUserOwnership(newUser.id);
                     OwnershipManager.CreateNewPersonalBattlegroup(newUser.id);
+                    ResourceManager.GenerateNewUserResources(newUser.id);
 
                     return true;
                 }

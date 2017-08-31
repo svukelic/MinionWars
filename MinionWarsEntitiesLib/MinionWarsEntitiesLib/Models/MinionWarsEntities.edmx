@@ -44,6 +44,7 @@
           <Property Name="lastMovement" Type="datetime" />
           <Property Name="type" Type="int" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="30" />
+          <Property Name="creation" Type="datetime" />
         </EntityType>
         <EntityType Name="BattlegroupAssignment">
           <Key>
@@ -65,6 +66,39 @@
           <Property Name="location" Type="geography" />
           <Property Name="activity_saturation" Type="float" />
           <Property Name="event_saturation" Type="float" />
+        </EntityType>
+        <EntityType Name="Camp">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="owner_id" Type="int" />
+          <Property Name="location" Type="geography" />
+          <Property Name="type" Type="varchar" MaxLength="80" />
+          <Property Name="mapped_type" Type="varchar" MaxLength="80" />
+          <Property Name="richness" Type="int" />
+        </EntityType>
+        <EntityType Name="CampTreasury">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="res_id" Type="int" Nullable="false" />
+          <Property Name="camp_id" Type="int" Nullable="false" />
+          <Property Name="amount" Type="int" />
+        </EntityType>
+        <EntityType Name="Caravan">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="owner_id" Type="int" />
+          <Property Name="source_id" Type="int" />
+          <Property Name="destination_id" Type="int" />
+          <Property Name="location" Type="geography" />
+          <Property Name="directions" Type="varchar" MaxLength="2000" />
+          <Property Name="current_step" Type="geography" />
+          <Property Name="last_movement" Type="datetime" />
         </EntityType>
         <EntityType Name="HiveNode">
           <Key>
@@ -135,6 +169,15 @@
           <Property Name="directions" Type="varchar" MaxLength="2000" />
           <Property Name="current_step" Type="geography" />
         </EntityType>
+        <EntityType Name="Reputation">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="camp_id" Type="int" Nullable="false" />
+          <Property Name="value" Type="int" />
+        </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
             <PropertyRef Name="id" />
@@ -180,18 +223,14 @@
           <Property Name="personal_bg_id" Type="int" />
           <Property Name="points" Type="int" />
         </EntityType>
-        <EntityType Name="UserTraits">
+        <EntityType Name="UserTreasury">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="cbg_size" Type="int" Nullable="false" />
-          <Property Name="cbg_count" Type="int" Nullable="false" />
-          <Property Name="cbg_speed" Type="float" Nullable="false" />
-          <Property Name="arch_speed" Type="float" Nullable="false" />
-          <Property Name="arch_def" Type="int" Nullable="false" />
-          <Property Name="arch_count" Type="int" Nullable="false" />
-          <Property Name="pbg_size" Type="int" Nullable="false" />
+          <Property Name="res_id" Type="int" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="amount" Type="int" />
         </EntityType>
         <Association Name="fk_assignment_bg">
           <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="1" />
@@ -253,6 +292,78 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_camp_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Camp" Type="Self.Camp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Camp">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_caravan_destination">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="0..1" />
+          <End Role="Caravan" Type="Self.Caravan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Caravan">
+              <PropertyRef Name="destination_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_caravan_source">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="0..1" />
+          <End Role="Caravan" Type="Self.Caravan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Caravan">
+              <PropertyRef Name="source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_caravan_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Caravan" Type="Self.Caravan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Caravan">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ctreasury_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="CampTreasury" Type="Self.CampTreasury" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampTreasury">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ctreasury_res">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="CampTreasury" Type="Self.CampTreasury" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampTreasury">
+              <PropertyRef Name="res_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_hnode_minion">
           <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
           <End Role="HiveNode" Type="Self.HiveNode" Multiplicity="*" />
@@ -301,6 +412,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_rep_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="Reputation" Type="Self.Reputation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Reputation">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rep_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Reputation" Type="Self.Reputation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Reputation">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_rnode_rtype">
           <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
           <End Role="ResourceNode" Type="Self.ResourceNode" Multiplicity="*" />
@@ -310,6 +445,18 @@
             </Principal>
             <Dependent Role="ResourceNode">
               <PropertyRef Name="rtype_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rtreasury_res">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="UserTreasury" Type="Self.UserTreasury" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserTreasury">
+              <PropertyRef Name="res_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -325,22 +472,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_utreasury_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserTreasury" Type="Self.UserTreasury" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserTreasury">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="MinionWarsModelStoreContainer">
           <EntitySet Name="AbilityStats" EntityType="Self.AbilityStats" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Battlegroup" EntityType="Self.Battlegroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BattlegroupAssignment" EntityType="Self.BattlegroupAssignment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BattlegroupMovementHistory" EntityType="Self.BattlegroupMovementHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Camp" EntityType="Self.Camp" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CampTreasury" EntityType="Self.CampTreasury" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Caravan" EntityType="Self.Caravan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HiveNode" EntityType="Self.HiveNode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Minion" EntityType="Self.Minion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MinionOwnership" EntityType="Self.MinionOwnership" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MinionType" EntityType="Self.MinionType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ModifierCoeficients" EntityType="Self.ModifierCoeficients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reputation" EntityType="Self.Reputation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResourceNode" EntityType="Self.ResourceNode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResourceType" EntityType="Self.ResourceType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMovementHistory" EntityType="Self.UserMovementHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserTraits" EntityType="Self.UserTraits" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTreasury" EntityType="Self.UserTreasury" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="fk_assignment_bg" Association="Self.fk_assignment_bg">
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
@@ -361,6 +524,30 @@
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupMovementHistory" EntitySet="BattlegroupMovementHistory" />
           </AssociationSet>
+          <AssociationSet Name="fk_camp_user" Association="Self.fk_camp_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Camp" EntitySet="Camp" />
+          </AssociationSet>
+          <AssociationSet Name="fk_caravan_destination" Association="Self.fk_caravan_destination">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="Caravan" EntitySet="Caravan" />
+          </AssociationSet>
+          <AssociationSet Name="fk_caravan_source" Association="Self.fk_caravan_source">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="Caravan" EntitySet="Caravan" />
+          </AssociationSet>
+          <AssociationSet Name="fk_caravan_user" Association="Self.fk_caravan_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Caravan" EntitySet="Caravan" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ctreasury_camp" Association="Self.fk_ctreasury_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="CampTreasury" EntitySet="CampTreasury" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ctreasury_res" Association="Self.fk_ctreasury_res">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="CampTreasury" EntitySet="CampTreasury" />
+          </AssociationSet>
           <AssociationSet Name="fk_hnode_minion" Association="Self.fk_hnode_minion">
             <End Role="Minion" EntitySet="Minion" />
             <End Role="HiveNode" EntitySet="HiveNode" />
@@ -377,13 +564,29 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="MinionOwnership" EntitySet="MinionOwnership" />
           </AssociationSet>
+          <AssociationSet Name="fk_rep_camp" Association="Self.fk_rep_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="Reputation" EntitySet="Reputation" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rep_user" Association="Self.fk_rep_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Reputation" EntitySet="Reputation" />
+          </AssociationSet>
           <AssociationSet Name="fk_rnode_rtype" Association="Self.fk_rnode_rtype">
             <End Role="ResourceType" EntitySet="ResourceType" />
             <End Role="ResourceNode" EntitySet="ResourceNode" />
           </AssociationSet>
+          <AssociationSet Name="fk_rtreasury_res" Association="Self.fk_rtreasury_res">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="UserTreasury" EntitySet="UserTreasury" />
+          </AssociationSet>
           <AssociationSet Name="fk_usermove_user" Association="Self.fk_usermove_user">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserMovementHistory" EntitySet="UserMovementHistory" />
+          </AssociationSet>
+          <AssociationSet Name="fk_utreasury_user" Association="Self.fk_utreasury_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTreasury" EntitySet="UserTreasury" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -427,12 +630,13 @@
           <Property Name="defense_mod" Type="Int32" Nullable="false" />
           <Property Name="location" Type="Geography" />
           <Property Name="lastMovement" Type="DateTime" Precision="3" />
+          <Property Name="type" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="creation" Type="DateTime" Precision="3" />
           <NavigationProperty Name="BattlegroupAssignment" Relationship="Self.fk_assignment_bg" FromRole="Battlegroup" ToRole="BattlegroupAssignment" />
           <NavigationProperty Name="Orders" Relationship="Self.fk_bg_orders" FromRole="Battlegroup" ToRole="Orders" />
           <NavigationProperty Name="Users" Relationship="Self.fk_bg_user" FromRole="Battlegroup" ToRole="Users" />
           <NavigationProperty Name="BattlegroupMovementHistory" Relationship="Self.fk_bgmove_bg" FromRole="Battlegroup" ToRole="BattlegroupMovementHistory" />
-          <Property Name="type" Type="Int32" Nullable="false" />
-          <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BattlegroupAssignment">
           <Key>
@@ -457,6 +661,49 @@
           <Property Name="activity_saturation" Type="Double" />
           <Property Name="event_saturation" Type="Double" />
           <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bgmove_bg" FromRole="BattlegroupMovementHistory" ToRole="Battlegroup" />
+        </EntityType>
+        <EntityType Name="Camp">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="owner_id" Type="Int32" />
+          <Property Name="location" Type="Geography" />
+          <Property Name="type" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="mapped_type" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="richness" Type="Int32" />
+          <NavigationProperty Name="Users" Relationship="Self.fk_camp_user" FromRole="Camp" ToRole="Users" />
+          <NavigationProperty Name="Caravan" Relationship="Self.fk_caravan_destination" FromRole="Camp" ToRole="Caravan" />
+          <NavigationProperty Name="Caravan1" Relationship="Self.fk_caravan_source" FromRole="Camp" ToRole="Caravan" />
+          <NavigationProperty Name="CampTreasury" Relationship="Self.fk_ctreasury_camp" FromRole="Camp" ToRole="CampTreasury" />
+          <NavigationProperty Name="Reputation" Relationship="Self.fk_rep_camp" FromRole="Camp" ToRole="Reputation" />
+        </EntityType>
+        <EntityType Name="CampTreasury">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="res_id" Type="Int32" Nullable="false" />
+          <Property Name="camp_id" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Int32" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_ctreasury_camp" FromRole="CampTreasury" ToRole="Camp" />
+          <NavigationProperty Name="ResourceType" Relationship="Self.fk_ctreasury_res" FromRole="CampTreasury" ToRole="ResourceType" />
+        </EntityType>
+        <EntityType Name="Caravan">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="owner_id" Type="Int32" />
+          <Property Name="source_id" Type="Int32" />
+          <Property Name="destination_id" Type="Int32" />
+          <Property Name="location" Type="Geography" />
+          <Property Name="directions" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_caravan_destination" FromRole="Caravan" ToRole="Camp" />
+          <NavigationProperty Name="Camp1" Relationship="Self.fk_caravan_source" FromRole="Caravan" ToRole="Camp" />
+          <NavigationProperty Name="Users" Relationship="Self.fk_caravan_user" FromRole="Caravan" ToRole="Users" />
+          <Property Name="current_step" Type="Geography" />
+          <Property Name="last_movement" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="HiveNode">
           <Key>
@@ -532,9 +779,20 @@
           <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="desc_text" Type="String" MaxLength="160" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="location" Type="Geography" />
-          <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bg_orders" FromRole="Orders" ToRole="Battlegroup" />
           <Property Name="directions" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <Property Name="current_step" Type="Geography" />
+          <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bg_orders" FromRole="Orders" ToRole="Battlegroup" />
+        </EntityType>
+        <EntityType Name="Reputation">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="camp_id" Type="Int32" Nullable="false" />
+          <Property Name="value" Type="Int32" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_rep_camp" FromRole="Reputation" ToRole="Camp" />
+          <NavigationProperty Name="Users" Relationship="Self.fk_rep_user" FromRole="Reputation" ToRole="Users" />
         </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
@@ -552,7 +810,9 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="category" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="CampTreasury" Relationship="Self.fk_ctreasury_res" FromRole="ResourceType" ToRole="CampTreasury" />
           <NavigationProperty Name="ResourceNode" Relationship="Self.fk_rnode_rtype" FromRole="ResourceType" ToRole="ResourceNode" />
+          <NavigationProperty Name="UserTreasury" Relationship="Self.fk_rtreasury_res" FromRole="ResourceType" ToRole="UserTreasury" />
         </EntityType>
         <EntityType Name="UserMovementHistory">
           <Key>
@@ -581,11 +841,26 @@
           <Property Name="trait_logistics" Type="Int32" Nullable="false" />
           <Property Name="trait_architecture" Type="Int32" Nullable="false" />
           <Property Name="trait_economics" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bg_user" FromRole="Users" ToRole="Battlegroup" />
-          <NavigationProperty Name="MinionOwnership" Relationship="Self.fk_ownership_users" FromRole="Users" ToRole="MinionOwnership" />
-          <NavigationProperty Name="UserMovementHistory" Relationship="Self.fk_usermove_user" FromRole="Users" ToRole="UserMovementHistory" />
           <Property Name="personal_bg_id" Type="Int32" />
           <Property Name="points" Type="Int32" />
+          <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bg_user" FromRole="Users" ToRole="Battlegroup" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_camp_user" FromRole="Users" ToRole="Camp" />
+          <NavigationProperty Name="Caravan" Relationship="Self.fk_caravan_user" FromRole="Users" ToRole="Caravan" />
+          <NavigationProperty Name="MinionOwnership" Relationship="Self.fk_ownership_users" FromRole="Users" ToRole="MinionOwnership" />
+          <NavigationProperty Name="Reputation" Relationship="Self.fk_rep_user" FromRole="Users" ToRole="Reputation" />
+          <NavigationProperty Name="UserMovementHistory" Relationship="Self.fk_usermove_user" FromRole="Users" ToRole="UserMovementHistory" />
+          <NavigationProperty Name="UserTreasury" Relationship="Self.fk_utreasury_user" FromRole="Users" ToRole="UserTreasury" />
+        </EntityType>
+        <EntityType Name="UserTreasury">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="res_id" Type="Int32" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Int32" />
+          <NavigationProperty Name="ResourceType" Relationship="Self.fk_rtreasury_res" FromRole="UserTreasury" ToRole="ResourceType" />
+          <NavigationProperty Name="Users" Relationship="Self.fk_utreasury_user" FromRole="UserTreasury" ToRole="Users" />
         </EntityType>
         <Association Name="fk_assignment_bg">
           <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="1" />
@@ -647,6 +922,90 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_camp_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Camp" Type="Self.Camp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Camp">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_caravan_destination">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="0..1" />
+          <End Role="Caravan" Type="Self.Caravan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Caravan">
+              <PropertyRef Name="destination_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_caravan_source">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="0..1" />
+          <End Role="Caravan" Type="Self.Caravan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Caravan">
+              <PropertyRef Name="source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ctreasury_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="CampTreasury" Type="Self.CampTreasury" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampTreasury">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rep_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="Reputation" Type="Self.Reputation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Reputation">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ctreasury_res">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="CampTreasury" Type="Self.CampTreasury" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampTreasury">
+              <PropertyRef Name="res_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_caravan_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Caravan" Type="Self.Caravan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Caravan">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_hnode_minion">
           <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
           <End Role="HiveNode" Type="Self.HiveNode" Multiplicity="*" />
@@ -695,6 +1054,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_rep_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Reputation" Type="Self.Reputation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Reputation">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_rnode_rtype">
           <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
           <End Role="ResourceNode" Type="Self.ResourceNode" Multiplicity="*" />
@@ -704,6 +1075,18 @@
             </Principal>
             <Dependent Role="ResourceNode">
               <PropertyRef Name="rtype_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rtreasury_res">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="UserTreasury" Type="Self.UserTreasury" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserTreasury">
+              <PropertyRef Name="res_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -719,21 +1102,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_utreasury_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserTreasury" Type="Self.UserTreasury" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserTreasury">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="MinionWarsEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AbilityStats" EntityType="Self.AbilityStats" />
           <EntitySet Name="Battlegroup" EntityType="Self.Battlegroup" />
           <EntitySet Name="BattlegroupAssignment" EntityType="Self.BattlegroupAssignment" />
           <EntitySet Name="BattlegroupMovementHistory" EntityType="Self.BattlegroupMovementHistory" />
+          <EntitySet Name="Camp" EntityType="Self.Camp" />
+          <EntitySet Name="CampTreasury" EntityType="Self.CampTreasury" />
+          <EntitySet Name="Caravan" EntityType="Self.Caravan" />
           <EntitySet Name="HiveNode" EntityType="Self.HiveNode" />
           <EntitySet Name="Minion" EntityType="Self.Minion" />
           <EntitySet Name="MinionOwnership" EntityType="Self.MinionOwnership" />
           <EntitySet Name="MinionType" EntityType="Self.MinionType" />
           <EntitySet Name="ModifierCoeficients" EntityType="Self.ModifierCoeficients" />
           <EntitySet Name="Orders" EntityType="Self.Orders" />
+          <EntitySet Name="Reputation" EntityType="Self.Reputation" />
           <EntitySet Name="ResourceNode" EntityType="Self.ResourceNode" />
           <EntitySet Name="ResourceType" EntityType="Self.ResourceType" />
           <EntitySet Name="UserMovementHistory" EntityType="Self.UserMovementHistory" />
           <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="UserTreasury" EntityType="Self.UserTreasury" />
           <AssociationSet Name="fk_assignment_bg" Association="Self.fk_assignment_bg">
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
@@ -754,6 +1154,34 @@
             <End Role="Minion" EntitySet="Minion" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
           </AssociationSet>
+          <AssociationSet Name="fk_camp_user" Association="Self.fk_camp_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Camp" EntitySet="Camp" />
+          </AssociationSet>
+          <AssociationSet Name="fk_caravan_destination" Association="Self.fk_caravan_destination">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="Caravan" EntitySet="Caravan" />
+          </AssociationSet>
+          <AssociationSet Name="fk_caravan_source" Association="Self.fk_caravan_source">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="Caravan" EntitySet="Caravan" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ctreasury_camp" Association="Self.fk_ctreasury_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="CampTreasury" EntitySet="CampTreasury" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rep_camp" Association="Self.fk_rep_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="Reputation" EntitySet="Reputation" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ctreasury_res" Association="Self.fk_ctreasury_res">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="CampTreasury" EntitySet="CampTreasury" />
+          </AssociationSet>
+          <AssociationSet Name="fk_caravan_user" Association="Self.fk_caravan_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Caravan" EntitySet="Caravan" />
+          </AssociationSet>
           <AssociationSet Name="fk_hnode_minion" Association="Self.fk_hnode_minion">
             <End Role="Minion" EntitySet="Minion" />
             <End Role="HiveNode" EntitySet="HiveNode" />
@@ -770,29 +1198,27 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="MinionOwnership" EntitySet="MinionOwnership" />
           </AssociationSet>
+          <AssociationSet Name="fk_rep_user" Association="Self.fk_rep_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Reputation" EntitySet="Reputation" />
+          </AssociationSet>
           <AssociationSet Name="fk_rnode_rtype" Association="Self.fk_rnode_rtype">
             <End Role="ResourceType" EntitySet="ResourceType" />
             <End Role="ResourceNode" EntitySet="ResourceNode" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rtreasury_res" Association="Self.fk_rtreasury_res">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="UserTreasury" EntitySet="UserTreasury" />
           </AssociationSet>
           <AssociationSet Name="fk_usermove_user" Association="Self.fk_usermove_user">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserMovementHistory" EntitySet="UserMovementHistory" />
           </AssociationSet>
-          <EntitySet Name="UserTraits" EntityType="MinionWarsModel.UserTraits" />
+          <AssociationSet Name="fk_utreasury_user" Association="Self.fk_utreasury_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTreasury" EntitySet="UserTreasury" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="UserTraits">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="cbg_size" Type="Int32" Nullable="false" />
-          <Property Name="cbg_count" Type="Int32" Nullable="false" />
-          <Property Name="cbg_speed" Type="Double" Nullable="false" />
-          <Property Name="arch_speed" Type="Double" Nullable="false" />
-          <Property Name="arch_def" Type="Int32" Nullable="false" />
-          <Property Name="arch_count" Type="Int32" Nullable="false" />
-          <Property Name="pbg_size" Type="Int32" Nullable="false" />
-        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -813,8 +1239,6 @@
           <EntitySetMapping Name="Battlegroup">
             <EntityTypeMapping TypeName="MinionWarsModel.Battlegroup">
               <MappingFragment StoreEntitySet="Battlegroup">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="owner_id" ColumnName="owner_id" />
                 <ScalarProperty Name="size" ColumnName="size" />
@@ -838,6 +1262,9 @@
                 <ScalarProperty Name="defense_mod" ColumnName="defense_mod" />
                 <ScalarProperty Name="location" ColumnName="location" />
                 <ScalarProperty Name="lastMovement" ColumnName="lastMovement" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="creation" ColumnName="creation" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -861,6 +1288,42 @@
                 <ScalarProperty Name="location" ColumnName="location" />
                 <ScalarProperty Name="activity_saturation" ColumnName="activity_saturation" />
                 <ScalarProperty Name="event_saturation" ColumnName="event_saturation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Camp">
+            <EntityTypeMapping TypeName="MinionWarsModel.Camp">
+              <MappingFragment StoreEntitySet="Camp">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="owner_id" ColumnName="owner_id" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="mapped_type" ColumnName="mapped_type" />
+                <ScalarProperty Name="richness" ColumnName="richness" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CampTreasury">
+            <EntityTypeMapping TypeName="MinionWarsModel.CampTreasury">
+              <MappingFragment StoreEntitySet="CampTreasury">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="res_id" ColumnName="res_id" />
+                <ScalarProperty Name="camp_id" ColumnName="camp_id" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Caravan">
+            <EntityTypeMapping TypeName="MinionWarsModel.Caravan">
+              <MappingFragment StoreEntitySet="Caravan">
+                <ScalarProperty Name="last_movement" ColumnName="last_movement" />
+                <ScalarProperty Name="current_step" ColumnName="current_step" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="owner_id" ColumnName="owner_id" />
+                <ScalarProperty Name="source_id" ColumnName="source_id" />
+                <ScalarProperty Name="destination_id" ColumnName="destination_id" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="directions" ColumnName="directions" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -930,12 +1393,22 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="MinionWarsModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
-                <ScalarProperty Name="current_step" ColumnName="current_step" />
-                <ScalarProperty Name="directions" ColumnName="directions" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="desc_text" ColumnName="desc_text" />
                 <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="directions" ColumnName="directions" />
+                <ScalarProperty Name="current_step" ColumnName="current_step" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reputation">
+            <EntityTypeMapping TypeName="MinionWarsModel.Reputation">
+              <MappingFragment StoreEntitySet="Reputation">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="camp_id" ColumnName="camp_id" />
+                <ScalarProperty Name="value" ColumnName="value" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -972,8 +1445,6 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="MinionWarsModel.Users">
               <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="points" ColumnName="points" />
-                <ScalarProperty Name="personal_bg_id" ColumnName="personal_bg_id" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="pass" ColumnName="pass" />
@@ -985,20 +1456,18 @@
                 <ScalarProperty Name="trait_logistics" ColumnName="trait_logistics" />
                 <ScalarProperty Name="trait_architecture" ColumnName="trait_architecture" />
                 <ScalarProperty Name="trait_economics" ColumnName="trait_economics" />
+                <ScalarProperty Name="personal_bg_id" ColumnName="personal_bg_id" />
+                <ScalarProperty Name="points" ColumnName="points" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UserTraits">
-            <EntityTypeMapping TypeName="MinionWarsModel.UserTraits">
-              <MappingFragment StoreEntitySet="UserTraits">
-                <ScalarProperty Name="pbg_size" ColumnName="pbg_size" />
-                <ScalarProperty Name="arch_count" ColumnName="arch_count" />
-                <ScalarProperty Name="arch_def" ColumnName="arch_def" />
-                <ScalarProperty Name="arch_speed" ColumnName="arch_speed" />
-                <ScalarProperty Name="cbg_speed" ColumnName="cbg_speed" />
-                <ScalarProperty Name="cbg_count" ColumnName="cbg_count" />
-                <ScalarProperty Name="cbg_size" ColumnName="cbg_size" />
+          <EntitySetMapping Name="UserTreasury">
+            <EntityTypeMapping TypeName="MinionWarsModel.UserTreasury">
+              <MappingFragment StoreEntitySet="UserTreasury">
                 <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="res_id" ColumnName="res_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

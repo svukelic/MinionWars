@@ -1,4 +1,6 @@
 ﻿using MinionWarsEntitiesLib.Models;
+using MinionWarsEntitiesLib.Structures;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -82,6 +84,11 @@ namespace MinionWarsEntitiesLib.Geolocations
             return OrdersParser.ParseDirections(GetDirections(orders.location.Latitude.Value, orders.location.Longitude.Value, current.Latitude.Value, current.Longitude.Value).Result);
         }
 
+        public static string GetCaravanDirections(DbGeography current, DbGeography destination)
+        {
+            return OrdersParser.ParseDirections(GetDirections(destination.Latitude.Value, destination.Longitude.Value, current.Latitude.Value, current.Longitude.Value).Result);
+        }
+
         public static DbGeography GetDirectionMovement(DbGeography current, Orders orders)
         {
             if (orders.directions == null) orders.directions = OrdersParser.ParseDirections(GetDirections(orders.location.Latitude.Value, orders.location.Longitude.Value, current.Latitude.Value, current.Longitude.Value).Result);
@@ -94,6 +101,24 @@ namespace MinionWarsEntitiesLib.Geolocations
 
                 db.Orders.Attach(orders);
                 db.Entry(orders).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            return OrdersParser.GetNextLoc(directions);
+        }
+
+        public static DbGeography GetCaravanDirectionMovement(Caravan car, DbGeography destination)
+        {
+            if (car.directions == null) car.directions = OrdersParser.ParseDirections(GetDirections(destination.Latitude.Value, destination.Longitude.Value, car.location.Latitude.Value, car.location.Longitude.Value).Result);
+
+            string directions = OrdersParser.UpdateNextLoc(car.directions);
+
+            using (var db = new MinionWarsEntities())
+            {
+                car.directions = directions;
+
+                db.Caravan.Attach(car);
+                db.Entry(car).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
             }
 
@@ -190,9 +215,37 @@ namespace MinionWarsEntitiesLib.Geolocations
             }
         }
 
-        public static void CheckForDiscovery()
+        public static List<Camp> InitiateDiscovery(DbGeography loc)
         {
+            string places = GetPlaces(loc.Latitude.Value, loc.Longitude.Value, 1000, "restaurant").Result;
+            List<Camp> newCamps = new List<Camp>();
+            List<DbGeography> newLocs = new List<DbGeography>();
+            //parse, create new camp
+            dynamic obj = JsonConvert.DeserializeObject(places);
+            for (int i = 0; i < obj.results.Count; i++)
+            {
+                dynamic place = obj.results[i];
+                var point = string.Format("POINT({1} {0})", place.geometry.location.lat, place.geometry.location.lng);
+                DbGeography newLoc = DbGeography.FromText(point);
+                newLocs.Add(newLoc);
+            }
 
+            foreach(DbGeography l in newLocs)
+            {
+                using (var db = new MinionWarsEntities())
+                {
+                    //Console.WriteLine("Discovery found");
+                    List<Camp> check = new List<Camp>();
+                    check = db.Camp.Where(x => x.location.Distance(l) <= 250).ToList();
+                    if (check.Count == 0)
+                    {
+                        Camp nc = CampManager.CreateCamp(-1, l);
+                        newCamps.Add(nc);
+                    }
+                }
+            }
+
+            return newCamps;
         }
     }
 }

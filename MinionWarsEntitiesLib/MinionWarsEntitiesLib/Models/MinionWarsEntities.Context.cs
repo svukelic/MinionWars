@@ -29,16 +29,20 @@ namespace MinionWarsEntitiesLib.Models
         public virtual DbSet<Battlegroup> Battlegroup { get; set; }
         public virtual DbSet<BattlegroupAssignment> BattlegroupAssignment { get; set; }
         public virtual DbSet<BattlegroupMovementHistory> BattlegroupMovementHistory { get; set; }
+        public virtual DbSet<Camp> Camp { get; set; }
+        public virtual DbSet<CampTreasury> CampTreasury { get; set; }
+        public virtual DbSet<Caravan> Caravan { get; set; }
         public virtual DbSet<HiveNode> HiveNode { get; set; }
         public virtual DbSet<Minion> Minion { get; set; }
         public virtual DbSet<MinionOwnership> MinionOwnership { get; set; }
         public virtual DbSet<MinionType> MinionType { get; set; }
         public virtual DbSet<ModifierCoeficients> ModifierCoeficients { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
+        public virtual DbSet<Reputation> Reputation { get; set; }
         public virtual DbSet<ResourceNode> ResourceNode { get; set; }
         public virtual DbSet<ResourceType> ResourceType { get; set; }
         public virtual DbSet<UserMovementHistory> UserMovementHistory { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<UserTraits> UserTraits { get; set; }
+        public virtual DbSet<UserTreasury> UserTreasury { get; set; }
     }
 }

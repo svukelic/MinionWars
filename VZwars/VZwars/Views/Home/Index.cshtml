@@ -11,6 +11,8 @@
 
 @Html.Partial("Partial_battlegroupPageModal")
 
+@Html.Partial("Partial_resourcesPageModal")
+
 @Html.Partial("Partial_clickModal")
 
 @Html.Partial("Partial_buildingModal")
@@ -19,27 +21,8 @@
 
 @Html.Partial("Partial_bgClickModal")
 
-<!-- Dodatne tipke -->
-<!--<div class="row">
-    <div class="col-md-3">
-        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">User info</button>
-    </div>
-    <div class="col-md-3">
-        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">Battlegroups</button>
-    </div>
-    <div class="col-md-3">
-        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">Camps</button>
-    </div>
-    <div class="col-md-3">
-        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userPageModal">Resources</button>
-    </div>
-</div>
-
-<hr />-->
-
 <!-- Mapa -->
 <div class="row">
-    <div class="col-md-12">
         @(Html.GoogleMap()
               .Name("map")
               .Center(c => c.Latitude(46.312d).Longitude(16.361d))
@@ -49,7 +32,6 @@
               .ApiKey("AIzaSyB3HF7za99ZA7QS8LhLJTkGN95LTB-_Ffk")
               .ClientEvents(events => events.OnMapClick("mapClickEvent").OnMapLoaded("mapLoadedEvent"))
         )
-    </div>
 </div>
 
 @section scripts
@@ -87,6 +69,14 @@
             }
         });
 
+        $(function(){
+            $(window).resize(function(){
+                var h = $(window).height();
+                //var w = $(window).width();
+                $("#map").css('height', 0.8 * h);
+            });
+        });
+
         function executeMapRefresh() {
             $.ajax({
                 type: "POST",
@@ -119,25 +109,34 @@
             var pos = new google.maps.LatLng({ lat: data.latitude, lng: data.longitude });
             var marker;
 
+            var icon_location = "";
             var userCheck = "Player";
+            var ncampCheck = "Neutral Camp";
+            var ycampCheck = "Your Camp";
+            var pcampCheck = "Player Camp";
             if(data.type.indexOf(userCheck) != -1){
-                marker = new google.maps.Marker({
-                    position: pos,
-                    map: map,
-                    id: data.id,
-                    title: data.type,
-                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-face.png'
-                });
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-face.png';
+            }
+            else if(data.type.indexOf(ncampCheck) != -1){
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-n.png';
+            }
+            else if(data.type.indexOf(ycampCheck) != -1){
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-p.png';
+            }
+            else if(data.type.indexOf(pcampCheck) != -1){
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-y.png';
             }
             else{
-                marker = new google.maps.Marker({
-                    position: pos,
-                    map: map,
-                    id: data.id,
-                    title: data.type,
-                    icon: 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-helmet.png'
-                });
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/dwarf-helmet.png';
             }
+
+            marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                id: data.id,
+                title: data.type,
+                icon: icon_location
+            });
 
             marker.addListener('click', function (e) {
                 //alert("clicked - " + this.getPosition());
@@ -153,7 +152,7 @@
                 }
                 $("#bgClickModal").modal();
             });
-            map.panTo(pos);
+            //map.panTo(pos);
             bgMarkersData.push(marker);
         }
 

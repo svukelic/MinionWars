@@ -1,5 +1,6 @@
 ﻿using MinionWarsEntitiesLib.AiManagers;
 using MinionWarsEntitiesLib.Models;
+using MinionWarsEntitiesLib.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +75,69 @@ namespace MinionWarsEntitiesLib.Geolocations
             }
 
             return bg;
+        }
+
+        public static Caravan UpdateCaravanPosition(Caravan car)
+        {
+            Camp destination;
+            using (var db = new MinionWarsEntities())
+            {
+                destination = db.Camp.Find(car.destination_id);
+            }
+
+            if (car.location.Distance(destination.location) <= 10)
+            {
+                car = CampManager.CaravanArrival(car);
+            }
+            else
+            {
+                if (car.current_step == null)
+                {
+                    car.current_step = Geolocations.GetCaravanDirectionMovement(car, destination.location);
+                    if (car.current_step == null)
+                    {
+                        car.directions = Geolocations.GetCaravanDirections(car.location, destination.location);
+                    }
+                    else
+                    {
+                        using (var db = new MinionWarsEntities())
+                        {
+                            db.Caravan.Attach(car);
+                            db.Entry(car).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                if (car.location.Distance(car.current_step) <= 10)
+                {
+                    car.current_step = Geolocations.GetCaravanDirectionMovement(car, destination.location);
+                    if (car.current_step == null)
+                    {
+                        car.directions = Geolocations.GetCaravanDirections(car.location, destination.location);
+                    }
+                    else
+                    {
+                        using (var db = new MinionWarsEntities())
+                        {
+                            db.Caravan.Attach(car);
+                            db.Entry(car).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                }
+
+                car.location = Geolocations.PerformDirectionMovement(car.location, car.current_step, car.last_movement.Value, 2);
+                car.last_movement = DateTime.Now;
+
+                using (var db = new MinionWarsEntities())
+                {
+                    db.Caravan.Attach(car);
+                    db.Entry(car).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+
+            return car;
         }
     }
 }

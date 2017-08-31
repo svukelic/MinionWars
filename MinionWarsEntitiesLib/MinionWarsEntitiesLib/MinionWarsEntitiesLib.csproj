@@ -91,6 +91,15 @@
     <Compile Include="Models\BattlegroupMovementHistory.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Camp.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CampTreasury.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Caravan.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\HiveNode.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
@@ -124,6 +133,9 @@
     <Compile Include="Models\Orders.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Reputation.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ResourceNode.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
@@ -136,7 +148,7 @@
     <Compile Include="Models\Users.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\UserTraits.cs">
+    <Compile Include="Models\UserTreasury.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -161,7 +173,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Models\MinionWarsEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

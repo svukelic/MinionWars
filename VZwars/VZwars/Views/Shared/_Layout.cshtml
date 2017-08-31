@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Minions Wars</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -20,11 +20,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Map", "Index", "Home")</li>
-                    <li><a href="#" data-toggle="modal" data-target="#userPageModal">User info</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#battlegroupPageModal">Battlegroups</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#userPageModal">Camps</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#userPageModal">Resources</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#userPageModal"><img src="~/Content/icons/barbute.png" /> User info</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#battlegroupPageModal"><img src="~/Content/icons/winged-sword.png" /> Battlegroups</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#userPageModal"><img src="~/Content/icons/castle.png" /> Camps</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#resourcesPageModal"><img src="~/Content/icons/locked-chest.png" /> Resources</a></li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

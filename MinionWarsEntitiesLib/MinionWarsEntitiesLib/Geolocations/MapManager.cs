@@ -1,4 +1,5 @@
 ﻿using MinionWarsEntitiesLib.Models;
+using MinionWarsEntitiesLib.Structures;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -17,6 +18,7 @@ namespace MinionWarsEntitiesLib.Geolocations
 
             List<Battlegroup> bg = new List<Battlegroup>();
             List<Users> users = new List<Users>();
+            List<Camp> camps = new List<Camp>();
             using (var db = new MinionWarsEntities())
             {
                 bg = db.Battlegroup.Where(x => x.location.Distance(loc) <= radius).ToList();
@@ -34,6 +36,30 @@ namespace MinionWarsEntitiesLib.Geolocations
                         MapObject obj = new MapObject(u.id, "Player - " + u.username, u.location);
                         mdm.objectList.Add(obj);
                     }
+                }
+
+                //camps
+                camps = db.Camp.Where(x=>x.location.Distance(loc) <= radius && x.owner_id == null).ToList(); //CampManager.ReturnCamps(loc, radius);
+                foreach(Camp c in camps)
+                {
+                    MapObject obj = new MapObject(c.id, "Neutral Camp", c.location);
+                    mdm.objectList.Add(obj);
+                }
+                camps = null;
+
+                camps = db.Camp.Where(x => x.location.Distance(loc) <= radius && x.owner_id == id).ToList(); //CampManager.ReturnCamps(loc, radius);
+                foreach (Camp c in camps)
+                {
+                    MapObject obj = new MapObject(c.id, "Your Camp", c.location);
+                    mdm.objectList.Add(obj);
+                }
+                camps = null;
+
+                camps = db.Camp.Where(x => x.location.Distance(loc) <= radius && x.owner_id != null && x.owner_id != id).ToList(); //CampManager.ReturnCamps(loc, radius);
+                foreach (Camp c in camps)
+                {
+                    MapObject obj = new MapObject(c.id, "Player Camp", c.location);
+                    mdm.objectList.Add(obj);
                 }
 
                 return mdm;

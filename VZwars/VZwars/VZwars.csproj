@@ -199,6 +199,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MinionModel.cs" />
+    <Compile Include="Models\TreasuryModel.cs" />
     <Compile Include="Models\UserDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -209,14 +210,33 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\fonts\aniron\aniron.gif" />
+    <Content Include="Content\fonts\aniron\example1.gif" />
+    <Content Include="Content\fonts\aniron\example2.gif" />
+    <Content Include="Content\fonts\aniron\liesmich.html" />
+    <Content Include="Content\fonts\aniron\prochitay.html" />
+    <Content Include="Content\fonts\aniron\readme.html" />
     <Content Include="Content\icons\barbute.png" />
     <Content Include="Content\icons\camping-tent.png" />
+    <Content Include="Content\icons\castle-n.png" />
+    <Content Include="Content\icons\castle-p.png" />
+    <Content Include="Content\icons\castle-y.png" />
+    <Content Include="Content\icons\castle.png" />
+    <Content Include="Content\icons\corn.png" />
     <Content Include="Content\icons\dwarf-face.png" />
     <Content Include="Content\icons\dwarf-helmet.png" />
     <Content Include="Content\icons\goblin-camp.png" />
     <Content Include="Content\icons\goblin_minion.png" />
     <Content Include="Content\icons\king.png" />
+    <Content Include="Content\icons\locked-chest.png" />
+    <Content Include="Content\icons\metal-bar.png" />
+    <Content Include="Content\icons\overlord-helm.png" />
+    <Content Include="Content\icons\pine-tree.png" />
+    <Content Include="Content\icons\spartan-helmet.png" />
+    <Content Include="Content\icons\stone-pile.png" />
+    <Content Include="Content\icons\sword-spade.png" />
     <Content Include="Content\icons\visored-helm.png" />
+    <Content Include="Content\icons\winged-sword.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -229,6 +249,8 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\fonts\aniron\anirb___.ttf" />
+    <Content Include="Content\fonts\aniron\anirm___.ttf" />
     <None Include="Properties\PublishProfiles\Minion-wars - Web Deploy.pubxml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -306,6 +328,7 @@
     <Content Include="Views\Home\Partial_battlegroupRemote.cshtml" />
     <Content Include="Views\Home\Partial_groupCreationModal.cshtml" />
     <Content Include="Views\Home\Partial_bgClickModal.cshtml" />
+    <Content Include="Views\Shared\_LayoutInitial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

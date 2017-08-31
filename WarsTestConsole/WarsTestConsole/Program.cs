@@ -13,6 +13,7 @@ using MinionWarsEntitiesLib.Combat;
 using MinionWarsEntitiesLib.Structures;
 using Newtonsoft.Json;
 using System.IO;
+using MinionWarsEntitiesLib.Resources;
 
 namespace WarsTestConsole
 {
@@ -25,8 +26,8 @@ namespace WarsTestConsole
             Console.WriteLine("TEST");
             //46.318565799999995 16.34576590000006
             var point = string.Format("POINT({1} {0})", 46.31856579999999, 16.34576590000006);
-            /*DbGeography loc = DbGeography.FromText(point);
-            MapDataModel mdm = MapManager.GetMapData(point, 1000);
+            DbGeography loc = DbGeography.FromText(point);
+            /*MapDataModel mdm = MapManager.GetMapData(point, 1000);
             Console.WriteLine(mdm.objectList.Count);*/
 
             //Console.WriteLine(UserDataManager.GetUserData(1).user.username);
@@ -38,7 +39,7 @@ namespace WarsTestConsole
             Console.WriteLine(l1.Distance(l2));*/
 
             //Console.WriteLine(UserDataManager.GetUserData(1).user.username);
-            WildMinionsTest.Generate(point);
+            //WildMinionsTest.Generate(point);
 
             /*decimal movement = 1000m / (1852m * 60m);
             double m = (double)movement;
@@ -55,6 +56,13 @@ namespace WarsTestConsole
             /*dynamic ds = JsonConvert.DeserializeObject(test);
             Console.WriteLine(ds.routes[0].legs[0].steps.Count);
             Console.WriteLine(ds.routes[0].legs[0].steps[0].end_location.lat);*/
+
+            /*List<Camp> camps = CampManager.ReturnCamps(loc, 1000);
+            Console.WriteLine(camps.Count);*/
+
+            List<UserTreasury> ut = ResourceManager.GetUserTreasury(8);
+            Console.WriteLine(ut[0].ResourceType.name);
+            Console.WriteLine(ut[0].amount);
 
             Console.WriteLine("DONE");
             Console.ReadKey();

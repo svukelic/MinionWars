@@ -17,6 +17,7 @@ namespace MinionWarsEntitiesLib.Battlegroups
         {
             Battlegroup bg = new Battlegroup();
             SetBasicModifiers(bg);
+            bg.creation = DateTime.Now;
 
             if (owner_id != null)
             {
@@ -160,12 +161,24 @@ namespace MinionWarsEntitiesLib.Battlegroups
             {
                 using (var db = new MinionWarsEntities())
                 {
-                    newBg = db.Battlegroup.Find(lastAssigned);
-                    lastAssigned++;
+                    do
+                    {
+                        newBg = db.Battlegroup.Find(lastAssigned);
+                        lastAssigned++;
+                    } while (newBg.location == null || newBg.orders_id == null);
                 }
             }
 
             return newBg;
+        }
+
+        public static List<Battlegroup> GetAllActiveGroups()
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                List<Battlegroup> bgl = db.Battlegroup.Where(x => x.location != null && x.orders_id != null).ToList();
+                return bgl;
+            }
         }
 
         public static Battlegroup UpdatePosition(Battlegroup bg)

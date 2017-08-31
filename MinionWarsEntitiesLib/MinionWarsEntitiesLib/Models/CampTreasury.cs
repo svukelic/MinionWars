@@ -12,15 +12,14 @@ namespace MinionWarsEntitiesLib.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class UserTraits
+    public partial class CampTreasury
     {
         public int id { get; set; }
-        public int cbg_size { get; set; }
-        public int cbg_count { get; set; }
-        public double cbg_speed { get; set; }
-        public double arch_speed { get; set; }
-        public int arch_def { get; set; }
-        public int arch_count { get; set; }
-        public int pbg_size { get; set; }
+        public int res_id { get; set; }
+        public int camp_id { get; set; }
+        public Nullable<int> amount { get; set; }
+    
+        public virtual Camp Camp { get; set; }
+        public virtual ResourceType ResourceType { get; set; }
     }
 }

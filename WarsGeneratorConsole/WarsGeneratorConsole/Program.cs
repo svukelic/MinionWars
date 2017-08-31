@@ -28,6 +28,9 @@ namespace WarsGeneratorConsole
             Timer hiveTimer = new Timer(1000 * 60 * 60);
             hiveTimer.Elapsed += new ElapsedEventHandler(HiveGenerationEvent);
 
+            Timer caravanTimer = new Timer(1000 * 60 * 15);
+            caravanTimer.Elapsed += new ElapsedEventHandler(CaravanGenerationEvent);
+
             while (true)
             {
                 System.Threading.Thread.Sleep(100);
@@ -93,6 +96,11 @@ namespace WarsGeneratorConsole
                 HiveManager.generateRandomHive(u.location);
                 UsersManager.UpdateEventSaturations(u.location, -5);
             }
+        }
+
+        private static void CaravanGenerationEvent(object source, ElapsedEventArgs e)
+        {
+            //generate caravans
         }
     }
 }

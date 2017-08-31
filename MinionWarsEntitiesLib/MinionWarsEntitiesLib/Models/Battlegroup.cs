@@ -46,6 +46,7 @@ namespace MinionWarsEntitiesLib.Models
         public Nullable<System.DateTime> lastMovement { get; set; }
         public int type { get; set; }
         public string name { get; set; }
+        public Nullable<System.DateTime> creation { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BattlegroupAssignment> BattlegroupAssignment { get; set; }
