@@ -19,6 +19,9 @@ namespace MinionWarsEntitiesLib.Geolocations
             List<Battlegroup> bg = new List<Battlegroup>();
             List<Users> users = new List<Users>();
             List<Camp> camps = new List<Camp>();
+            List<ResourceNode> res = new List<ResourceNode>();
+            List<HiveNode> hives = new List<HiveNode>();
+            List<Caravan> caravans = new List<Caravan>();
             using (var db = new MinionWarsEntities())
             {
                 bg = db.Battlegroup.Where(x => x.location.Distance(loc) <= radius).ToList();
@@ -39,12 +42,12 @@ namespace MinionWarsEntitiesLib.Geolocations
                 }
 
                 //camps
-                CampManager.CheckForDiscovery(loc, radius);
+                //CampManager.CheckForDiscovery(loc, radius);
 
                 camps = db.Camp.Where(x=>x.location.Distance(loc) <= radius && x.owner_id == null).ToList(); //CampManager.ReturnCamps(loc, radius);
                 foreach(Camp c in camps)
                 {
-                    MapObject obj = new MapObject(c.id, "Neutral Camp", c.location);
+                    MapObject obj = new MapObject(c.id, c.name, c.location);
                     mdm.objectList.Add(obj);
                 }
                 camps = null;
@@ -52,7 +55,7 @@ namespace MinionWarsEntitiesLib.Geolocations
                 camps = db.Camp.Where(x => x.location.Distance(loc) <= radius && x.owner_id == id).ToList(); //CampManager.ReturnCamps(loc, radius);
                 foreach (Camp c in camps)
                 {
-                    MapObject obj = new MapObject(c.id, "Your Camp", c.location);
+                    MapObject obj = new MapObject(c.id, "Your Camp - " + c.name, c.location);
                     mdm.objectList.Add(obj);
                 }
                 camps = null;
@@ -60,7 +63,31 @@ namespace MinionWarsEntitiesLib.Geolocations
                 camps = db.Camp.Where(x => x.location.Distance(loc) <= radius && x.owner_id != null && x.owner_id != id).ToList(); //CampManager.ReturnCamps(loc, radius);
                 foreach (Camp c in camps)
                 {
-                    MapObject obj = new MapObject(c.id, "Player Camp", c.location);
+                    MapObject obj = new MapObject(c.id, "Player Camp - " + c.name, c.location);
+                    mdm.objectList.Add(obj);
+                }
+
+                //caravans
+                caravans = db.Caravan.Where(x => x.location.Distance(loc) <= radius).ToList();
+                foreach (Caravan car in caravans)
+                {
+                    MapObject obj = new MapObject(car.id, "Caravan", car.location);
+                    mdm.objectList.Add(obj);
+                }
+
+                //resources
+                res = db.ResourceNode.Where(x => x.location.Distance(loc) <= radius).ToList();
+                foreach(ResourceNode r in res)
+                {
+                    MapObject obj = new MapObject(r.id, "Resource Node - " + db.ResourceType.Find(r.rtype_id).name, r.location);
+                    mdm.objectList.Add(obj);
+                }
+
+                //hives
+                hives = db.HiveNode.Where(x => x.location.Distance(loc) <= radius).ToList();
+                foreach (HiveNode h in hives)
+                {
+                    MapObject obj = new MapObject(h.id, "Hive Node", h.location);
                     mdm.objectList.Add(obj);
                 }
 

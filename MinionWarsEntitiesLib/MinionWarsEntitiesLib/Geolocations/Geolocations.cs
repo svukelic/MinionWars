@@ -1,6 +1,7 @@
 ﻿using MinionWarsEntitiesLib.Models;
 using MinionWarsEntitiesLib.Structures;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -222,26 +223,31 @@ namespace MinionWarsEntitiesLib.Geolocations
             List<DbGeography> newLocs = new List<DbGeography>();
             //parse, create new camp
             dynamic obj = JsonConvert.DeserializeObject(places);
-            for (int i = 0; i < obj.results.Count; i++)
+            //dynamic obj = JObject.Parse(places);
+            if(obj["results"] != null)
             {
-                dynamic place = obj.results[i];
-                var point = string.Format("POINT({1} {0})", place.geometry.location.lat, place.geometry.location.lng);
-                DbGeography newLoc = DbGeography.FromText(point);
-                newLocs.Add(newLoc);
+                for (int i = 0; i < obj["results"].Count; i++)
+                {
+                    dynamic place = obj["results"][i];
+                    var point = string.Format("POINT({1} {0})", place["geometry"]["location"]["lat"], place["geometry"]["location"]["lng"]);
+                    DbGeography newLoc = DbGeography.FromText(point);
+                    newLocs.Add(newLoc);
+                }
             }
 
-            foreach(DbGeography l in newLocs)
+            using (var db = new MinionWarsEntities())
             {
-                using (var db = new MinionWarsEntities())
+                foreach (DbGeography l in newLocs)
                 {
                     //Console.WriteLine("Discovery found");
                     List<Camp> check = new List<Camp>();
                     check = db.Camp.Where(x => x.location.Distance(l) <= 250).ToList();
                     if (check.Count == 0)
                     {
-                        Camp nc = CampManager.CreateCamp(-1, l);
+                        Camp nc = CampManager.CreateCamp(-1, l, "Neutral Camp");
                         newCamps.Add(nc);
                     }
+
                 }
             }
 

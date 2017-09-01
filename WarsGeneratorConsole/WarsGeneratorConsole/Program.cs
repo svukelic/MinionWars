@@ -20,32 +20,52 @@ namespace WarsGeneratorConsole
         static Random r = new Random();
         static void Main(string[] args)
         {
+            Console.WriteLine("Started");
+
+            Timer satTimer = new Timer(1000 * 60 * 5);
+            satTimer.Elapsed += new ElapsedEventHandler(UpdateActivitySaturation);
+            satTimer.Enabled = true;
+
             Timer locTimer = new Timer(1000 * 60 * 15);
             locTimer.Elapsed += new ElapsedEventHandler(GetLocs);
+            locTimer.Enabled = true;
 
             AssignEvents();
 
             Timer hiveTimer = new Timer(1000 * 60 * 60);
             hiveTimer.Elapsed += new ElapsedEventHandler(HiveGenerationEvent);
+            hiveTimer.Enabled = true;
 
             Timer caravanTimer = new Timer(1000 * 60 * 15);
             caravanTimer.Elapsed += new ElapsedEventHandler(CaravanGenerationEvent);
+            hiveTimer.Enabled = true;
 
             while (true)
             {
-                System.Threading.Thread.Sleep(100);
+                Console.WriteLine(DateTime.Now + " - Pending events count: " + pendingLocEvents.Count);
+                System.Threading.Thread.Sleep(10000);
             }
         }
 
         private static void GetLocs(object source, ElapsedEventArgs e)
         {
-            List<UserMovementHistory> umh = UsersManager.GetLatestLocations(15);
-            foreach(UserMovementHistory u in umh)
+            Console.WriteLine("GetLocs initiated");
+            List<UserMovementHistory> umh = UsersManager.GetLatestLocations(60);
+            if(umh.Count > 0)
             {
-                if(u.activity_saturation.Value == 0.5 || u.activity_saturation.Value == 0.9)
+                //Console.WriteLine("Movement count: " + umh.Count);
+                foreach (UserMovementHistory u in umh)
                 {
-                    pendingLocEvents.Add(u.location);
+                    decimal value = (decimal)u.activity_saturation.Value;
+                    if ((value >= (decimal)0.45 && value <= (decimal)0.55) || (value >= (decimal)0.85 && value <= (decimal)0.95))
+                    {
+                        pendingLocEvents.Add(u.location);
+                    }
                 }
+            }
+            else
+            {
+                Console.WriteLine("No recent movement");
             }
         }
 
@@ -73,15 +93,24 @@ namespace WarsGeneratorConsole
             }
         }
 
+        private static void UpdateActivitySaturation(object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine("Activity saturation update started");
+            UsersManager.UpdateActivitySaturations();
+        }
+
         private static void ResGenerationEvent(DbGeography loc)
         {
+            Console.WriteLine("Resource generation started");
             //generate resource node
             ResourceNode res = ResourceManager.generateRandomResource(loc);
             UsersManager.UpdateEventSaturations(loc, 1);
+            Console.WriteLine("Resource generated: " + res.location.Latitude + " | " + res.location.Longitude);
         }
 
         private static void MinionGenerationEvent(DbGeography loc)
         {
+            Console.WriteLine("Wild Group generation started");
             //generate wild minion group
             WildMinionGeneratorManager.GenerateWildMinionGroup(loc);
             UsersManager.UpdateEventSaturations(loc, 1);
@@ -89,18 +118,25 @@ namespace WarsGeneratorConsole
 
         private static void HiveGenerationEvent(object source, ElapsedEventArgs e)
         {
+            Console.WriteLine("Hive generation started");
             //generate new hives in top 10% event saturated locs, lower event saturation
-            List<UserMovementHistory> umh = UsersManager.GetHighestEventSaturationLocations(10);
+            List<UserMovementHistory> umh = UsersManager.GetHighestEventSaturationLocations((decimal)0.1);
             foreach(UserMovementHistory u in umh)
             {
-                HiveManager.generateRandomHive(u.location);
+                HiveNode h = HiveManager.generateRandomHive(u.location);
                 UsersManager.UpdateEventSaturations(u.location, -5);
+                Console.WriteLine("Hive generated: " + h.location.Latitude + " | " + h.location.Longitude);
             }
         }
 
         private static void CaravanGenerationEvent(object source, ElapsedEventArgs e)
         {
-            //generate caravans
+            Console.WriteLine("Caravan generation started");
+            List<Caravan> list = CampManager.GenerateCaravans();
+            foreach(Caravan c in list)
+            {
+                Console.WriteLine("Caravan generated: " + c.location.Latitude + " | " + c.location.Longitude);
+            }
         }
     }
 }

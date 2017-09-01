@@ -13,6 +13,7 @@ using MinionWarsEntitiesLib.Combat;
 using MinionWarsEntitiesLib.Battlegroups;
 using MinionWarsEntitiesLib.Structures;
 using System.Threading.Tasks;
+using MinionWarsEntitiesLib.Resources;
 
 namespace VZwars.Controllers
 {
@@ -74,10 +75,10 @@ namespace VZwars.Controllers
             return Json(result);
         }
 
-        public ActionResult BuildCamp(double lat, double lon)
+        public ActionResult BuildCamp(double lat, double lon, string name)
         {
             var point = string.Format("POINT({1} {0})", lat, lon);
-            Camp c = CampManager.CreateUserCamp(point, Convert.ToInt32(Session["UserId"]));
+            Camp c = CampManager.CreateUserCamp(point, Convert.ToInt32(Session["UserId"]), name);
             if (c == null) return Json("Camp couldn't be built!");
             else return Json("Camp built!");
         }
@@ -121,6 +122,22 @@ namespace VZwars.Controllers
             if (log == null) message = "You cannot attack your own minions!";
             else if (log.winner.id == Convert.ToInt32(Session["UserId"])) message = "You won! +50 exp";
             else message = "You lost!";
+
+            return Json(message);
+        }
+
+        public ActionResult ConsumeResource(int target_id)
+        {
+            ResourceManager.ConsumeResourceNode(Convert.ToInt32(Session["UserId"]), target_id);
+            string message = "You gained 30 resources!";
+
+            return Json(message);
+        }
+
+        public ActionResult ConsumeHive(int target_id)
+        {
+            HiveManager.ConsumeHiveNode(Convert.ToInt32(Session["UserId"]), target_id);
+            string message = "You gained 10 minions!";
 
             return Json(message);
         }

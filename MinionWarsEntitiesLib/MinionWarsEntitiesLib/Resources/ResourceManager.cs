@@ -14,18 +14,26 @@ namespace MinionWarsEntitiesLib.Resources
         {
             using (var db = new MinionWarsEntities())
             {
-                Random r = new Random();
-                List<ResourceType> rtypeList = db.ResourceType.ToList();
+                List<ResourceNode> list = db.ResourceNode.Where(x => x.location.Distance(loc) <= 250).ToList();
+                if(list.Count > 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    Random r = new Random();
+                    List<ResourceType> rtypeList = db.ResourceType.ToList();
 
-                ResourceNode newRes = new ResourceNode();
-                //var point = string.Format("POINT({1} {0})", latitude, longitude);
-                newRes.location = loc;
-                newRes.rtype_id = r.Next(1, rtypeList.Count);
+                    ResourceNode newRes = new ResourceNode();
+                    //var point = string.Format("POINT({1} {0})", latitude, longitude);
+                    newRes.location = loc;
+                    newRes.rtype_id = r.Next(1, rtypeList.Count);
 
-                db.ResourceNode.Add(newRes);
-                db.SaveChanges();
+                    db.ResourceNode.Add(newRes);
+                    db.SaveChanges();
 
-                return newRes;
+                    return newRes;
+                }
             }
         }
 
@@ -37,6 +45,23 @@ namespace MinionWarsEntitiesLib.Resources
                 List<ResourceType> list = db.ResourceType.ToList();
                 list = list.OrderBy(a => r.Next()).ToList();
                 return list;
+            }
+        }
+
+        public static void ConsumeResourceNode(int user_id, int node_id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                ResourceNode node = db.ResourceNode.Find(node_id);
+                UserTreasury ut = db.UserTreasury.Where(x => x.user_id == user_id && x.res_id == node.rtype_id).First();
+                ut.amount += 30;
+
+                db.UserTreasury.Attach(ut);
+                db.Entry(ut).State = System.Data.Entity.EntityState.Modified;
+
+                db.ResourceNode.Remove(node);
+
+                db.SaveChanges();
             }
         }
 

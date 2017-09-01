@@ -77,6 +77,7 @@
           <Property Name="type" Type="varchar" MaxLength="80" />
           <Property Name="mapped_type" Type="varchar" MaxLength="80" />
           <Property Name="richness" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="CampTreasury">
           <Key>
@@ -677,6 +678,7 @@
           <NavigationProperty Name="Caravan1" Relationship="Self.fk_caravan_source" FromRole="Camp" ToRole="Caravan" />
           <NavigationProperty Name="CampTreasury" Relationship="Self.fk_ctreasury_camp" FromRole="Camp" ToRole="CampTreasury" />
           <NavigationProperty Name="Reputation" Relationship="Self.fk_rep_camp" FromRole="Camp" ToRole="Reputation" />
+          <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CampTreasury">
           <Key>
@@ -1294,6 +1296,7 @@
           <EntitySetMapping Name="Camp">
             <EntityTypeMapping TypeName="MinionWarsModel.Camp">
               <MappingFragment StoreEntitySet="Camp">
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="owner_id" ColumnName="owner_id" />
                 <ScalarProperty Name="location" ColumnName="location" />

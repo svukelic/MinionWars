@@ -29,6 +29,7 @@ namespace MinionWarsEntitiesLib.Models
         public string type { get; set; }
         public string mapped_type { get; set; }
         public Nullable<int> richness { get; set; }
+        public string name { get; set; }
     
         public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

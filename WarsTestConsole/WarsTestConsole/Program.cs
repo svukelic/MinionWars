@@ -14,6 +14,7 @@ using MinionWarsEntitiesLib.Structures;
 using Newtonsoft.Json;
 using System.IO;
 using MinionWarsEntitiesLib.Resources;
+using MinionWarsEntitiesLib.Minions;
 
 namespace WarsTestConsole
 {
@@ -27,8 +28,31 @@ namespace WarsTestConsole
             //46.318565799999995 16.34576590000006
             var point = string.Format("POINT({1} {0})", 46.31856579999999, 16.34576590000006);
             DbGeography loc = DbGeography.FromText(point);
-            /*MapDataModel mdm = MapManager.GetMapData(point, 1000);
-            Console.WriteLine(mdm.objectList.Count);*/
+            /*MapDataModel mdm = MapManager.GetMapData(11, point, 1000);
+            Console.WriteLine(mdm.objectList.Count);
+            foreach(MapObject m in mdm.objectList)
+            {
+                Console.WriteLine(m.type);
+            }*/
+
+            List<UserMovementHistory> umh = UsersManager.GetHighestEventSaturationLocations((decimal)0.1);
+            Console.WriteLine(umh.Count);
+            foreach(UserMovementHistory u in umh)
+            {
+                Console.WriteLine(u.occurence);
+            }
+
+            /*HiveNode h = HiveManager.generateRandomHive(loc);
+            UsersManager.UpdateEventSaturations(loc, -5);
+            Console.WriteLine("Hive generated: " + h.location.Latitude + " | " + h.location.Longitude);*/
+
+            //UsersManager.UpdateActivitySaturations();
+
+            /*List<Caravan> list = CampManager.GenerateCaravans();
+            foreach (Caravan c in list)
+            {
+                Console.WriteLine("Caravan generated: " + c.location.Latitude + " | " + c.location.Longitude);
+            }*/
 
             //Console.WriteLine(UserDataManager.GetUserData(1).user.username);
 
@@ -59,8 +83,21 @@ namespace WarsTestConsole
 
             /*List<Camp> camps = CampManager.ReturnCamps(loc, 1000);
             Console.WriteLine(camps.Count);*/
+            //CampManager.CheckForDiscovery(loc, 1000);
 
-            
+            /*string places = Geolocations.GetPlaces(loc.Latitude.Value, loc.Longitude.Value, 1000, "restaurant").Result;
+            dynamic obj = JsonConvert.DeserializeObject(places);
+            Console.WriteLine(obj.results.Count);
+            for (int i = 0; i < obj.results.Count; i++)
+            {
+                dynamic place = obj.results[i];
+                var p = string.Format("POINT({1} {0})", place.geometry.location.lat, place.geometry.location.lng);
+                Console.WriteLine("p: " + p);
+            }*/
+
+            /*List<UserTreasury> ut = ResourceManager.GetUserTreasury(8);
+            Console.WriteLine(ut[0].ResourceType.name);
+            Console.WriteLine(ut[0].amount);*/
 
             Console.WriteLine("DONE");
             Console.ReadKey();

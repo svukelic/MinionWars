@@ -25,6 +25,8 @@ namespace MinionWarsEntitiesLib.EntityManagers
                         newMovement.users_id = user_id;
                         newMovement.occurence = DateTime.Now;
                         newMovement.location = user.location;
+                        newMovement.activity_saturation = 1;
+                        newMovement.event_saturation = 0;
                         db.UserMovementHistory.Add(newMovement);
                     }
 
@@ -58,17 +60,19 @@ namespace MinionWarsEntitiesLib.EntityManagers
         {
             using (var db = new MinionWarsEntities())
             {
-                List<UserMovementHistory> umh = db.UserMovementHistory.Where(x => (x.occurence - DateTime.Now).TotalMinutes <= 15).ToList();
+                //List<UserMovementHistory> umh = db.UserMovementHistory.Where(x => (x.occurence - DateTime.Now).TotalMinutes <= time).ToList();
+                List<UserMovementHistory> umh = db.UserMovementHistory.ToList();
                 return umh;
             }
         }
 
-        public static List<UserMovementHistory> GetHighestEventSaturationLocations(double percentage)
+        public static List<UserMovementHistory> GetHighestEventSaturationLocations(decimal percentage)
         {
             using (var db = new MinionWarsEntities())
             {
                 List<UserMovementHistory> umh = db.UserMovementHistory.OrderByDescending(x => x.event_saturation).ToList();
-                int toTake = Convert.ToInt32(percentage * umh.Count);
+                int toTake = Convert.ToInt32(Math.Floor(percentage * umh.Count));
+                if (toTake == 0) toTake = 1;
                 List<UserMovementHistory> limitedUmh = umh.Take(toTake).ToList();
 
                 return limitedUmh;
@@ -87,6 +91,31 @@ namespace MinionWarsEntitiesLib.EntityManagers
                     if (u.event_saturation < 0) u.event_saturation = 0;
                     db.UserMovementHistory.Attach(u);
                     db.Entry(u).State = System.Data.Entity.EntityState.Modified;
+                }
+
+                db.SaveChanges();
+            }
+        }
+
+        public static void UpdateActivitySaturations()
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                List < UserMovementHistory > history = db.UserMovementHistory.Where(x => x.activity_saturation > 0).ToList();
+                foreach (UserMovementHistory h in history)
+                {
+                    var difference = DateTime.Now - h.occurence;
+                    var value = Math.Floor((difference.TotalSeconds - 300 * difference.TotalMinutes) / 5);
+                    h.activity_saturation -= 0.01*value;
+                    if (h.activity_saturation <= 0)
+                    {
+                        db.UserMovementHistory.Remove(h);
+                    }
+                    else
+                    {
+                        db.UserMovementHistory.Attach(h);
+                        db.Entry(h).State = System.Data.Entity.EntityState.Modified;
+                    }
                 }
 
                 db.SaveChanges();

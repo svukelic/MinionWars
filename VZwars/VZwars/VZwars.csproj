@@ -228,9 +228,12 @@
     <Content Include="Content\icons\dwarf-helmet.png" />
     <Content Include="Content\icons\goblin-camp.png" />
     <Content Include="Content\icons\goblin_minion.png" />
+    <Content Include="Content\icons\heart-tower.png" />
     <Content Include="Content\icons\king.png" />
     <Content Include="Content\icons\locked-chest.png" />
     <Content Include="Content\icons\metal-bar.png" />
+    <Content Include="Content\icons\mine-wagon.png" />
+    <Content Include="Content\icons\old-wagon.png" />
     <Content Include="Content\icons\overlord-helm.png" />
     <Content Include="Content\icons\pine-tree.png" />
     <Content Include="Content\icons\spartan-helmet.png" />
@@ -322,6 +325,9 @@
     <Content Include="Views\Home\Partial_campClickModal.cshtml" />
     <Content Include="Views\Home\Partial_groupDetailsModal.cshtml" />
     <Content Include="Views\Home\Partial_campPageModal.cshtml" />
+    <Content Include="Views\Home\Partial_loadingModal.cshtml" />
+    <Content Include="Views\Home\Partial_resNodeClickModal.cshtml" />
+    <Content Include="Views\Home\Partial_hiveNodeClickModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
