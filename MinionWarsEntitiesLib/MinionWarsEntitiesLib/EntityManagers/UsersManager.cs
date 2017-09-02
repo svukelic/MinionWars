@@ -99,12 +99,13 @@ namespace MinionWarsEntitiesLib.EntityManagers
 
         public static void UpdateActivitySaturations()
         {
+            DateTime now = DateTime.Now;
             using (var db = new MinionWarsEntities())
             {
                 List < UserMovementHistory > history = db.UserMovementHistory.Where(x => x.activity_saturation > 0).ToList();
                 foreach (UserMovementHistory h in history)
                 {
-                    var difference = DateTime.Now - h.occurence;
+                    var difference = now - h.occurence;
                     var value = Math.Floor((difference.TotalSeconds - 300 * difference.TotalMinutes) / 5);
                     h.activity_saturation -= 0.01*value;
                     if (h.activity_saturation <= 0)
@@ -116,6 +117,22 @@ namespace MinionWarsEntitiesLib.EntityManagers
                         db.UserMovementHistory.Attach(h);
                         db.Entry(h).State = System.Data.Entity.EntityState.Modified;
                     }
+                }
+
+                //check last activity;
+                history = history.OrderByDescending(x => x.occurence).ToList();
+                if ((now - history.First().occurence).TotalMinutes >= 15)
+                {
+                    Users user = db.Users.Find(history.First().users_id);
+                    user.online = 0;
+
+                    if ((now - history.First().occurence).TotalHours >= 24)
+                    {
+                        user.online = -1;
+                    }
+
+                    db.Users.Attach(user);
+                    db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                 }
 
                 db.SaveChanges();

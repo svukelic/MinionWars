@@ -18,6 +18,9 @@ namespace MinionWarsEntitiesLib.Models
         public ResourceType()
         {
             this.CampTreasury = new HashSet<CampTreasury>();
+            this.CostsBuilding = new HashSet<CostsBuilding>();
+            this.CostsMinion = new HashSet<CostsMinion>();
+            this.ResourceBuilding = new HashSet<ResourceBuilding>();
             this.ResourceNode = new HashSet<ResourceNode>();
             this.UserTreasury = new HashSet<UserTreasury>();
         }
@@ -28,6 +31,12 @@ namespace MinionWarsEntitiesLib.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CampTreasury> CampTreasury { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CostsBuilding> CostsBuilding { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CostsMinion> CostsMinion { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ResourceBuilding> ResourceBuilding { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ResourceNode> ResourceNode { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -35,13 +35,6 @@ namespace WarsTestConsole
                 Console.WriteLine(m.type);
             }*/
 
-            List<UserMovementHistory> umh = UsersManager.GetHighestEventSaturationLocations((decimal)0.1);
-            Console.WriteLine(umh.Count);
-            foreach(UserMovementHistory u in umh)
-            {
-                Console.WriteLine(u.occurence);
-            }
-
             /*HiveNode h = HiveManager.generateRandomHive(loc);
             UsersManager.UpdateEventSaturations(loc, -5);
             Console.WriteLine("Hive generated: " + h.location.Latitude + " | " + h.location.Longitude);*/
@@ -83,7 +76,9 @@ namespace WarsTestConsole
 
             /*List<Camp> camps = CampManager.ReturnCamps(loc, 1000);
             Console.WriteLine(camps.Count);*/
+
             //CampManager.CheckForDiscovery(loc, 1000);
+            //CampManager.CreateCamp(17, loc, "Throne");
 
             /*string places = Geolocations.GetPlaces(loc.Latitude.Value, loc.Longitude.Value, 1000, "restaurant").Result;
             dynamic obj = JsonConvert.DeserializeObject(places);
@@ -98,6 +93,20 @@ namespace WarsTestConsole
             /*List<UserTreasury> ut = ResourceManager.GetUserTreasury(8);
             Console.WriteLine(ut[0].ResourceType.name);
             Console.WriteLine(ut[0].amount);*/
+
+            using (var db = new MinionWarsEntities())
+            {
+                List<CostsBuilding> cbl = db.CostsBuilding.Where(x => x.b_id == 1).ToList();
+                List<UserTreasury> utl = db.UserTreasury.Where(x => x.user_id == 17).ToList();
+
+                foreach (CostsBuilding cb in cbl)
+                {
+                    UserTreasury ut = utl.Where(x => x.res_id == cb.r_id).First();
+                    Console.WriteLine("Amount: " + cb.amount.Value);
+                }
+
+                Console.Write("ok");
+            }
 
             Console.WriteLine("DONE");
             Console.ReadKey();

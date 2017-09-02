@@ -90,7 +90,15 @@ namespace MinionWarsEntitiesLib.EntityManagers
             using (var db = new MinionWarsEntities())
             {
                 db.Configuration.LazyLoadingEnabled = false;
-                return db.Camp.Where(x => x.owner_id == id).ToList();
+                List<Camp> list = db.Camp.Where(x => x.owner_id == id).ToList();
+                foreach(Camp c in list)
+                {
+                    c.ResourceBuilding = db.ResourceBuilding.Where(x => x.camp_id == c.id).ToList();
+                    c.OffensiveBuilding = db.OffensiveBuilding.Where(x => x.camp_id == c.id).ToList();
+                    c.DefensiveBuilding = db.DefensiveBuilding.Where(x => x.camp_id == c.id).ToList();
+                    c.UtilityBuilding = db.UtilityBuilding.Where(x => x.camp_id == c.id).ToList();
+                }
+                return list;
             }
         }
 

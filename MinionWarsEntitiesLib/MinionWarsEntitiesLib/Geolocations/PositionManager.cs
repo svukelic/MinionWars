@@ -85,7 +85,7 @@ namespace MinionWarsEntitiesLib.Geolocations
                 destination = db.Camp.Find(car.destination_id);
             }
 
-            if (car.location.Distance(destination.location) <= 10)
+            if (car.location.Distance(destination.location) <= 50)
             {
                 car = CampManager.CaravanArrival(car);
             }

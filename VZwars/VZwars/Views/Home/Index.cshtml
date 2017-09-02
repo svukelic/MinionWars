@@ -17,11 +17,15 @@
 
 @Html.Partial("Partial_groupCreationModal")
 
+@Html.Partial("Partial_buildingCreationModal")
+
 @Html.Partial("Partial_bgClickModal")
 
 @Html.Partial("Partial_resNodeClickModal")
 
 @Html.Partial("Partial_hiveNodeClickModal")
+
+@Html.Partial("Partial_caravanClickModal")
 
 @Html.Partial("Partial_campClickModal")
 
@@ -236,7 +240,14 @@
                     targetLoc = this.getPosition();
                     targetId = this.id;
                     var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
-                    alert("Caravan");
+                    $("#caravan_target_distance").text("Distance: " + distance);
+                    if (distance > 75) {
+                        $("#btnConsumeCaravan").prop("disabled", true);
+                    }
+                    else {
+                        $("#btnConsumeCaravan").prop("disabled", false);
+                    }
+                    $("#caravanClickModal").modal();
                 });
             }
             else{
@@ -350,6 +361,7 @@
                     success: function (jsonData) {
                         if (jsonData != null) {
                             alert(JSON.stringify(jsonData));
+                            location.reload();
                         }
                         $("#clickModal").modal('hide');
                     },
@@ -398,10 +410,80 @@
         //camps
         function panToLocation(lat, lon){
             var pos = new google.maps.LatLng({ lat: lat, lng: lon });
-            $('#campPageModal').modal({
-                show: 'false'
-            });
+            $("#campPageModal").modal('hide');
             map.panTo(pos);
+        }
+
+        var bCamp;
+        var bBuild;
+        function addNewBuilding(c_id, b_id, b_name, b_type){
+            bCamp = c_id;
+            bBuild = b_id;
+            $("#buildingCreationName").text("Name: " + b_name);
+            $("#buildingCreationType").text("Type: " + b_type);
+
+            $("#buildingCreationCostsMetal").empty();
+            $("#buildingCreationCostsStone").empty();
+            $("#buildingCreationCostsWood").empty();
+            $("#buildingCreationCostsFood").empty();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetBuildingCosts")',
+                data: { 'building_id': bBuild },
+                dataType: 'json',
+                success: function (jsonData) {
+                    //alert(JSON.stringify(jsonData));
+                    for(var i=0; i<jsonData.length; i++){
+                        var cost_amount = jsonData[i].cost.amount;
+                        var cost_name = jsonData[i].res.name;
+                        var cost_category = jsonData[i].res.category
+                        var targetCost = "";
+                        if(cost_category == "metal") targetCost = "#buildingCreationCostsMetal";
+                        else if(cost_category == "stone") targetCost = "#buildingCreationCostsStone";
+                        else if(cost_category == "wood") targetCost = "#buildingCreationCostsWood";
+                        else if(cost_category == "food") targetCost = "#buildingCreationCostsFood";
+
+                        $(targetCost).append( "<p>" + cost_name + ": " + cost_amount + "</p><hr />" );
+                    }
+                    $('#buildingCreationModal').modal('show');
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function submitNewBuilding(){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddNewBuilding")',
+                data: { 'camp_id': bCamp, 'building_id': bBuild },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                    location.reload();
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function destroyBuilding(c_id, b_id, type){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DestroyBuilding")',
+                data: { 'camp_id': c_id, 'building_id': b_id, 'type': type },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                    location.reload();
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
         }
 
         //battlegroup functions
@@ -495,6 +577,22 @@
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("ConsumeHive")',
+                data: { 'target_id': targetId },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                    location.reload();
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function ConsumeCaravan() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ConsumeCaravan")',
                 data: { 'target_id': targetId },
                 dataType: 'json',
                 success: function (jsonData) {

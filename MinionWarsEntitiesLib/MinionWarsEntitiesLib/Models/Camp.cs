@@ -20,7 +20,11 @@ namespace MinionWarsEntitiesLib.Models
             this.Caravan = new HashSet<Caravan>();
             this.Caravan1 = new HashSet<Caravan>();
             this.CampTreasury = new HashSet<CampTreasury>();
+            this.DefensiveBuilding = new HashSet<DefensiveBuilding>();
+            this.OffensiveBuilding = new HashSet<OffensiveBuilding>();
+            this.ResourceBuilding = new HashSet<ResourceBuilding>();
             this.Reputation = new HashSet<Reputation>();
+            this.UtilityBuilding = new HashSet<UtilityBuilding>();
         }
     
         public int id { get; set; }
@@ -30,7 +34,12 @@ namespace MinionWarsEntitiesLib.Models
         public string mapped_type { get; set; }
         public Nullable<int> richness { get; set; }
         public string name { get; set; }
+        public Nullable<int> building_count { get; set; }
+        public Nullable<int> def_modifier { get; set; }
+        public Nullable<int> size { get; set; }
+        public Nullable<int> bg_id { get; set; }
     
+        public virtual Battlegroup Battlegroup { get; set; }
         public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Caravan> Caravan { get; set; }
@@ -39,6 +48,14 @@ namespace MinionWarsEntitiesLib.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CampTreasury> CampTreasury { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DefensiveBuilding> DefensiveBuilding { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OffensiveBuilding> OffensiveBuilding { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ResourceBuilding> ResourceBuilding { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Reputation> Reputation { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UtilityBuilding> UtilityBuilding { get; set; }
     }
 }

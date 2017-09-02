@@ -19,6 +19,7 @@ namespace MinionWarsEntitiesLib.Models
         {
             this.BattlegroupAssignment = new HashSet<BattlegroupAssignment>();
             this.BattlegroupMovementHistory = new HashSet<BattlegroupMovementHistory>();
+            this.Camp = new HashSet<Camp>();
         }
     
         public int id { get; set; }
@@ -54,5 +55,7 @@ namespace MinionWarsEntitiesLib.Models
         public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BattlegroupMovementHistory> BattlegroupMovementHistory { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Camp> Camp { get; set; }
     }
 }

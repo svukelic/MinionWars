@@ -1,0 +1,14 @@
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\WarsGeneratorConsole.exe.config
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\WarsGeneratorConsole.exe
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\WarsGeneratorConsole.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\EntityFramework.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\MinionWarsEntitiesLib.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\Newtonsoft.Json.dll
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\EntityFramework.xml
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\MinionWarsEntitiesLib.pdb
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\bin\Release\Newtonsoft.Json.xml
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\obj\Release\WarsGeneratorConsole.csprojResolveAssemblyReference.cache
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\obj\Release\WarsGeneratorConsole.exe
+C:\Users\The Director\Desktop\Minions Wars\MinionWars\WarsGeneratorConsole\WarsGeneratorConsole\obj\Release\WarsGeneratorConsole.pdb

@@ -233,6 +233,7 @@
     <Content Include="Content\icons\locked-chest.png" />
     <Content Include="Content\icons\metal-bar.png" />
     <Content Include="Content\icons\mine-wagon.png" />
+    <Content Include="Content\icons\mw_title.png" />
     <Content Include="Content\icons\old-wagon.png" />
     <Content Include="Content\icons\overlord-helm.png" />
     <Content Include="Content\icons\pine-tree.png" />
@@ -328,6 +329,8 @@
     <Content Include="Views\Home\Partial_loadingModal.cshtml" />
     <Content Include="Views\Home\Partial_resNodeClickModal.cshtml" />
     <Content Include="Views\Home\Partial_hiveNodeClickModal.cshtml" />
+    <Content Include="Views\Home\Partial_caravanClickModal.cshtml" />
+    <Content Include="Views\Home\Partial_buildingCreationModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

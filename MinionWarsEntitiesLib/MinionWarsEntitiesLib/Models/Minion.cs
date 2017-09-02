@@ -18,7 +18,9 @@ namespace MinionWarsEntitiesLib.Models
         public Minion()
         {
             this.BattlegroupAssignment = new HashSet<BattlegroupAssignment>();
+            this.CostsMinion = new HashSet<CostsMinion>();
             this.HiveNode = new HashSet<HiveNode>();
+            this.OffensiveBuilding = new HashSet<OffensiveBuilding>();
             this.MinionOwnership = new HashSet<MinionOwnership>();
         }
     
@@ -40,8 +42,12 @@ namespace MinionWarsEntitiesLib.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BattlegroupAssignment> BattlegroupAssignment { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CostsMinion> CostsMinion { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HiveNode> HiveNode { get; set; }
         public virtual MinionType MinionType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OffensiveBuilding> OffensiveBuilding { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MinionOwnership> MinionOwnership { get; set; }
     }

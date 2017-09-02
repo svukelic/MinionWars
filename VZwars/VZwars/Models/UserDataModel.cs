@@ -18,6 +18,7 @@ namespace VZwars.Models
         public List<TreasuryModel> treasury;
         public List<Camp> personalCamps;
         public List<ReputationModel> reputation;
+        public List<Buildings> buildings;
 
         public UserDataModel(int id)
         {
@@ -61,6 +62,8 @@ namespace VZwars.Models
                 ReputationModel rm = new ReputationModel(c, r);
                 this.reputation.Add(rm);
             }
+
+            this.buildings = CampManager.GetAllBuildings();
         }
     }
 }

@@ -68,7 +68,7 @@ namespace MinionWarsEntitiesLib.Geolocations
                 }
 
                 //caravans
-                caravans = db.Caravan.Where(x => x.location.Distance(loc) <= radius).ToList();
+                caravans = db.Caravan.Where(x => x.location != null && x.location.Distance(loc) <= radius).ToList();
                 foreach (Caravan car in caravans)
                 {
                     MapObject obj = new MapObject(car.id, "Caravan", car.location);

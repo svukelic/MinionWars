@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MinionWarsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MinionWarsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AbilityStats">
           <Key>
             <PropertyRef Name="id" />
@@ -67,6 +67,15 @@
           <Property Name="activity_saturation" Type="float" />
           <Property Name="event_saturation" Type="float" />
         </EntityType>
+        <EntityType Name="Buildings">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="description" Type="varchar" MaxLength="500" />
+          <Property Name="type" Type="varchar" MaxLength="20" />
+        </EntityType>
         <EntityType Name="Camp">
           <Key>
             <PropertyRef Name="id" />
@@ -78,6 +87,10 @@
           <Property Name="mapped_type" Type="varchar" MaxLength="80" />
           <Property Name="richness" Type="int" />
           <Property Name="name" Type="varchar" MaxLength="30" />
+          <Property Name="building_count" Type="int" />
+          <Property Name="def_modifier" Type="int" />
+          <Property Name="size" Type="int" />
+          <Property Name="bg_id" Type="int" />
         </EntityType>
         <EntityType Name="CampTreasury">
           <Key>
@@ -100,6 +113,33 @@
           <Property Name="directions" Type="varchar" MaxLength="2000" />
           <Property Name="current_step" Type="geography" />
           <Property Name="last_movement" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CostsBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="b_id" Type="int" Nullable="false" />
+          <Property Name="r_id" Type="int" Nullable="false" />
+          <Property Name="amount" Type="int" />
+        </EntityType>
+        <EntityType Name="CostsMinion">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="m_id" Type="int" Nullable="false" />
+          <Property Name="r_id" Type="int" Nullable="false" />
+          <Property Name="amount" Type="int" />
+        </EntityType>
+        <EntityType Name="DefensiveBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="camp_id" Type="int" Nullable="false" />
+          <Property Name="modifier" Type="int" />
         </EntityType>
         <EntityType Name="HiveNode">
           <Key>
@@ -159,6 +199,15 @@
           <Property Name="name" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="value" Type="float" Nullable="false" />
         </EntityType>
+        <EntityType Name="OffensiveBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="camp_id" Type="int" Nullable="false" />
+          <Property Name="minion_id" Type="int" />
+        </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="id" />
@@ -178,6 +227,15 @@
           <Property Name="user_id" Type="int" Nullable="false" />
           <Property Name="camp_id" Type="int" Nullable="false" />
           <Property Name="value" Type="int" />
+        </EntityType>
+        <EntityType Name="ResourceBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="camp_id" Type="int" Nullable="false" />
+          <Property Name="rtype_id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
@@ -233,6 +291,16 @@
           <Property Name="user_id" Type="int" Nullable="false" />
           <Property Name="amount" Type="int" />
         </EntityType>
+        <EntityType Name="UtilityBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="camp_id" Type="int" Nullable="false" />
+          <Property Name="type" Type="int" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="2000" />
+        </EntityType>
         <Association Name="fk_assignment_bg">
           <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="1" />
           <End Role="BattlegroupAssignment" Type="Self.BattlegroupAssignment" Multiplicity="*" />
@@ -293,6 +361,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_camp_bg">
+          <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="0..1" />
+          <End Role="Camp" Type="Self.Camp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Battlegroup">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Camp">
+              <PropertyRef Name="bg_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_camp_user">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Camp" Type="Self.Camp" Multiplicity="*" />
@@ -341,6 +421,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_costsb_building">
+          <End Role="Buildings" Type="Self.Buildings" Multiplicity="1" />
+          <End Role="CostsBuilding" Type="Self.CostsBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buildings">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CostsBuilding">
+              <PropertyRef Name="b_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_costsb_resource">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="CostsBuilding" Type="Self.CostsBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CostsBuilding">
+              <PropertyRef Name="r_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_costsm_minion">
+          <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
+          <End Role="CostsMinion" Type="Self.CostsMinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Minion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CostsMinion">
+              <PropertyRef Name="m_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_costsm_resource">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="CostsMinion" Type="Self.CostsMinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CostsMinion">
+              <PropertyRef Name="r_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_ctreasury_camp">
           <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
           <End Role="CampTreasury" Type="Self.CampTreasury" Multiplicity="*" />
@@ -362,6 +490,18 @@
             </Principal>
             <Dependent Role="CampTreasury">
               <PropertyRef Name="res_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_db_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="DefensiveBuilding" Type="Self.DefensiveBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DefensiveBuilding">
+              <PropertyRef Name="camp_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -389,6 +529,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_ob_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="OffensiveBuilding" Type="Self.OffensiveBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OffensiveBuilding">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ob_minion">
+          <End Role="Minion" Type="Self.Minion" Multiplicity="0..1" />
+          <End Role="OffensiveBuilding" Type="Self.OffensiveBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Minion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OffensiveBuilding">
+              <PropertyRef Name="minion_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_ownership_minion">
           <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
           <End Role="MinionOwnership" Type="Self.MinionOwnership" Multiplicity="*" />
@@ -410,6 +574,30 @@
             </Principal>
             <Dependent Role="MinionOwnership">
               <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rb_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="ResourceBuilding" Type="Self.ResourceBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ResourceBuilding">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rb_rtype">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="ResourceBuilding" Type="Self.ResourceBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ResourceBuilding">
+              <PropertyRef Name="rtype_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -461,6 +649,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_ub_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="UtilityBuilding" Type="Self.UtilityBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UtilityBuilding">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_usermove_user">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="UserMovementHistory" Type="Self.UserMovementHistory" Multiplicity="*" />
@@ -490,21 +690,28 @@
           <EntitySet Name="Battlegroup" EntityType="Self.Battlegroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BattlegroupAssignment" EntityType="Self.BattlegroupAssignment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BattlegroupMovementHistory" EntityType="Self.BattlegroupMovementHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Buildings" EntityType="Self.Buildings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Camp" EntityType="Self.Camp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CampTreasury" EntityType="Self.CampTreasury" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Caravan" EntityType="Self.Caravan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CostsBuilding" EntityType="Self.CostsBuilding" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CostsMinion" EntityType="Self.CostsMinion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DefensiveBuilding" EntityType="Self.DefensiveBuilding" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HiveNode" EntityType="Self.HiveNode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Minion" EntityType="Self.Minion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MinionOwnership" EntityType="Self.MinionOwnership" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MinionType" EntityType="Self.MinionType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ModifierCoeficients" EntityType="Self.ModifierCoeficients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OffensiveBuilding" EntityType="Self.OffensiveBuilding" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reputation" EntityType="Self.Reputation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceBuilding" EntityType="Self.ResourceBuilding" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResourceNode" EntityType="Self.ResourceNode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResourceType" EntityType="Self.ResourceType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMovementHistory" EntityType="Self.UserMovementHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTreasury" EntityType="Self.UserTreasury" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UtilityBuilding" EntityType="Self.UtilityBuilding" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="fk_assignment_bg" Association="Self.fk_assignment_bg">
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
@@ -525,6 +732,10 @@
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupMovementHistory" EntitySet="BattlegroupMovementHistory" />
           </AssociationSet>
+          <AssociationSet Name="fk_camp_bg" Association="Self.fk_camp_bg">
+            <End Role="Battlegroup" EntitySet="Battlegroup" />
+            <End Role="Camp" EntitySet="Camp" />
+          </AssociationSet>
           <AssociationSet Name="fk_camp_user" Association="Self.fk_camp_user">
             <End Role="Users" EntitySet="Users" />
             <End Role="Camp" EntitySet="Camp" />
@@ -541,6 +752,22 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Caravan" EntitySet="Caravan" />
           </AssociationSet>
+          <AssociationSet Name="fk_costsb_building" Association="Self.fk_costsb_building">
+            <End Role="Buildings" EntitySet="Buildings" />
+            <End Role="CostsBuilding" EntitySet="CostsBuilding" />
+          </AssociationSet>
+          <AssociationSet Name="fk_costsb_resource" Association="Self.fk_costsb_resource">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="CostsBuilding" EntitySet="CostsBuilding" />
+          </AssociationSet>
+          <AssociationSet Name="fk_costsm_minion" Association="Self.fk_costsm_minion">
+            <End Role="Minion" EntitySet="Minion" />
+            <End Role="CostsMinion" EntitySet="CostsMinion" />
+          </AssociationSet>
+          <AssociationSet Name="fk_costsm_resource" Association="Self.fk_costsm_resource">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="CostsMinion" EntitySet="CostsMinion" />
+          </AssociationSet>
           <AssociationSet Name="fk_ctreasury_camp" Association="Self.fk_ctreasury_camp">
             <End Role="Camp" EntitySet="Camp" />
             <End Role="CampTreasury" EntitySet="CampTreasury" />
@@ -548,6 +775,10 @@
           <AssociationSet Name="fk_ctreasury_res" Association="Self.fk_ctreasury_res">
             <End Role="ResourceType" EntitySet="ResourceType" />
             <End Role="CampTreasury" EntitySet="CampTreasury" />
+          </AssociationSet>
+          <AssociationSet Name="fk_db_camp" Association="Self.fk_db_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="DefensiveBuilding" EntitySet="DefensiveBuilding" />
           </AssociationSet>
           <AssociationSet Name="fk_hnode_minion" Association="Self.fk_hnode_minion">
             <End Role="Minion" EntitySet="Minion" />
@@ -557,6 +788,14 @@
             <End Role="MinionType" EntitySet="MinionType" />
             <End Role="Minion" EntitySet="Minion" />
           </AssociationSet>
+          <AssociationSet Name="fk_ob_camp" Association="Self.fk_ob_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="OffensiveBuilding" EntitySet="OffensiveBuilding" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ob_minion" Association="Self.fk_ob_minion">
+            <End Role="Minion" EntitySet="Minion" />
+            <End Role="OffensiveBuilding" EntitySet="OffensiveBuilding" />
+          </AssociationSet>
           <AssociationSet Name="fk_ownership_minion" Association="Self.fk_ownership_minion">
             <End Role="Minion" EntitySet="Minion" />
             <End Role="MinionOwnership" EntitySet="MinionOwnership" />
@@ -564,6 +803,14 @@
           <AssociationSet Name="fk_ownership_users" Association="Self.fk_ownership_users">
             <End Role="Users" EntitySet="Users" />
             <End Role="MinionOwnership" EntitySet="MinionOwnership" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rb_camp" Association="Self.fk_rb_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="ResourceBuilding" EntitySet="ResourceBuilding" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rb_rtype" Association="Self.fk_rb_rtype">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="ResourceBuilding" EntitySet="ResourceBuilding" />
           </AssociationSet>
           <AssociationSet Name="fk_rep_camp" Association="Self.fk_rep_camp">
             <End Role="Camp" EntitySet="Camp" />
@@ -581,6 +828,10 @@
             <End Role="ResourceType" EntitySet="ResourceType" />
             <End Role="UserTreasury" EntitySet="UserTreasury" />
           </AssociationSet>
+          <AssociationSet Name="fk_ub_camp" Association="Self.fk_ub_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="UtilityBuilding" EntitySet="UtilityBuilding" />
+          </AssociationSet>
           <AssociationSet Name="fk_usermove_user" Association="Self.fk_usermove_user">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserMovementHistory" EntitySet="UserMovementHistory" />
@@ -590,7 +841,8 @@
             <End Role="UserTreasury" EntitySet="UserTreasury" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MinionWarsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -638,6 +890,7 @@
           <NavigationProperty Name="Orders" Relationship="Self.fk_bg_orders" FromRole="Battlegroup" ToRole="Orders" />
           <NavigationProperty Name="Users" Relationship="Self.fk_bg_user" FromRole="Battlegroup" ToRole="Users" />
           <NavigationProperty Name="BattlegroupMovementHistory" Relationship="Self.fk_bgmove_bg" FromRole="Battlegroup" ToRole="BattlegroupMovementHistory" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_camp_bg" FromRole="Battlegroup" ToRole="Camp" />
         </EntityType>
         <EntityType Name="BattlegroupAssignment">
           <Key>
@@ -663,6 +916,16 @@
           <Property Name="event_saturation" Type="Double" />
           <NavigationProperty Name="Battlegroup" Relationship="Self.fk_bgmove_bg" FromRole="BattlegroupMovementHistory" ToRole="Battlegroup" />
         </EntityType>
+        <EntityType Name="Buildings">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CostsBuilding" Relationship="Self.fk_costsb_building" FromRole="Buildings" ToRole="CostsBuilding" />
+        </EntityType>
         <EntityType Name="Camp">
           <Key>
             <PropertyRef Name="id" />
@@ -673,12 +936,21 @@
           <Property Name="type" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="mapped_type" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="richness" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="building_count" Type="Int32" />
+          <Property Name="def_modifier" Type="Int32" />
+          <Property Name="size" Type="Int32" />
+          <Property Name="bg_id" Type="Int32" />
+          <NavigationProperty Name="Battlegroup" Relationship="Self.fk_camp_bg" FromRole="Camp" ToRole="Battlegroup" />
           <NavigationProperty Name="Users" Relationship="Self.fk_camp_user" FromRole="Camp" ToRole="Users" />
           <NavigationProperty Name="Caravan" Relationship="Self.fk_caravan_destination" FromRole="Camp" ToRole="Caravan" />
           <NavigationProperty Name="Caravan1" Relationship="Self.fk_caravan_source" FromRole="Camp" ToRole="Caravan" />
           <NavigationProperty Name="CampTreasury" Relationship="Self.fk_ctreasury_camp" FromRole="Camp" ToRole="CampTreasury" />
+          <NavigationProperty Name="DefensiveBuilding" Relationship="Self.fk_db_camp" FromRole="Camp" ToRole="DefensiveBuilding" />
+          <NavigationProperty Name="OffensiveBuilding" Relationship="Self.fk_ob_camp" FromRole="Camp" ToRole="OffensiveBuilding" />
+          <NavigationProperty Name="ResourceBuilding" Relationship="Self.fk_rb_camp" FromRole="Camp" ToRole="ResourceBuilding" />
           <NavigationProperty Name="Reputation" Relationship="Self.fk_rep_camp" FromRole="Camp" ToRole="Reputation" />
-          <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UtilityBuilding" Relationship="Self.fk_ub_camp" FromRole="Camp" ToRole="UtilityBuilding" />
         </EntityType>
         <EntityType Name="CampTreasury">
           <Key>
@@ -701,11 +973,43 @@
           <Property Name="destination_id" Type="Int32" />
           <Property Name="location" Type="Geography" />
           <Property Name="directions" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="current_step" Type="Geography" />
+          <Property Name="last_movement" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Camp" Relationship="Self.fk_caravan_destination" FromRole="Caravan" ToRole="Camp" />
           <NavigationProperty Name="Camp1" Relationship="Self.fk_caravan_source" FromRole="Caravan" ToRole="Camp" />
           <NavigationProperty Name="Users" Relationship="Self.fk_caravan_user" FromRole="Caravan" ToRole="Users" />
-          <Property Name="current_step" Type="Geography" />
-          <Property Name="last_movement" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="CostsBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="b_id" Type="Int32" Nullable="false" />
+          <Property Name="r_id" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Int32" />
+          <NavigationProperty Name="Buildings" Relationship="Self.fk_costsb_building" FromRole="CostsBuilding" ToRole="Buildings" />
+          <NavigationProperty Name="ResourceType" Relationship="Self.fk_costsb_resource" FromRole="CostsBuilding" ToRole="ResourceType" />
+        </EntityType>
+        <EntityType Name="CostsMinion">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="m_id" Type="Int32" Nullable="false" />
+          <Property Name="r_id" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Int32" />
+          <NavigationProperty Name="Minion" Relationship="Self.fk_costsm_minion" FromRole="CostsMinion" ToRole="Minion" />
+          <NavigationProperty Name="ResourceType" Relationship="Self.fk_costsm_resource" FromRole="CostsMinion" ToRole="ResourceType" />
+        </EntityType>
+        <EntityType Name="DefensiveBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="camp_id" Type="Int32" Nullable="false" />
+          <Property Name="modifier" Type="Int32" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_db_camp" FromRole="DefensiveBuilding" ToRole="Camp" />
         </EntityType>
         <EntityType Name="HiveNode">
           <Key>
@@ -735,8 +1039,10 @@
           <Property Name="cooldown" Type="Int32" Nullable="false" />
           <Property Name="duration" Type="Int32" Nullable="false" />
           <NavigationProperty Name="BattlegroupAssignment" Relationship="Self.fk_assignment_minion" FromRole="Minion" ToRole="BattlegroupAssignment" />
+          <NavigationProperty Name="CostsMinion" Relationship="Self.fk_costsm_minion" FromRole="Minion" ToRole="CostsMinion" />
           <NavigationProperty Name="HiveNode" Relationship="Self.fk_hnode_minion" FromRole="Minion" ToRole="HiveNode" />
           <NavigationProperty Name="MinionType" Relationship="Self.fk_minion_mtype" FromRole="Minion" ToRole="MinionType" />
+          <NavigationProperty Name="OffensiveBuilding" Relationship="Self.fk_ob_minion" FromRole="Minion" ToRole="OffensiveBuilding" />
           <NavigationProperty Name="MinionOwnership" Relationship="Self.fk_ownership_minion" FromRole="Minion" ToRole="MinionOwnership" />
         </EntityType>
         <EntityType Name="MinionOwnership">
@@ -773,6 +1079,17 @@
           <Property Name="name" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="value" Type="Double" Nullable="false" />
         </EntityType>
+        <EntityType Name="OffensiveBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="camp_id" Type="Int32" Nullable="false" />
+          <Property Name="minion_id" Type="Int32" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_ob_camp" FromRole="OffensiveBuilding" ToRole="Camp" />
+          <NavigationProperty Name="Minion" Relationship="Self.fk_ob_minion" FromRole="OffensiveBuilding" ToRole="Minion" />
+        </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="id" />
@@ -796,6 +1113,17 @@
           <NavigationProperty Name="Camp" Relationship="Self.fk_rep_camp" FromRole="Reputation" ToRole="Camp" />
           <NavigationProperty Name="Users" Relationship="Self.fk_rep_user" FromRole="Reputation" ToRole="Users" />
         </EntityType>
+        <EntityType Name="ResourceBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="camp_id" Type="Int32" Nullable="false" />
+          <Property Name="rtype_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_rb_camp" FromRole="ResourceBuilding" ToRole="Camp" />
+          <NavigationProperty Name="ResourceType" Relationship="Self.fk_rb_rtype" FromRole="ResourceBuilding" ToRole="ResourceType" />
+        </EntityType>
         <EntityType Name="ResourceNode">
           <Key>
             <PropertyRef Name="id" />
@@ -813,6 +1141,9 @@
           <Property Name="name" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="category" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="CampTreasury" Relationship="Self.fk_ctreasury_res" FromRole="ResourceType" ToRole="CampTreasury" />
+          <NavigationProperty Name="CostsBuilding" Relationship="Self.fk_costsb_resource" FromRole="ResourceType" ToRole="CostsBuilding" />
+          <NavigationProperty Name="CostsMinion" Relationship="Self.fk_costsm_resource" FromRole="ResourceType" ToRole="CostsMinion" />
+          <NavigationProperty Name="ResourceBuilding" Relationship="Self.fk_rb_rtype" FromRole="ResourceType" ToRole="ResourceBuilding" />
           <NavigationProperty Name="ResourceNode" Relationship="Self.fk_rnode_rtype" FromRole="ResourceType" ToRole="ResourceNode" />
           <NavigationProperty Name="UserTreasury" Relationship="Self.fk_rtreasury_res" FromRole="ResourceType" ToRole="UserTreasury" />
         </EntityType>
@@ -864,6 +1195,17 @@
           <NavigationProperty Name="ResourceType" Relationship="Self.fk_rtreasury_res" FromRole="UserTreasury" ToRole="ResourceType" />
           <NavigationProperty Name="Users" Relationship="Self.fk_utreasury_user" FromRole="UserTreasury" ToRole="Users" />
         </EntityType>
+        <EntityType Name="UtilityBuilding">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="camp_id" Type="Int32" Nullable="false" />
+          <Property Name="type" Type="Int32" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Camp" Relationship="Self.fk_ub_camp" FromRole="UtilityBuilding" ToRole="Camp" />
+        </EntityType>
         <Association Name="fk_assignment_bg">
           <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="1" />
           <End Role="BattlegroupAssignment" Type="Self.BattlegroupAssignment" Multiplicity="*" />
@@ -912,6 +1254,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_camp_bg">
+          <End Role="Battlegroup" Type="Self.Battlegroup" Multiplicity="0..1" />
+          <End Role="Camp" Type="Self.Camp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Battlegroup">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Camp">
+              <PropertyRef Name="bg_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_assignment_minion">
           <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
           <End Role="BattlegroupAssignment" Type="Self.BattlegroupAssignment" Multiplicity="*" />
@@ -921,6 +1275,18 @@
             </Principal>
             <Dependent Role="BattlegroupAssignment">
               <PropertyRef Name="minion_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_costsb_building">
+          <End Role="Buildings" Type="Self.Buildings" Multiplicity="1" />
+          <End Role="CostsBuilding" Type="Self.CostsBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buildings">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CostsBuilding">
+              <PropertyRef Name="b_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -972,6 +1338,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_db_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="DefensiveBuilding" Type="Self.DefensiveBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DefensiveBuilding">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ob_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="OffensiveBuilding" Type="Self.OffensiveBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OffensiveBuilding">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rb_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="ResourceBuilding" Type="Self.ResourceBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ResourceBuilding">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_rep_camp">
           <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
           <End Role="Reputation" Type="Self.Reputation" Multiplicity="*" />
@@ -980,6 +1382,18 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Reputation">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ub_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="UtilityBuilding" Type="Self.UtilityBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UtilityBuilding">
               <PropertyRef Name="camp_id" />
             </Dependent>
           </ReferentialConstraint>
@@ -1008,6 +1422,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_costsb_resource">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="CostsBuilding" Type="Self.CostsBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CostsBuilding">
+              <PropertyRef Name="r_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_costsm_minion">
+          <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
+          <End Role="CostsMinion" Type="Self.CostsMinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Minion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CostsMinion">
+              <PropertyRef Name="m_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_costsm_resource">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="CostsMinion" Type="Self.CostsMinion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CostsMinion">
+              <PropertyRef Name="r_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_hnode_minion">
           <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
           <End Role="HiveNode" Type="Self.HiveNode" Multiplicity="*" />
@@ -1029,6 +1479,18 @@
             </Principal>
             <Dependent Role="Minion">
               <PropertyRef Name="mtype_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ob_minion">
+          <End Role="Minion" Type="Self.Minion" Multiplicity="0..1" />
+          <End Role="OffensiveBuilding" Type="Self.OffensiveBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Minion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OffensiveBuilding">
+              <PropertyRef Name="minion_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1065,6 +1527,18 @@
             </Principal>
             <Dependent Role="Reputation">
               <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_rb_rtype">
+          <End Role="ResourceType" Type="Self.ResourceType" Multiplicity="1" />
+          <End Role="ResourceBuilding" Type="Self.ResourceBuilding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ResourceBuilding">
+              <PropertyRef Name="rtype_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1121,21 +1595,28 @@
           <EntitySet Name="Battlegroup" EntityType="Self.Battlegroup" />
           <EntitySet Name="BattlegroupAssignment" EntityType="Self.BattlegroupAssignment" />
           <EntitySet Name="BattlegroupMovementHistory" EntityType="Self.BattlegroupMovementHistory" />
+          <EntitySet Name="Buildings" EntityType="Self.Buildings" />
           <EntitySet Name="Camp" EntityType="Self.Camp" />
           <EntitySet Name="CampTreasury" EntityType="Self.CampTreasury" />
           <EntitySet Name="Caravan" EntityType="Self.Caravan" />
+          <EntitySet Name="CostsBuilding" EntityType="Self.CostsBuilding" />
+          <EntitySet Name="CostsMinion" EntityType="Self.CostsMinion" />
+          <EntitySet Name="DefensiveBuilding" EntityType="Self.DefensiveBuilding" />
           <EntitySet Name="HiveNode" EntityType="Self.HiveNode" />
           <EntitySet Name="Minion" EntityType="Self.Minion" />
           <EntitySet Name="MinionOwnership" EntityType="Self.MinionOwnership" />
           <EntitySet Name="MinionType" EntityType="Self.MinionType" />
           <EntitySet Name="ModifierCoeficients" EntityType="Self.ModifierCoeficients" />
+          <EntitySet Name="OffensiveBuilding" EntityType="Self.OffensiveBuilding" />
           <EntitySet Name="Orders" EntityType="Self.Orders" />
           <EntitySet Name="Reputation" EntityType="Self.Reputation" />
+          <EntitySet Name="ResourceBuilding" EntityType="Self.ResourceBuilding" />
           <EntitySet Name="ResourceNode" EntityType="Self.ResourceNode" />
           <EntitySet Name="ResourceType" EntityType="Self.ResourceType" />
           <EntitySet Name="UserMovementHistory" EntityType="Self.UserMovementHistory" />
           <EntitySet Name="Users" EntityType="Self.Users" />
           <EntitySet Name="UserTreasury" EntityType="Self.UserTreasury" />
+          <EntitySet Name="UtilityBuilding" EntityType="Self.UtilityBuilding" />
           <AssociationSet Name="fk_assignment_bg" Association="Self.fk_assignment_bg">
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
@@ -1152,9 +1633,17 @@
             <End Role="Battlegroup" EntitySet="Battlegroup" />
             <End Role="BattlegroupMovementHistory" EntitySet="BattlegroupMovementHistory" />
           </AssociationSet>
+          <AssociationSet Name="fk_camp_bg" Association="Self.fk_camp_bg">
+            <End Role="Battlegroup" EntitySet="Battlegroup" />
+            <End Role="Camp" EntitySet="Camp" />
+          </AssociationSet>
           <AssociationSet Name="fk_assignment_minion" Association="Self.fk_assignment_minion">
             <End Role="Minion" EntitySet="Minion" />
             <End Role="BattlegroupAssignment" EntitySet="BattlegroupAssignment" />
+          </AssociationSet>
+          <AssociationSet Name="fk_costsb_building" Association="Self.fk_costsb_building">
+            <End Role="Buildings" EntitySet="Buildings" />
+            <End Role="CostsBuilding" EntitySet="CostsBuilding" />
           </AssociationSet>
           <AssociationSet Name="fk_camp_user" Association="Self.fk_camp_user">
             <End Role="Users" EntitySet="Users" />
@@ -1172,9 +1661,25 @@
             <End Role="Camp" EntitySet="Camp" />
             <End Role="CampTreasury" EntitySet="CampTreasury" />
           </AssociationSet>
+          <AssociationSet Name="fk_db_camp" Association="Self.fk_db_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="DefensiveBuilding" EntitySet="DefensiveBuilding" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ob_camp" Association="Self.fk_ob_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="OffensiveBuilding" EntitySet="OffensiveBuilding" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rb_camp" Association="Self.fk_rb_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="ResourceBuilding" EntitySet="ResourceBuilding" />
+          </AssociationSet>
           <AssociationSet Name="fk_rep_camp" Association="Self.fk_rep_camp">
             <End Role="Camp" EntitySet="Camp" />
             <End Role="Reputation" EntitySet="Reputation" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ub_camp" Association="Self.fk_ub_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="UtilityBuilding" EntitySet="UtilityBuilding" />
           </AssociationSet>
           <AssociationSet Name="fk_ctreasury_res" Association="Self.fk_ctreasury_res">
             <End Role="ResourceType" EntitySet="ResourceType" />
@@ -1184,6 +1689,18 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Caravan" EntitySet="Caravan" />
           </AssociationSet>
+          <AssociationSet Name="fk_costsb_resource" Association="Self.fk_costsb_resource">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="CostsBuilding" EntitySet="CostsBuilding" />
+          </AssociationSet>
+          <AssociationSet Name="fk_costsm_minion" Association="Self.fk_costsm_minion">
+            <End Role="Minion" EntitySet="Minion" />
+            <End Role="CostsMinion" EntitySet="CostsMinion" />
+          </AssociationSet>
+          <AssociationSet Name="fk_costsm_resource" Association="Self.fk_costsm_resource">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="CostsMinion" EntitySet="CostsMinion" />
+          </AssociationSet>
           <AssociationSet Name="fk_hnode_minion" Association="Self.fk_hnode_minion">
             <End Role="Minion" EntitySet="Minion" />
             <End Role="HiveNode" EntitySet="HiveNode" />
@@ -1191,6 +1708,10 @@
           <AssociationSet Name="fk_minion_mtype" Association="Self.fk_minion_mtype">
             <End Role="MinionType" EntitySet="MinionType" />
             <End Role="Minion" EntitySet="Minion" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ob_minion" Association="Self.fk_ob_minion">
+            <End Role="Minion" EntitySet="Minion" />
+            <End Role="OffensiveBuilding" EntitySet="OffensiveBuilding" />
           </AssociationSet>
           <AssociationSet Name="fk_ownership_minion" Association="Self.fk_ownership_minion">
             <End Role="Minion" EntitySet="Minion" />
@@ -1203,6 +1724,10 @@
           <AssociationSet Name="fk_rep_user" Association="Self.fk_rep_user">
             <End Role="Users" EntitySet="Users" />
             <End Role="Reputation" EntitySet="Reputation" />
+          </AssociationSet>
+          <AssociationSet Name="fk_rb_rtype" Association="Self.fk_rb_rtype">
+            <End Role="ResourceType" EntitySet="ResourceType" />
+            <End Role="ResourceBuilding" EntitySet="ResourceBuilding" />
           </AssociationSet>
           <AssociationSet Name="fk_rnode_rtype" Association="Self.fk_rnode_rtype">
             <End Role="ResourceType" EntitySet="ResourceType" />
@@ -1293,16 +1818,30 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Buildings">
+            <EntityTypeMapping TypeName="MinionWarsModel.Buildings">
+              <MappingFragment StoreEntitySet="Buildings">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Camp">
             <EntityTypeMapping TypeName="MinionWarsModel.Camp">
               <MappingFragment StoreEntitySet="Camp">
-                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="owner_id" ColumnName="owner_id" />
                 <ScalarProperty Name="location" ColumnName="location" />
                 <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="mapped_type" ColumnName="mapped_type" />
                 <ScalarProperty Name="richness" ColumnName="richness" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="building_count" ColumnName="building_count" />
+                <ScalarProperty Name="def_modifier" ColumnName="def_modifier" />
+                <ScalarProperty Name="size" ColumnName="size" />
+                <ScalarProperty Name="bg_id" ColumnName="bg_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1319,14 +1858,44 @@
           <EntitySetMapping Name="Caravan">
             <EntityTypeMapping TypeName="MinionWarsModel.Caravan">
               <MappingFragment StoreEntitySet="Caravan">
-                <ScalarProperty Name="last_movement" ColumnName="last_movement" />
-                <ScalarProperty Name="current_step" ColumnName="current_step" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="owner_id" ColumnName="owner_id" />
                 <ScalarProperty Name="source_id" ColumnName="source_id" />
                 <ScalarProperty Name="destination_id" ColumnName="destination_id" />
                 <ScalarProperty Name="location" ColumnName="location" />
                 <ScalarProperty Name="directions" ColumnName="directions" />
+                <ScalarProperty Name="current_step" ColumnName="current_step" />
+                <ScalarProperty Name="last_movement" ColumnName="last_movement" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CostsBuilding">
+            <EntityTypeMapping TypeName="MinionWarsModel.CostsBuilding">
+              <MappingFragment StoreEntitySet="CostsBuilding">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="b_id" ColumnName="b_id" />
+                <ScalarProperty Name="r_id" ColumnName="r_id" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CostsMinion">
+            <EntityTypeMapping TypeName="MinionWarsModel.CostsMinion">
+              <MappingFragment StoreEntitySet="CostsMinion">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="m_id" ColumnName="m_id" />
+                <ScalarProperty Name="r_id" ColumnName="r_id" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DefensiveBuilding">
+            <EntityTypeMapping TypeName="MinionWarsModel.DefensiveBuilding">
+              <MappingFragment StoreEntitySet="DefensiveBuilding">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="camp_id" ColumnName="camp_id" />
+                <ScalarProperty Name="modifier" ColumnName="modifier" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1393,6 +1962,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="OffensiveBuilding">
+            <EntityTypeMapping TypeName="MinionWarsModel.OffensiveBuilding">
+              <MappingFragment StoreEntitySet="OffensiveBuilding">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="camp_id" ColumnName="camp_id" />
+                <ScalarProperty Name="minion_id" ColumnName="minion_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="MinionWarsModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
@@ -1412,6 +1991,16 @@
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="camp_id" ColumnName="camp_id" />
                 <ScalarProperty Name="value" ColumnName="value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceBuilding">
+            <EntityTypeMapping TypeName="MinionWarsModel.ResourceBuilding">
+              <MappingFragment StoreEntitySet="ResourceBuilding">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="camp_id" ColumnName="camp_id" />
+                <ScalarProperty Name="rtype_id" ColumnName="rtype_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1471,6 +2060,17 @@
                 <ScalarProperty Name="res_id" ColumnName="res_id" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="amount" ColumnName="amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UtilityBuilding">
+            <EntityTypeMapping TypeName="MinionWarsModel.UtilityBuilding">
+              <MappingFragment StoreEntitySet="UtilityBuilding">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="camp_id" ColumnName="camp_id" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="description" ColumnName="description" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

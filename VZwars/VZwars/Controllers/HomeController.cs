@@ -141,5 +141,37 @@ namespace VZwars.Controllers
 
             return Json(message);
         }
+
+        public ActionResult ConsumeCaravan(int target_id)
+        {
+            string res = CampManager.ConsumeCaravan(Convert.ToInt32(Session["UserId"]), target_id);
+            string message = "You gained 30 " + res + "!";
+
+            return Json(message);
+        }
+
+        public ActionResult AddNewBuilding(int camp_id, int building_id)
+        {
+            bool result = CampManager.CreateBuilding(camp_id, building_id);
+            string message = "";
+            if (result) message = "Building created!";
+            else message = "Insufficient resources!";
+
+            return Json(message);
+        }
+
+        public ActionResult DestroyBuilding(int camp_id, int building_id, int type)
+        {
+            CampManager.DestroyBuilding(camp_id, building_id, type);
+
+            return Json("Building destroyed");
+        }
+
+        public ActionResult GetBuildingCosts(int building_id)
+        {
+            List<CostObject> col = CostManager.GetBuildingCosts(building_id);
+
+            return Json(col);
+        }
     }
 }

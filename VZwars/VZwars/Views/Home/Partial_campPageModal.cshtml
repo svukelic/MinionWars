@@ -24,35 +24,173 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <img src="~/Content/icons/castle.png" />
+                                        <h1>@camp.name</h1>
                                     </div>
                                     <div class="col-md-3">
-                                        <button class="btn btn-default" data-toggle="collapse" data-target="#camp-@camp.id">Details <img class="glyphicon-collapse-down"/></button>
+                                        <p>Richness: @camp.richness</p>
+                                        <p>Size: @camp.size</p>
+                                        <p>Buildings: @camp.building_count</p>
                                     </div>
                                     <div class="col-md-3">
-                                        <button class="btn btn-default" onclick="panToLocation(@camp.location.Latitude, @camp.location.Longitude)">Location</button>
+                                        <button class="btn btn-default" onclick="panToLocation(@camp.location.Latitude, @camp.location.Longitude)"><span class="glyphicon glyphicon-tower"></span> Location</button>
+                                        <hr />
+                                        <button class="btn btn-default" data-toggle="collapse" data-target="#camp-@camp.id"><span class="glyphicon glyphicon-collapse-down"></span> Details</button>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <hr />
                                 </div>
 
-                                <div  id="camp-@camp.id" class="collapse">
+                                <div id="camp-@camp.id" class="collapse">
                                     <div id="campDetailTabs">
                                         <ul>
                                             <li><a href="#modalCampStructures">Structures</a></li>
                                             <li><a href="#modalCampMinions">Minions</a></li>
-                                            <li><a href="#modalCampResources">Resources</a></li>
+                                            @{
+                                                if (camp.OffensiveBuilding.Count > 0)
+                                                {
+                                                    <li><a href="#modalCampColonies">Colonies</a></li>
+                                                }
+                                            }
+                                            @{
+                                                int stationCheck = camp.UtilityBuilding.ToList().FindIndex(x => x.type == 16);
+                                                if (stationCheck > 0)
+                                                {
+                                                    <li><a href="#modalCampCaravans">Caravans</a></li>
+                                                }
+                                            }
                                         </ul>
 
-                                        <!-- Personal Battlegroup-->
                                         <div id="modalCampStructures">
-                                            <p>Richness: @camp.richness</p>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p>Buildings: @camp.building_count</p>
+                                                    <p>Maximum: 5</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    @if (camp.building_count < 5)
+                                                    {
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                                Build
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                @foreach (Buildings b in Model.buildings)
+                                                                {
+                                                                    <li><a href="#" onclick="addNewBuilding(@camp.id, @b.id, '@b.name', '@b.type')">@b.name</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <hr />
+                                            </div>
+                                            <div class="row" style="text-align: center;">
+                                                <div class="col-md-3">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">Resource Buildings</div>
+                                                        <div class="panel-body">
+                                                        @if (camp.ResourceBuilding != null)
+                                                        {
+                                                            foreach (ResourceBuilding rb in camp.ResourceBuilding)
+                                                            {
+                                                                <div class="row">
+                                                                    <p>@rb.name</p>
+                                                                    <button class="btn btn-default" onclick="destroyBuilding(@camp.id, @rb.id, 1)">Destroy</button>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <hr />
+                                                                </div>
+                                                            }
+                                                        }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">Offensive Buildings</div>
+                                                        <div class="panel-body">
+                                                        @if (camp.OffensiveBuilding != null)
+                                                        {
+                                                            foreach (OffensiveBuilding ob in camp.OffensiveBuilding)
+                                                            {
+                                                                <div class="row">
+                                                                    <p>@ob.name</p>
+                                                                    <button class="btn btn-default" onclick="destroyBuilding(@camp.id, @ob.id, 2)">Destroy</button>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <hr />
+                                                                </div>
+                                                            }
+                                                        }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">Defensive Buildings</div>
+                                                        <div class="panel-body">
+                                                        @if (camp.DefensiveBuilding != null)
+                                                        {
+                                                            foreach (DefensiveBuilding db in camp.DefensiveBuilding)
+                                                            {
+                                                                <div class="row">
+                                                                    <p>@db.name</p>
+                                                                    <button class="btn btn-default" onclick="destroyBuilding(@camp.id, @db.id, 3)">Destroy</button>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <hr />
+                                                                </div>
+                                                            }
+                                                        }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">Utility Buildings</div>
+                                                        <div class="panel-body">
+                                                            @if (camp.UtilityBuilding != null)
+                                                            {
+                                                                foreach (UtilityBuilding ub in camp.UtilityBuilding)
+                                                                {
+                                                                    <div class="row">
+                                                                        <p>@ub.name</p>
+                                                                        <button class="btn btn-default" onclick="destroyBuilding(@camp.id, @ub.id, 1)">Destroy</button>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <hr />
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div id="modalCampMinions">
+                                            <p>Size: @camp.size</p>
+                                            <p>Defenses: @camp.def_modifier</p>
                                         </div>
-                                        <div id="modalCampResources">
-                                        </div>
-                                        <p id="campDistance"></p>
+                                        @{
+                                            if (camp.OffensiveBuilding.Count > 0)
+                                            {
+                                                <div id="modalCampColonies">
+                                                    <p>Available colonies: 0</p>
+                                                </div>
+                                            }
+                                        }
+                                        @{
+                                            if (stationCheck > 0)
+                                            {
+                                                <div id="modalCampCaravans">
+                                                    <p>Available caravans: 0</p>
+                                                </div>
+                                            }
+                                        }
                                     </div>
                                     <div class="row">
                                         <hr />

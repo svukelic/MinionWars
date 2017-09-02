@@ -16,7 +16,7 @@ namespace WarsMovementConsole
         static void Main(string[] args)
         {
             SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
-
+            Console.WriteLine("Movement updater started");
             /*for (int i = 0; i < 20; i++)
             {
                 assignedBattlegroups[i] = new List<Battlegroup>();
@@ -30,6 +30,7 @@ namespace WarsMovementConsole
             }*/
 
             DoBattlegroupWork();
+            DoCaravanWork();
 
             while (true)
             {
@@ -41,13 +42,29 @@ namespace WarsMovementConsole
         {
             while (true)
             {
-                List<Battlegroup> bgl = MapMovementUpdater.GetAll();
+                List<Battlegroup> bgl = MapMovementUpdater.GetAllBattlegroups();
                 foreach (Battlegroup bg in bgl)
                 {
-                    Battlegroup updatedObj = MapMovementUpdater.UpdatePosition(bg);
+                    Battlegroup updatedObj = MapMovementUpdater.UpdateBattlegroupPosition(bg);
                     updatedObj = null;
                 }
                 bgl = null;
+
+                await Task.Delay(1);
+            }
+        }
+
+        private static async Task DoCaravanWork()
+        {
+            while (true)
+            {
+                List<Caravan> carl = MapMovementUpdater.GetAllCaravans();
+                foreach (Caravan car in carl)
+                {
+                    Caravan updatedObj = MapMovementUpdater.UpdateCaravanPosition(car);
+                    updatedObj = null;
+                }
+                carl = null;
 
                 await Task.Delay(1);
             }

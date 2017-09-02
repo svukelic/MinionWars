@@ -91,6 +91,9 @@
     <Compile Include="Models\BattlegroupMovementHistory.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Buildings.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Camp.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
@@ -98,6 +101,15 @@
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Caravan.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CostsBuilding.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CostsMinion.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DefensiveBuilding.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\HiveNode.cs">
@@ -130,10 +142,16 @@
     <Compile Include="Models\ModifierCoeficients.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OffensiveBuilding.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Orders.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Reputation.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResourceBuilding.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ResourceNode.cs">
@@ -151,7 +169,12 @@
     <Compile Include="Models\UserTreasury.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UtilityBuilding.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\CostManager.cs" />
+    <Compile Include="Resources\CostObject.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="RewardManagers\RewardGenerator.cs" />
     <Compile Include="Structures\HiveManager.cs" />

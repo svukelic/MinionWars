@@ -1,5 +1,6 @@
 ﻿using MinionWarsEntitiesLib.Minions;
 using MinionWarsEntitiesLib.Models;
+using MinionWarsEntitiesLib.RewardManagers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -54,25 +55,7 @@ namespace MinionWarsEntitiesLib.Structures
             using (var db = new MinionWarsEntities())
             {
                 HiveNode node = db.HiveNode.Find(node_id);
-                MinionOwnership mo = null;
-                List<MinionOwnership> list = db.MinionOwnership.Where(x => x.owner_id == user_id && x.minion_id == node.minion_id).ToList();
-                if (list.Count > 0) {
-                    mo = list.First();
-                    mo.group_count += 10;
-                    mo.available += 10;
-
-                    db.MinionOwnership.Attach(mo);
-                    db.Entry(mo).State = System.Data.Entity.EntityState.Modified;
-                }
-                else {
-                    mo = new MinionOwnership();
-                    mo.group_count = 10;
-                    mo.available = 10;
-                    mo.owner_id = user_id;
-                    mo.minion_id = node.minion_id;
-
-                    db.MinionOwnership.Add(mo);
-                }
+                RewardGenerator.AwardMinions(user_id, node.minion_id, 10);
 
                 db.HiveNode.Remove(node);
                 db.SaveChanges();
