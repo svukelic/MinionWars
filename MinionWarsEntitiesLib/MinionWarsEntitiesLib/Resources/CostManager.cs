@@ -33,6 +33,32 @@ namespace MinionWarsEntitiesLib.Resources
             }
         }
 
+        public static bool ApplyMinionCosts(int user_id, int amount)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                List<UserTreasury> utl = db.UserTreasury.Where(x => x.user_id == user_id).ToList();
+                foreach (UserTreasury ut in utl)
+                {
+                    ResourceType rt = db.ResourceType.Find(ut.res_id);
+                    if (rt.category.Equals("food"))
+                    {
+                        if (ut.amount < amount * 20) return false;
+                        else
+                        {
+                            ut.amount -= amount * 20;
+                            db.UserTreasury.Attach(ut);
+                            db.Entry(ut).State = System.Data.Entity.EntityState.Modified;
+                        }
+                    }
+                }
+
+                db.SaveChanges();
+
+                return true;
+            }
+        }
+
         public static List<CostObject> GetBuildingCosts(int b_id)
         {
             using (var db = new MinionWarsEntities())

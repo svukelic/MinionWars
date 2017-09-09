@@ -112,6 +112,9 @@
     <Compile Include="Models\DefensiveBuilding.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EvolutionPool.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\HiveNode.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
@@ -160,6 +163,9 @@
     <Compile Include="Models\ResourceType.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Trading.cs">
+      <DependentUpon>MinionWarsEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UserMovementHistory.cs">
       <DependentUpon>MinionWarsEntities.tt</DependentUpon>
     </Compile>
@@ -177,9 +183,11 @@
     <Compile Include="Resources\CostObject.cs" />
     <Compile Include="Resources\ResourceManager.cs" />
     <Compile Include="RewardManagers\RewardGenerator.cs" />
+    <Compile Include="RewardManagers\TreasuryUpdater.cs" />
     <Compile Include="Structures\HiveManager.cs" />
     <Compile Include="EntityManagers\UsersManager.cs" />
     <Compile Include="Structures\CampManager.cs" />
+    <Compile Include="Structures\TradeManager.cs" />
     <Compile Include="TestManagers\WildMinionsTest.cs" />
   </ItemGroup>
   <ItemGroup>

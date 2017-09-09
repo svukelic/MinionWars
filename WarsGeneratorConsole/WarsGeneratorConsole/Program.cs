@@ -11,6 +11,7 @@ using MinionWarsEntitiesLib.Resources;
 using MinionWarsEntitiesLib.Minions;
 using MinionWarsEntitiesLib.Battlegroups;
 using MinionWarsEntitiesLib.Structures;
+using MinionWarsEntitiesLib.RewardManagers;
 
 namespace WarsGeneratorConsole
 {
@@ -39,6 +40,10 @@ namespace WarsGeneratorConsole
             Timer caravanTimer = new Timer(1000 * 60 * 15);
             caravanTimer.Elapsed += new ElapsedEventHandler(CaravanGenerationEvent);
             hiveTimer.Enabled = true;
+
+            Timer tTimer = new Timer(1000 * 60 * 60);
+            tTimer.Elapsed += new ElapsedEventHandler(UpdateUserTreasuries);
+            tTimer.Enabled = true;
 
             while (true)
             {
@@ -137,6 +142,11 @@ namespace WarsGeneratorConsole
             {
                 Console.WriteLine("Caravan generated: " + c.location.Latitude + " | " + c.location.Longitude);
             }
+        }
+
+        private static void UpdateUserTreasuries(object source, ElapsedEventArgs e)
+        {
+            TreasuryUpdater.UpdateUserTreasuries();
         }
     }
 }

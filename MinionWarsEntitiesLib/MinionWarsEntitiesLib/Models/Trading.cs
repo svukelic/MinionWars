@@ -12,15 +12,16 @@ namespace MinionWarsEntitiesLib.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class UserTreasury
+    public partial class Trading
     {
         public int id { get; set; }
-        public int res_id { get; set; }
-        public int user_id { get; set; }
-        public Nullable<int> amount { get; set; }
-        public Nullable<int> generation { get; set; }
+        public int minion_id { get; set; }
+        public int amount { get; set; }
+        public int camp_id { get; set; }
+        public int owner_id { get; set; }
     
-        public virtual ResourceType ResourceType { get; set; }
+        public virtual Camp Camp { get; set; }
+        public virtual Minion Minion { get; set; }
         public virtual Users Users { get; set; }
     }
 }

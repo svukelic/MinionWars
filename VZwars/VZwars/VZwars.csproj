@@ -196,10 +196,13 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BattlegroupModel.cs" />
+    <Compile Include="Models\CampModel.cs" />
+    <Compile Include="Models\CaravanDisplayModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MinionModel.cs" />
     <Compile Include="Models\ReputationModel.cs" />
+    <Compile Include="Models\TradeModel.cs" />
     <Compile Include="Models\TreasuryModel.cs" />
     <Compile Include="Models\UserDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -219,6 +222,8 @@
     <Content Include="Content\fonts\aniron\readme.html" />
     <Content Include="Content\icons\barbute.png" />
     <Content Include="Content\icons\camping-tent.png" />
+    <Content Include="Content\icons\cash.png" />
+    <Content Include="Content\icons\castle-circle.png" />
     <Content Include="Content\icons\castle-n.png" />
     <Content Include="Content\icons\castle-p.png" />
     <Content Include="Content\icons\castle-y.png" />
@@ -231,12 +236,14 @@
     <Content Include="Content\icons\heart-tower.png" />
     <Content Include="Content\icons\king.png" />
     <Content Include="Content\icons\locked-chest.png" />
+    <Content Include="Content\icons\mailbox.png" />
     <Content Include="Content\icons\metal-bar.png" />
     <Content Include="Content\icons\mine-wagon.png" />
     <Content Include="Content\icons\mw_title.png" />
     <Content Include="Content\icons\old-wagon.png" />
     <Content Include="Content\icons\overlord-helm.png" />
     <Content Include="Content\icons\pine-tree.png" />
+    <Content Include="Content\icons\scales.png" />
     <Content Include="Content\icons\spartan-helmet.png" />
     <Content Include="Content\icons\stone-pile.png" />
     <Content Include="Content\icons\sword-spade.png" />
@@ -331,6 +338,7 @@
     <Content Include="Views\Home\Partial_hiveNodeClickModal.cshtml" />
     <Content Include="Views\Home\Partial_caravanClickModal.cshtml" />
     <Content Include="Views\Home\Partial_buildingCreationModal.cshtml" />
+    <Content Include="Views\Home\Partial_subPageModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,4 +1,7 @@
-﻿<div id="campClickModal" class="modal fade" role="dialog">
+﻿@model VZwars.Models.UserDataModel
+@using MinionWarsEntitiesLib.Models
+@using VZwars.Models
+<div id="campClickModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <div class="modal-content">
@@ -12,13 +15,42 @@
                         <p id="campDistance"></p>
                     </div>
                 </div>
-                <div id="tradingPostArea">
+                <div class="row" id="streetViewArea" style="text-align:center;">
+
+                </div>
+                <div id="tradingPostArea" style="text-align: center;">
                     <div class="row">
+                        <h2>Trading Post</h2>
                         <hr />
                     </div>
                     <div class="row">
-                        <div class="col-md-3">
-                            <p>test</p>
+                        <div class="col-md-12">
+                            <div class="dropdown">
+                                <h3>Trade your minions</h3>
+                                <input type="text" id="tradeAmount" name="tradeAmount" placeholder="Amount" class="input-sm" />
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                    Trade minions
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    @foreach (MinionModel mm in Model.minions)
+                                    {
+                                        <li><a href="#" onclick="tradeMinions(@mm.ownership.id)">@mm.type.name</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <hr />
+                            <h3>Available minions for trade</h3>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="availableTradeMinions" class="col-md-12">
+
                         </div>
                     </div>
                 </div>

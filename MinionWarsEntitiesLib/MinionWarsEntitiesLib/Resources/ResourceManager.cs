@@ -76,6 +76,7 @@ namespace MinionWarsEntitiesLib.Resources
                     ut.user_id = id;
                     ut.res_id = rt.id;
                     ut.amount = 50;
+                    ut.generation = 3;
 
                     db.UserTreasury.Add(ut);
                 }

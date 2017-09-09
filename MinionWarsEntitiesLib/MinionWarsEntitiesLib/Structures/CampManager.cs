@@ -12,16 +12,13 @@ namespace MinionWarsEntitiesLib.Structures
 {
     public static class CampManager
     {
-        public static List<Camp> ReturnCamps(DbGeography loc, int radius)
+        public static List<Camp> ReturnCamps(string point, int radius)
         {
+            DbGeography loc = DbGeography.FromText(point);
             using (var db = new MinionWarsEntities())
             {
+                db.Configuration.LazyLoadingEnabled = false;
                 List<Camp> camps = db.Camp.Where(x => x.location.Distance(loc) <= radius).ToList();
-                //Check for discovery - max 16, check if at least 10
-                if (camps.Count <= 10)
-                {
-                    camps.AddRange(Geolocations.Geolocations.InitiateDiscovery(loc)); 
-                }
 
                 return camps;
             }
@@ -35,8 +32,10 @@ namespace MinionWarsEntitiesLib.Structures
                 //Check for discovery - max 16, check if at least 10
                 if (camps.Count <= 10)
                 {
-                    camps.AddRange(Geolocations.Geolocations.InitiateDiscovery(loc));
+                    camps.AddRange(Geolocations.Geolocations.InitiateDiscovery(loc, "restaurant"));
                 }
+                camps.AddRange(Geolocations.Geolocations.InitiateDiscovery(loc, "gas_station"));
+                camps.AddRange(Geolocations.Geolocations.InitiateDiscovery(loc, "bank"));
                 camps = null;
             }
         }
@@ -59,12 +58,9 @@ namespace MinionWarsEntitiesLib.Structures
                 {
                     camp.owner_id = null;
                     camp.type = "neutral";
-                    camp.name = "Neutral Camp";
+                    camp.name = name;
                     camp.size = 30;
                     camp.building_count = 3;
-
-                    bool result = CostManager.ApplyCampCost(camp.owner_id.Value);
-                    if (!result) return null;
                 }
                 else {
                     camp.owner_id = user_id;
@@ -72,6 +68,8 @@ namespace MinionWarsEntitiesLib.Structures
                     camp.name = name;
                     camp.size = CalculateCampCapacity(user_id);
                     camp.building_count = 0;
+                    bool result = CostManager.ApplyCampCost(camp.owner_id.Value);
+                    if (!result) return null;
                 }
                 camp.location = loc;
                 camp.mapped_type = "restaurant";
@@ -151,6 +149,30 @@ namespace MinionWarsEntitiesLib.Structures
             }
         }
 
+        public static Caravan GenerateUserCaravan(int source_id, int destination_id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                Camp source = db.Camp.Find(source_id);
+
+                Caravan caravan = new Caravan();
+                caravan.owner_id = source.owner_id;
+                caravan.source_id = source_id;
+                caravan.location = source.location;
+                caravan.last_movement = DateTime.Now;
+
+                Camp destinationCamp = db.Camp.Find(destination_id);
+                caravan.destination_id = destinationCamp.id;
+
+                caravan.directions = null; //Geolocations.Geolocations.GetCaravanDirections(caravan.location, destinationCamp.location);
+
+                db.Caravan.Add(caravan);
+                db.SaveChanges();
+
+                return caravan;
+            }
+        }
+
         public static Caravan CaravanArrival(Caravan car)
         {
             car.current_step = null;
@@ -208,6 +230,21 @@ namespace MinionWarsEntitiesLib.Structures
             }
         }
 
+        public static Caravan GetCampCaravan(int camp_id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                Caravan car = null;
+                List<Caravan> cl = db.Caravan.Where(x => x.source_id == camp_id).ToList();
+                if(cl.Count > 1)
+                {
+                    car = cl.First();
+                }
+                return car;
+            }
+        }
+
         public static Caravan UpdatePosition(Caravan car)
         {
             return PositionManager.UpdateCaravanPosition(car);
@@ -255,10 +292,11 @@ namespace MinionWarsEntitiesLib.Structures
                 Camp camp = db.Camp.Find(car.source_id);
                 Camp destination = db.Camp.Find(car.destination_id);
 
-                Random r = new Random();
+                /*Random r = new Random();
                 List<CampTreasury> ctl = db.CampTreasury.Where(x => x.camp_id == camp.id).ToList();
                 CampTreasury ct = ctl.OrderBy(x => r.Next()).First();
-                ResourceType rt = db.ResourceType.Find(ct.res_id);
+                ResourceType rt = db.ResourceType.Find(ct.res_id);*/
+                ResourceType rt = ResourceManager.getRandomRes().First();
 
                 res = rt.name;
 
@@ -320,6 +358,12 @@ namespace MinionWarsEntitiesLib.Structures
                         rb.camp_id = camp_id;
                         rb.rtype_id = b.id;
                         db.ResourceBuilding.Add(rb);
+
+                        UserTreasury ut = db.UserTreasury.Where(x => x.user_id == camp.owner_id && x.res_id == rb.rtype_id).First();
+                        ut.generation += 5;
+                        db.UserTreasury.Attach(ut);
+                        db.Entry(ut).State = System.Data.Entity.EntityState.Modified;
+
                         break;
                     case "Offensive Building":
                         OffensiveBuilding ob = new OffensiveBuilding();
@@ -372,10 +416,20 @@ namespace MinionWarsEntitiesLib.Structures
 
             using (var db = new MinionWarsEntities())
             {
+                Camp camp = db.Camp.Find(camp_id);
+
                 switch (type)
                 {
                     case 1:
-                        db.ResourceBuilding.Remove(db.ResourceBuilding.Find(b_id));
+                        ResourceBuilding rb = db.ResourceBuilding.Find(b_id);
+
+                        UserTreasury ut = db.UserTreasury.Where(x => x.user_id == camp.owner_id && x.res_id == rb.rtype_id).First();
+                        ut.generation -= 5;
+                        db.UserTreasury.Attach(ut);
+                        db.Entry(ut).State = System.Data.Entity.EntityState.Modified;
+
+                        db.ResourceBuilding.Remove(rb);
+
                         break;
                     case 2:
                         db.OffensiveBuilding.Remove(db.OffensiveBuilding.Find(b_id));
@@ -388,13 +442,51 @@ namespace MinionWarsEntitiesLib.Structures
                         break;
                 }
 
-                Camp camp = db.Camp.Find(camp_id);
                 camp.building_count--;
                 db.Camp.Attach(camp);
                 db.Entry(camp).State = System.Data.Entity.EntityState.Modified;
 
                 db.SaveChanges();
             }
+        }
+
+        public static bool AttachMinions(int ob_id, int m_id)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                OffensiveBuilding ob = db.OffensiveBuilding.Find(ob_id);
+                ob.minion_id = m_id;
+
+                db.OffensiveBuilding.Attach(ob);
+                db.Entry(ob).State = System.Data.Entity.EntityState.Modified;
+
+                db.SaveChanges();
+            }
+
+            return true;
+        }
+
+        public static bool BuildMinions(int ob_id, int user_id, int amount)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                OffensiveBuilding ob = db.OffensiveBuilding.Find(ob_id);
+
+                List<MinionOwnership> mol = db.MinionOwnership.Where(x => x.owner_id == user_id && x.minion_id == ob.minion_id).ToList();
+                if(mol.Count > 0)
+                {
+                    bool check = CostManager.ApplyMinionCosts(user_id, amount);
+                    if (check)
+                    {
+                        MinionOwnership mo = mol.First();
+                        mo.group_count += amount;
+                        mo.available += amount;
+                    }
+                    else return false;
+                }
+            }
+
+            return true;
         }
     }
 }

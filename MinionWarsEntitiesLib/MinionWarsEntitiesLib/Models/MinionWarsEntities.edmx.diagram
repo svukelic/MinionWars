@@ -63,6 +63,12 @@
         <AssociationConnector Association="MinionWarsModel.fk_rtreasury_res" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_usermove_user" ManuallyRouted="false" />
         <AssociationConnector Association="MinionWarsModel.fk_utreasury_user" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MinionWarsModel.Trading" Width="1.5" PointX="13.5" PointY="6.75" />
+        <AssociationConnector Association="MinionWarsModel.fk_trade_camp" />
+        <AssociationConnector Association="MinionWarsModel.fk_trade_minion" />
+        <AssociationConnector Association="MinionWarsModel.fk_trade_user" />
+        <EntityTypeShape EntityType="MinionWarsModel.EvolutionPool" Width="1.5" PointX="10.5" PointY="23" />
+        <AssociationConnector Association="MinionWarsModel.fk_evo_minion" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

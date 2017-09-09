@@ -15,6 +15,7 @@ namespace MinionWarsEntitiesLib.Geolocations
         {
             MapDataModel mdm = new MapDataModel();
             DbGeography loc = DbGeography.FromText(point);
+            int sub = 0;
 
             List<Battlegroup> bg = new List<Battlegroup>();
             List<Users> users = new List<Users>();
@@ -24,6 +25,8 @@ namespace MinionWarsEntitiesLib.Geolocations
             List<Caravan> caravans = new List<Caravan>();
             using (var db = new MinionWarsEntities())
             {
+                sub = db.Users.Find(id).subscription.Value;
+
                 bg = db.Battlegroup.Where(x => x.location.Distance(loc) <= radius).ToList();
                 foreach (Battlegroup b in bg)
                 {
@@ -47,8 +50,19 @@ namespace MinionWarsEntitiesLib.Geolocations
                 camps = db.Camp.Where(x=>x.location.Distance(loc) <= radius && x.owner_id == null).ToList(); //CampManager.ReturnCamps(loc, radius);
                 foreach(Camp c in camps)
                 {
-                    MapObject obj = new MapObject(c.id, c.name, c.location);
-                    mdm.objectList.Add(obj);
+                    if(c.name.Equals("Message Board") || c.name.Equals("Neutral Trader"))
+                    {
+                        if(sub > 0)
+                        {
+                            MapObject obj = new MapObject(c.id, c.name, c.location);
+                            mdm.objectList.Add(obj);
+                        }
+                    }
+                    else
+                    {
+                        MapObject obj = new MapObject(c.id, c.name, c.location);
+                        mdm.objectList.Add(obj);
+                    }
                 }
                 camps = null;
 

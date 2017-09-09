@@ -173,5 +173,107 @@ namespace VZwars.Controllers
 
             return Json(col);
         }
+
+        public ActionResult GetCampCaravan(int camp_id, double lat, double lon)
+        {
+            Caravan car = CampManager.GetCampCaravan(camp_id);
+            CaravanDisplayModel cdm;
+            if (car == null)
+            {
+                var point = string.Format("POINT({1} {0})", lat, lon);
+                List<Camp> cl = CampManager.ReturnCamps(point, 1000);
+                cdm = new CaravanDisplayModel(0, camp_id, null, cl, Convert.ToInt32(Session["UserId"]));
+            }
+            else
+            {
+                cdm = new CaravanDisplayModel(1, camp_id, car, null, Convert.ToInt32(Session["UserId"]));
+            }
+
+            return Json(cdm);
+        }
+
+        public ActionResult SendUserCaravan(int source, int destination)
+        {
+            string message = "Initial";
+            Caravan car = CampManager.GenerateUserCaravan(source, destination);
+            if (car == null) message = "Error sending Caravan!";
+            else message = "Caravan sent!";
+
+            return Json(message);
+        }
+
+        public ActionResult AttachMinions(int m_id, int ob_id)
+        {
+            string message = "Initial";
+            bool result = CampManager.AttachMinions(ob_id, m_id);
+            if (result) message = "Minions attached!";
+            else message = "Error attaching minions!";
+
+            return Json(message);
+        }
+
+        public ActionResult BuildMinions(int ob_id, int amount)
+        {
+            string message = "Initial";
+            bool result = CampManager.BuildMinions(ob_id, Convert.ToInt32(Session["UserId"]), amount);
+            if (result) message = "Minions succesfully built!";
+            else message = "Error building minions!";
+
+            return Json(message);
+        }
+
+        public ActionResult CheckTradingPost(int camp_id)
+        {
+            List<TradeModel> tml = new List<TradeModel>();
+            List<Trading> tradeList = TradeManager.CheckTradingPost(camp_id);
+            if(tradeList == null)
+            {
+                return Json(-1);
+            }
+            else
+            {
+                if (tradeList.Count > 0)
+                {
+                    foreach(Trading t in tradeList)
+                    {
+                        tml.Add(new TradeModel(t));
+                    }
+
+                    return Json(tml);
+                }
+                else
+                {
+                    return Json(0);
+                }
+            }
+        }
+
+        public ActionResult AddToTradingPost(int mo_id, int camp_id, int amount)
+        {
+            bool result = TradeManager.AddToTradingPost(mo_id, amount, camp_id);
+            string message = "Initial";
+            if (result) message = "Minions succesfully added to Trading Post!";
+            else message = "Error working with Trading Post!";
+
+            return Json(message);
+        }
+
+        public ActionResult BuyMinions(int trade_id)
+        {
+            bool result = TradeManager.BuyMinions(trade_id, Convert.ToInt32(Session["UserId"]));
+            string message = "Initial";
+            if (result) message = "Minions succesfully bought!";
+            else message = "Error working with Trading Post!";
+
+            return Json(message);
+        }
+
+        public ActionResult BuySubscription(int sub)
+        {
+            string message = "Subscription succesful!";
+            UsersManager.SetSubscription(Convert.ToInt32(Session["UserId"]), sub);
+
+            return Json(message);
+        }
     }
 }

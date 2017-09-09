@@ -22,6 +22,8 @@ namespace MinionWarsEntitiesLib.Models
             this.HiveNode = new HashSet<HiveNode>();
             this.OffensiveBuilding = new HashSet<OffensiveBuilding>();
             this.MinionOwnership = new HashSet<MinionOwnership>();
+            this.Trading = new HashSet<Trading>();
+            this.EvolutionPool = new HashSet<EvolutionPool>();
         }
     
         public int id { get; set; }
@@ -50,5 +52,9 @@ namespace MinionWarsEntitiesLib.Models
         public virtual ICollection<OffensiveBuilding> OffensiveBuilding { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MinionOwnership> MinionOwnership { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Trading> Trading { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EvolutionPool> EvolutionPool { get; set; }
     }
 }

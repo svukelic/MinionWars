@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MinionWarsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MinionWarsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AbilityStats">
           <Key>
             <PropertyRef Name="id" />
@@ -141,6 +141,14 @@
           <Property Name="camp_id" Type="int" Nullable="false" />
           <Property Name="modifier" Type="int" />
         </EntityType>
+        <EntityType Name="EvolutionPool">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stored_date" Type="datetime" />
+          <Property Name="minion_id" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="HiveNode">
           <Key>
             <PropertyRef Name="id" />
@@ -253,6 +261,16 @@
           <Property Name="name" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="category" Type="varchar" MaxLength="15" Nullable="false" />
         </EntityType>
+        <EntityType Name="Trading">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="minion_id" Type="int" Nullable="false" />
+          <Property Name="amount" Type="int" Nullable="false" />
+          <Property Name="camp_id" Type="int" Nullable="false" />
+          <Property Name="owner_id" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserMovementHistory">
           <Key>
             <PropertyRef Name="id" />
@@ -281,6 +299,7 @@
           <Property Name="trait_economics" Type="int" Nullable="false" />
           <Property Name="personal_bg_id" Type="int" />
           <Property Name="points" Type="int" />
+          <Property Name="subscription" Type="int" />
         </EntityType>
         <EntityType Name="UserTreasury">
           <Key>
@@ -290,6 +309,7 @@
           <Property Name="res_id" Type="int" Nullable="false" />
           <Property Name="user_id" Type="int" Nullable="false" />
           <Property Name="amount" Type="int" />
+          <Property Name="generation" Type="int" />
         </EntityType>
         <EntityType Name="UtilityBuilding">
           <Key>
@@ -505,6 +525,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_evo_minion">
+          <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
+          <End Role="EvolutionPool" Type="Self.EvolutionPool" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Minion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EvolutionPool">
+              <PropertyRef Name="minion_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_hnode_minion">
           <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
           <End Role="HiveNode" Type="Self.HiveNode" Multiplicity="*" />
@@ -649,6 +681,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_trade_camp">
+          <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
+          <End Role="Trading" Type="Self.Trading" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Trading">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_trade_minion">
+          <End Role="Minion" Type="Self.Minion" Multiplicity="1" />
+          <End Role="Trading" Type="Self.Trading" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Minion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Trading">
+              <PropertyRef Name="minion_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_trade_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Trading" Type="Self.Trading" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Trading">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_ub_camp">
           <End Role="Camp" Type="Self.Camp" Multiplicity="1" />
           <End Role="UtilityBuilding" Type="Self.UtilityBuilding" Multiplicity="*" />
@@ -697,6 +765,7 @@
           <EntitySet Name="CostsBuilding" EntityType="Self.CostsBuilding" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CostsMinion" EntityType="Self.CostsMinion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DefensiveBuilding" EntityType="Self.DefensiveBuilding" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EvolutionPool" EntityType="Self.EvolutionPool" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HiveNode" EntityType="Self.HiveNode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Minion" EntityType="Self.Minion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MinionOwnership" EntityType="Self.MinionOwnership" Schema="dbo" store:Type="Tables" />
@@ -708,6 +777,7 @@
           <EntitySet Name="ResourceBuilding" EntityType="Self.ResourceBuilding" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResourceNode" EntityType="Self.ResourceNode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResourceType" EntityType="Self.ResourceType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Trading" EntityType="Self.Trading" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserMovementHistory" EntityType="Self.UserMovementHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTreasury" EntityType="Self.UserTreasury" Schema="dbo" store:Type="Tables" />
@@ -780,6 +850,10 @@
             <End Role="Camp" EntitySet="Camp" />
             <End Role="DefensiveBuilding" EntitySet="DefensiveBuilding" />
           </AssociationSet>
+          <AssociationSet Name="fk_evo_minion" Association="Self.fk_evo_minion">
+            <End Role="Minion" EntitySet="Minion" />
+            <End Role="EvolutionPool" EntitySet="EvolutionPool" />
+          </AssociationSet>
           <AssociationSet Name="fk_hnode_minion" Association="Self.fk_hnode_minion">
             <End Role="Minion" EntitySet="Minion" />
             <End Role="HiveNode" EntitySet="HiveNode" />
@@ -828,6 +902,18 @@
             <End Role="ResourceType" EntitySet="ResourceType" />
             <End Role="UserTreasury" EntitySet="UserTreasury" />
           </AssociationSet>
+          <AssociationSet Name="fk_trade_camp" Association="Self.fk_trade_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="Trading" EntitySet="Trading" />
+          </AssociationSet>
+          <AssociationSet Name="fk_trade_minion" Association="Self.fk_trade_minion">
+            <End Role="Minion" EntitySet="Minion" />
+            <End Role="Trading" EntitySet="Trading" />
+          </AssociationSet>
+          <AssociationSet Name="fk_trade_user" Association="Self.fk_trade_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Trading" EntitySet="Trading" />
+          </AssociationSet>
           <AssociationSet Name="fk_ub_camp" Association="Self.fk_ub_camp">
             <End Role="Camp" EntitySet="Camp" />
             <End Role="UtilityBuilding" EntitySet="UtilityBuilding" />
@@ -841,8 +927,7 @@
             <End Role="UserTreasury" EntitySet="UserTreasury" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MinionWarsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -951,6 +1036,7 @@
           <NavigationProperty Name="ResourceBuilding" Relationship="Self.fk_rb_camp" FromRole="Camp" ToRole="ResourceBuilding" />
           <NavigationProperty Name="Reputation" Relationship="Self.fk_rep_camp" FromRole="Camp" ToRole="Reputation" />
           <NavigationProperty Name="UtilityBuilding" Relationship="Self.fk_ub_camp" FromRole="Camp" ToRole="UtilityBuilding" />
+          <NavigationProperty Name="Trading" Relationship="MinionWarsModel.fk_trade_camp" FromRole="Camp" ToRole="Trading" />
         </EntityType>
         <EntityType Name="CampTreasury">
           <Key>
@@ -1044,6 +1130,8 @@
           <NavigationProperty Name="MinionType" Relationship="Self.fk_minion_mtype" FromRole="Minion" ToRole="MinionType" />
           <NavigationProperty Name="OffensiveBuilding" Relationship="Self.fk_ob_minion" FromRole="Minion" ToRole="OffensiveBuilding" />
           <NavigationProperty Name="MinionOwnership" Relationship="Self.fk_ownership_minion" FromRole="Minion" ToRole="MinionOwnership" />
+          <NavigationProperty Name="Trading" Relationship="MinionWarsModel.fk_trade_minion" FromRole="Minion" ToRole="Trading" />
+          <NavigationProperty Name="EvolutionPool" Relationship="MinionWarsModel.fk_evo_minion" FromRole="Minion" ToRole="EvolutionPool" />
         </EntityType>
         <EntityType Name="MinionOwnership">
           <Key>
@@ -1183,6 +1271,8 @@
           <NavigationProperty Name="Reputation" Relationship="Self.fk_rep_user" FromRole="Users" ToRole="Reputation" />
           <NavigationProperty Name="UserMovementHistory" Relationship="Self.fk_usermove_user" FromRole="Users" ToRole="UserMovementHistory" />
           <NavigationProperty Name="UserTreasury" Relationship="Self.fk_utreasury_user" FromRole="Users" ToRole="UserTreasury" />
+          <NavigationProperty Name="Trading" Relationship="MinionWarsModel.fk_trade_user" FromRole="Users" ToRole="Trading" />
+          <Property Name="subscription" Type="Int32" />
         </EntityType>
         <EntityType Name="UserTreasury">
           <Key>
@@ -1194,6 +1284,7 @@
           <Property Name="amount" Type="Int32" />
           <NavigationProperty Name="ResourceType" Relationship="Self.fk_rtreasury_res" FromRole="UserTreasury" ToRole="ResourceType" />
           <NavigationProperty Name="Users" Relationship="Self.fk_utreasury_user" FromRole="UserTreasury" ToRole="Users" />
+          <Property Name="generation" Type="Int32" />
         </EntityType>
         <EntityType Name="UtilityBuilding">
           <Key>
@@ -1745,7 +1836,95 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="UserTreasury" EntitySet="UserTreasury" />
           </AssociationSet>
+          <EntitySet Name="Trading" EntityType="MinionWarsModel.Trading" />
+          <AssociationSet Name="fk_trade_camp" Association="MinionWarsModel.fk_trade_camp">
+            <End Role="Camp" EntitySet="Camp" />
+            <End Role="Trading" EntitySet="Trading" />
+          </AssociationSet>
+          <AssociationSet Name="fk_trade_minion" Association="MinionWarsModel.fk_trade_minion">
+            <End Role="Minion" EntitySet="Minion" />
+            <End Role="Trading" EntitySet="Trading" />
+          </AssociationSet>
+          <AssociationSet Name="fk_trade_user" Association="MinionWarsModel.fk_trade_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Trading" EntitySet="Trading" />
+          </AssociationSet>
+          <EntitySet Name="EvolutionPool" EntityType="MinionWarsModel.EvolutionPool" />
+          <AssociationSet Name="fk_evo_minion" Association="MinionWarsModel.fk_evo_minion">
+            <End Role="Minion" EntitySet="Minion" />
+            <End Role="EvolutionPool" EntitySet="EvolutionPool" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Trading">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="minion_id" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Int32" Nullable="false" />
+          <Property Name="camp_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Camp" Relationship="MinionWarsModel.fk_trade_camp" FromRole="Trading" ToRole="Camp" />
+          <NavigationProperty Name="Minion" Relationship="MinionWarsModel.fk_trade_minion" FromRole="Trading" ToRole="Minion" />
+          <Property Name="owner_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="MinionWarsModel.fk_trade_user" FromRole="Trading" ToRole="Users" />
+        </EntityType>
+        <Association Name="fk_trade_camp">
+          <End Type="MinionWarsModel.Camp" Role="Camp" Multiplicity="1" />
+          <End Type="MinionWarsModel.Trading" Role="Trading" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Camp">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Trading">
+              <PropertyRef Name="camp_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_trade_minion">
+          <End Type="MinionWarsModel.Minion" Role="Minion" Multiplicity="1" />
+          <End Type="MinionWarsModel.Trading" Role="Trading" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Minion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Trading">
+              <PropertyRef Name="minion_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_trade_user">
+          <End Type="MinionWarsModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="MinionWarsModel.Trading" Role="Trading" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Trading">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EvolutionPool">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stored_date" Type="DateTime" Precision="3" />
+          <Property Name="minion_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Minion" Relationship="MinionWarsModel.fk_evo_minion" FromRole="EvolutionPool" ToRole="Minion" />
+        </EntityType>
+        <Association Name="fk_evo_minion">
+          <End Type="MinionWarsModel.Minion" Role="Minion" Multiplicity="1" />
+          <End Type="MinionWarsModel.EvolutionPool" Role="EvolutionPool" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Minion">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EvolutionPool">
+              <PropertyRef Name="minion_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2037,6 +2216,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="MinionWarsModel.Users">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="subscription" ColumnName="subscription" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="pass" ColumnName="pass" />
@@ -2056,6 +2236,7 @@
           <EntitySetMapping Name="UserTreasury">
             <EntityTypeMapping TypeName="MinionWarsModel.UserTreasury">
               <MappingFragment StoreEntitySet="UserTreasury">
+                <ScalarProperty Name="generation" ColumnName="generation" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="res_id" ColumnName="res_id" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
@@ -2071,6 +2252,26 @@
                 <ScalarProperty Name="camp_id" ColumnName="camp_id" />
                 <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trading">
+            <EntityTypeMapping TypeName="MinionWarsModel.Trading">
+              <MappingFragment StoreEntitySet="Trading">
+                <ScalarProperty Name="owner_id" ColumnName="owner_id" />
+                <ScalarProperty Name="camp_id" ColumnName="camp_id" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="minion_id" ColumnName="minion_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EvolutionPool">
+            <EntityTypeMapping TypeName="MinionWarsModel.EvolutionPool">
+              <MappingFragment StoreEntitySet="EvolutionPool">
+                <ScalarProperty Name="minion_id" ColumnName="minion_id" />
+                <ScalarProperty Name="stored_date" ColumnName="stored_date" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MinionWarsEntitiesLib.Models;
 using System.Data.Entity.Spatial;
+using MinionWarsEntitiesLib.Structures;
 
 namespace MinionWarsEntitiesLib.EntityManagers
 {
@@ -45,6 +46,20 @@ namespace MinionWarsEntitiesLib.EntityManagers
             using (var db = new MinionWarsEntities())
             {
                 return db.Users.Find(id);
+            }
+        }
+
+        public static void SetSubscription(int id, int sub)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                Users u = db.Users.Find(id);
+                if (u.subscription == null) u.subscription = 0;
+                u.subscription += sub;
+
+                db.Users.Attach(u);
+                db.Entry(u).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
             }
         }
 
@@ -134,6 +149,9 @@ namespace MinionWarsEntitiesLib.EntityManagers
                     db.Users.Attach(user);
                     db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                 }
+
+                //check for discovery
+                CampManager.CheckForDiscovery(history.First().location, 5000);
 
                 db.SaveChanges();
             }

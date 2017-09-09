@@ -11,6 +11,8 @@
 
 @Html.Partial("Partial_resourcesPageModal")
 
+@Html.Partial("Partial_subPageModal")
+
 @Html.Partial("Partial_clickModal")
 
 @Html.Partial("Partial_buildingModal")
@@ -124,6 +126,8 @@
             var ncampCheck = "Neutral Camp";
             var ycampCheck = "Your Camp";
             var pcampCheck = "Player Camp";
+            var ntraderCheck = "Neutral Trader";
+            var mboardCheck = "Message Board";
             var hiveCheck = "Hive Node";
             var resCheck = "Resource Node";
             var carCheck = "Caravan";
@@ -138,6 +142,12 @@
             }
             else if(data.type.indexOf(pcampCheck) != -1){
                 icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/castle-p.png';
+            }
+            else if(data.type.indexOf(ntraderCheck) != -1){
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/scales.png';
+            }
+            else if(data.type.indexOf(mboardCheck) != -1){
+                icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/mailbox.png';
             }
             else if(data.type.indexOf(hiveCheck) != -1){
                 icon_location = 'http://minion-wars.azurewebsites.net/Content/icons/heart-tower.png';
@@ -179,9 +189,11 @@
                 marker.addListener('click', function (e) {
                     targetLoc = this.getPosition();
                     targetId = this.id;
+                    GetStreetView(targetLoc.lat(), targetLoc.lng());
                     var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
                     $("#campDistance").text("Distance: " + distance);
                     $("#campDetails").text("Camp details - Neutral camp");
+                    checkTradingPost();
                     $("#campClickModal").modal();
                 });
             }
@@ -189,9 +201,11 @@
                 marker.addListener('click', function (e) {
                     targetLoc = this.getPosition();
                     targetId = this.id;
+                    GetStreetView(targetLoc.lat(), targetLoc.lng());
                     var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
                     $("#campDistance").text("Distance: " + distance);
                     $("#campDetails").text("Camp details - Your camp");
+                    checkTradingPost();
                     $("#campClickModal").modal();
                 });
             }
@@ -199,9 +213,33 @@
                 marker.addListener('click', function (e) {
                     targetLoc = this.getPosition();
                     targetId = this.id;
+                    GetStreetView(targetLoc.lat(), targetLoc.lng());
                     var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
                     $("#campDistance").text("Distance: " + distance);
                     $("#campDetails").text("Camp details - Player camp");
+                    checkTradingPost();
+                    $("#campClickModal").modal();
+                });
+            }
+            else if(data.type.indexOf(ntraderCheck) != -1){
+                marker.addListener('click', function (e) {
+                    targetLoc = this.getPosition();
+                    targetId = this.id;
+                    GetStreetView(targetLoc.lat(), targetLoc.lng());
+                    var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
+                    $("#campDistance").text("Distance: " + distance);
+                    $("#campDetails").text("Camp details - Neutral Trader");
+                    $("#campClickModal").modal();
+                });
+            }
+            else if(data.type.indexOf(mboardCheck) != -1){
+                marker.addListener('click', function (e) {
+                    targetLoc = this.getPosition();
+                    targetId = this.id;
+                    GetStreetView(targetLoc.lat(), targetLoc.lng());
+                    var distance = GetDistance(UserMarker.getPosition().lat(), UserMarker.getPosition().lng(), targetLoc.lat(), targetLoc.lng()).toFixed(2);
+                    $("#campDistance").text("Distance: " + distance);
+                    $("#campDetails").text("Camp details - Message Board");
                     $("#campClickModal").modal();
                 });
             }
@@ -486,6 +524,152 @@
             });
         }
 
+        var currentCamp;
+        function refreshCampCaravan(camp_id, lat, lon){
+            currentCamp = camp_id;
+            $("#campCaravanNearby").empty();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetCampCaravan")',
+                data: { 'camp_id': camp_id, 'lat': lat, 'lon': lon  },
+                dataType: 'json',
+                success: function (jsonData) {
+                    //alert(JSON.stringify(jsonData));
+                    if(jsonData.type == 0){
+                        $("#campCaravanAvailable").text("Available caravans: 1")
+                        for(var i = 0; i<jsonData.camps.length; i++){
+                            $("#campCaravanNearby").append( "<p>Name : " + jsonData.camps[i].name + "</p>");
+                            $("#campCaravanNearby").append( "<p>Reputation : " + jsonData.camps[i].reputation + "</p>");
+                            var btnSendCarStr = "<button class='btn btn-default' onclick='SendCaravan(" + jsonData.camps[i].id + ")'><span class='glyphicon glyphicon-circle-arrow-right'></span> Send Caravan</button><hr />"
+                            $("#campCaravanNearby").append( btnSendCarStr );
+
+                            //var btnLocStr = "<button class='btn btn-default' onclick='test1(" + jsonData.camps[i].lat + ", " + jsonData.camps[i].lon + ")'><span class='glyphicon glyphicon-tower'></span> Location</button><hr />"
+                            //alert(btnLocStr);
+                            //$("#campCaravanNearby").append( btnLocStr );
+                        }
+                    }
+                    else{
+                        $("#campCaravanAvailable").text("Available caravans: 0")
+
+                    }
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function SendCaravan(id){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SendUserCaravan")',
+                data: { 'source': currentCamp, 'destination': id },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                    location.reload();
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function getNearbyCamps(lat, long){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetNearbyCamps")',
+                data: { 'lat': lat, 'lon': lon },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function buildMinions(ob_id){
+            var amount = $("#buildAmount").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BuildMinions")',
+                data: { 'ob_id': ob_id, 'amount': amount },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function checkTradingPost(){
+            $("#tradingPostArea").hide();
+            $("#availableTradeMinions").empty();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckTradingPost")',
+                data: { 'camp_id': targetId },
+                dataType: 'json',
+                success: function (jsonData) {
+                    //alert(JSON.stringify(jsonData));
+                    if(jsonData != -1){
+                        $("#tradingPostArea").show();
+                        if(jsonData != 0){
+                            for(var i=0; i<jsonData.length; i++){
+                                $("#availableTradeMinions").append("<p>Owner: " + jsonData[i].owner + "</p>");
+                                $("#availableTradeMinions").append("<p>Type: " + jsonData[i].mtype + "</p>");
+                                $("#availableTradeMinions").append("<p>Amount: " + jsonData[i].amount + "</p>");
+                                $("#availableTradeMinions").append("<button class='btn btn-default' onclick='buyMinions(" + jsonData[i].id + ")'>Buy minions</button>");
+                                $("#availableTradeMinions").append("<hr />");
+                            }
+                        }
+                    }
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function buyMinions(t_id){
+            alert(t_id);
+        }
+
+        function tradeMinions(mo_id){
+            var tradeAmount = $("#tradeAmount").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddToTradingPost")',
+                data: { 'mo_id': mo_id, 'camp_id': targetId, 'amount': tradeAmount },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        function attachMinions(m_id, ob_id){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AttachMinions")',
+                data: { 'm_id': m_id, 'ob_id': ob_id },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
         //battlegroup functions
         function removeMinions(id) {
             $.ajax({
@@ -594,6 +778,30 @@
                 type: "POST",
                 url: '@Url.Action("ConsumeCaravan")',
                 data: { 'target_id': targetId },
+                dataType: 'json',
+                success: function (jsonData) {
+                    alert(JSON.stringify(jsonData));
+                    location.reload();
+                },
+                error: function (jsonData) {
+                    alert("Error");
+                }
+            });
+        }
+
+        //google streetview
+        function GetStreetView(lat, lon){
+            $("#streetViewArea").empty();
+            $("#streetViewArea").html('<img src="https://maps.googleapis.com/maps/api/streetview?size=250x250&location=' + lat + ',' + lon + '&key=AIzaSyCS8CA5fO7JvUk_s4hV7tMsDJkeY5cvhIo">')
+        }
+
+        //subscription
+        function buySubscription(){
+            var sub = $("#subForm input[type='radio']:checked").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BuySubscription")',
+                data: { 'sub': sub },
                 dataType: 'json',
                 success: function (jsonData) {
                     alert(JSON.stringify(jsonData));

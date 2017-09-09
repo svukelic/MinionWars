@@ -24,6 +24,7 @@ namespace MinionWarsEntitiesLib.Models
             this.Reputation = new HashSet<Reputation>();
             this.UserMovementHistory = new HashSet<UserMovementHistory>();
             this.UserTreasury = new HashSet<UserTreasury>();
+            this.Trading = new HashSet<Trading>();
         }
     
         public int id { get; set; }
@@ -39,6 +40,7 @@ namespace MinionWarsEntitiesLib.Models
         public int trait_economics { get; set; }
         public Nullable<int> personal_bg_id { get; set; }
         public Nullable<int> points { get; set; }
+        public Nullable<int> subscription { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Battlegroup> Battlegroup { get; set; }
@@ -54,5 +56,7 @@ namespace MinionWarsEntitiesLib.Models
         public virtual ICollection<UserMovementHistory> UserMovementHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserTreasury> UserTreasury { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Trading> Trading { get; set; }
     }
 }

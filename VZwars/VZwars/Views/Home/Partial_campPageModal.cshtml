@@ -23,8 +23,7 @@
                             {
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <img src="~/Content/icons/castle.png" />
-                                        <h1>@camp.name</h1>
+                                        <h2>@camp.name</h2>
                                     </div>
                                     <div class="col-md-3">
                                         <p>Richness: @camp.richness</p>
@@ -53,10 +52,10 @@
                                                 }
                                             }
                                             @{
-                                                int stationCheck = camp.UtilityBuilding.ToList().FindIndex(x => x.type == 16);
-                                                if (stationCheck > 0)
+                                                List<UtilityBuilding> stationCheck = camp.UtilityBuilding.Where(x => x.type == 16).ToList();
+                                                if (stationCheck.Count > 0)
                                                 {
-                                                    <li><a href="#modalCampCaravans">Caravans</a></li>
+                                                    <li><a href="#modalCampCaravans" onclick="refreshCampCaravan(@camp.id, @camp.location.Latitude, @camp.location.Longitude)">Caravans</a></li>
                                                 }
                                             }
                                         </ul>
@@ -172,22 +171,80 @@
                                             </div>
                                         </div>
                                         <div id="modalCampMinions">
-                                            <p>Size: @camp.size</p>
-                                            <p>Defenses: @camp.def_modifier</p>
+                                            <div class="row">
+                                                <p>Size: @camp.size</p>
+                                                <p>Defenses: @camp.def_modifier</p>
+                                            </div>
                                         </div>
-                                        @{
-                                            if (camp.OffensiveBuilding.Count > 0)
-                                            {
-                                                <div id="modalCampColonies">
-                                                    <p>Available colonies: 0</p>
+                                        @{ 
+                                        if (camp.OffensiveBuilding.Count > 0)
+                                        {
+                                                <div id="modalCampColonies" class="row">
+                                                    <p>Available colonies: @camp.OffensiveBuilding.Count</p>
                                                 </div>
+                                                <div class="row">
+                                                    <hr />
+                                                </div>
+                                                foreach (OffensiveBuilding ob in camp.OffensiveBuilding)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <h2>Colony</h2>
+                                                        </div>
+                                                        @if (ob.Minion != null)
+                                                        {
+                                                            <div class="col-md-3">
+                                                                <p>Type: @ob.Minion.MinionType.name</p>
+                                                                <p>Strength: @ob.Minion.strength</p>
+                                                                <p>Dexterity: @ob.Minion.dexterity</p>
+                                                                <p>Vitality: @ob.Minion.vitality</p>
+                                                                <p>Power: @ob.Minion.power</p>
+                                                            </div>
+                                                                <div class="col-md-3">
+                                                                    <p>Melee Ability: @ob.Minion.melee_ability</p>
+                                                                    <p>Ranged Ability: @ob.Minion.ranged_ability</p>
+                                                                    <p>Passive: @ob.Minion.passive</p>
+                                                                </div>
+                                                        }
+                                                        <div class="col-md-3">
+                                                            @if (ob.Minion != null)
+                                                            {
+                                                                <input type="text" id="buildAmount" name="buildAmount" placeholder="Amount" class="input-sm" />
+                                                                <button class="btn btn-default" onclick="buildMinions(@ob.id)">Build minion</button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="dropdown">
+                                                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                                        Attach minions
+                                                                        <span class="caret"></span>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        @foreach (MinionModel mm in Model.minions)
+                                                                        {
+                                                                            <li><a href="#" onclick="attachMinions(@mm.data.id, @ob.id)">@mm.type.name</a></li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
                                             }
                                         }
                                         @{
-                                            if (stationCheck > 0)
+                                            if (stationCheck.Count > 0)
                                             {
                                                 <div id="modalCampCaravans">
-                                                    <p>Available caravans: 0</p>
+                                                    <div class="row">
+                                                        <p id="campCaravanAvailable">Available caravans: </p>
+                                                    </div>
+                                                    <div class="row">
+                                                        <hr />
+                                                    </div>
+                                                    <div class="row" id="campCaravanNearby">
+                                                        
+                                                    </div>
                                                 </div>
                                             }
                                         }
@@ -207,7 +264,23 @@
                     </div>
 
                     <div id="modalReputation">
-                        @Html.Partial("Partial_battlegroupRemote")
+                        @foreach(ReputationModel r in Model.reputation)
+                        {
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img src = "~/Content/icons/castle-circle.png" />
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-default" onclick="panToLocation(@r.camp.location.Latitude, @r.camp.location.Longitude)"><span class="glyphicon glyphicon-tower"></span> Location</button>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>Reputation @r.reputation.value</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <hr />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

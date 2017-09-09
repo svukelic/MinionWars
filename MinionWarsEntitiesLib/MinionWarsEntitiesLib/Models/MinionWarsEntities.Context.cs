@@ -51,5 +51,7 @@ namespace MinionWarsEntitiesLib.Models
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<UserTreasury> UserTreasury { get; set; }
         public virtual DbSet<UtilityBuilding> UtilityBuilding { get; set; }
+        public virtual DbSet<Trading> Trading { get; set; }
+        public virtual DbSet<EvolutionPool> EvolutionPool { get; set; }
     }
 }

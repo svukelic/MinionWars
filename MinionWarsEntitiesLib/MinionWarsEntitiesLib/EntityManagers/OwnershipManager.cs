@@ -95,6 +95,16 @@ namespace MinionWarsEntitiesLib.EntityManagers
                 {
                     c.ResourceBuilding = db.ResourceBuilding.Where(x => x.camp_id == c.id).ToList();
                     c.OffensiveBuilding = db.OffensiveBuilding.Where(x => x.camp_id == c.id).ToList();
+                    foreach(OffensiveBuilding ob in c.OffensiveBuilding)
+                    {
+                        if (ob.minion_id != null)
+                        {
+                            ob.Minion = db.Minion.Find(ob.minion_id);
+                            ob.Minion.MinionType = db.MinionType.Find(ob.Minion.mtype_id);
+                        }
+                        else ob.Minion = null;
+                    }
+
                     c.DefensiveBuilding = db.DefensiveBuilding.Where(x => x.camp_id == c.id).ToList();
                     c.UtilityBuilding = db.UtilityBuilding.Where(x => x.camp_id == c.id).ToList();
                 }
@@ -108,6 +118,15 @@ namespace MinionWarsEntitiesLib.EntityManagers
             {
                 db.Configuration.LazyLoadingEnabled = false;
                 return db.Reputation.Where(x => x.user_id == id).ToList();
+            }
+        }
+
+        public static List<Reputation> GetUserCampReputation(int uid, int cid)
+        {
+            using (var db = new MinionWarsEntities())
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                return db.Reputation.Where(x => x.user_id == uid && x.camp_id == cid).ToList();
             }
         }
 

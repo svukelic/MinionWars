@@ -77,7 +77,7 @@ namespace WarsTestConsole
             /*List<Camp> camps = CampManager.ReturnCamps(loc, 1000);
             Console.WriteLine(camps.Count);*/
 
-            //CampManager.CheckForDiscovery(loc, 1000);
+            CampManager.CheckForDiscovery(loc, 1000);
             //CampManager.CreateCamp(17, loc, "Throne");
 
             /*string places = Geolocations.GetPlaces(loc.Latitude.Value, loc.Longitude.Value, 1000, "restaurant").Result;
@@ -94,7 +94,7 @@ namespace WarsTestConsole
             Console.WriteLine(ut[0].ResourceType.name);
             Console.WriteLine(ut[0].amount);*/
 
-            using (var db = new MinionWarsEntities())
+            /*using (var db = new MinionWarsEntities())
             {
                 List<CostsBuilding> cbl = db.CostsBuilding.Where(x => x.b_id == 1).ToList();
                 List<UserTreasury> utl = db.UserTreasury.Where(x => x.user_id == 17).ToList();
@@ -106,7 +106,19 @@ namespace WarsTestConsole
                 }
 
                 Console.Write("ok");
-            }
+            }*/
+
+            /*List<Camp> cl = CampManager.ReturnCamps(point, 1000);
+            foreach(Camp c in cl)
+            {
+                Console.WriteLine(c.name);
+            }*/
+
+            //CampManager.GenerateUserCaravan(43, 44);
+
+            //CampManager.AttachMinions(1, 89);
+
+            //List<Trading> tl = TradeManager.CheckTradingPost(43);
 
             Console.WriteLine("DONE");
             Console.ReadKey();

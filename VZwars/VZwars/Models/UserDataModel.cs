@@ -55,6 +55,7 @@ namespace VZwars.Models
 
             this.personalCamps = OwnershipManager.GetUserCamps(id);
 
+            this.reputation = new List<ReputationModel>();
             List<Reputation> repList = OwnershipManager.GetUserReputation(id);
             foreach(Reputation r in repList)
             {

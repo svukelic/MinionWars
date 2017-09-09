@@ -216,9 +216,9 @@ namespace MinionWarsEntitiesLib.Geolocations
             }
         }
 
-        public static List<Camp> InitiateDiscovery(DbGeography loc)
+        public static List<Camp> InitiateDiscovery(DbGeography loc, string locType)
         {
-            string places = GetPlaces(loc.Latitude.Value, loc.Longitude.Value, 1000, "restaurant").Result;
+            string places = GetPlaces(loc.Latitude.Value, loc.Longitude.Value, 1000, locType).Result;
             List<Camp> newCamps = new List<Camp>();
             List<DbGeography> newLocs = new List<DbGeography>();
             //parse, create new camp
@@ -235,16 +235,21 @@ namespace MinionWarsEntitiesLib.Geolocations
                 }
             }
 
+            string name = "";
+            if (locType.Equals("restaurant")) name = "Neutral Camp";
+            else if (locType.Equals("gas_station")) name = "Message Board";
+            else if (locType.Equals("bank")) name = "Neutral Trader";
+
             using (var db = new MinionWarsEntities())
             {
                 foreach (DbGeography l in newLocs)
                 {
-                    //Console.WriteLine("Discovery found");
+                    Console.WriteLine("Discovery found: " + name);
                     List<Camp> check = new List<Camp>();
                     check = db.Camp.Where(x => x.location.Distance(l) <= 250).ToList();
                     if (check.Count == 0)
                     {
-                        Camp nc = CampManager.CreateCamp(-1, l, "Neutral Camp");
+                        Camp nc = CampManager.CreateCamp(-1, l, name);
                         newCamps.Add(nc);
                     }
 
