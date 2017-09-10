@@ -1,4 +1,5 @@
-﻿using MinionWarsEntitiesLib.Models;
+﻿using MinionWarsEntitiesLib.Minions;
+using MinionWarsEntitiesLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -46,6 +47,7 @@ namespace MinionWarsEntitiesLib.AiManagers
                 var difference = (DateTime.Now - bg.creation.Value).TotalMinutes;
                 if (difference > ttl.value)
                 {
+                    WildMinionGeneratorManager.SaveToPool(bg);
                     bg.location = null;
                     bg.orders_id = null;
                     death = true;

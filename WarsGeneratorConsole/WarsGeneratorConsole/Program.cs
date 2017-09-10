@@ -115,9 +115,9 @@ namespace WarsGeneratorConsole
 
         private static void MinionGenerationEvent(DbGeography loc)
         {
-            Console.WriteLine("Wild Group generation started");
+            Console.WriteLine("Ontogenesis started");
             //generate wild minion group
-            WildMinionGeneratorManager.GenerateWildMinionGroup(loc);
+            WildMinionGeneratorManager.InitiateOntogenesis(loc);
             UsersManager.UpdateEventSaturations(loc, 1);
         }
 

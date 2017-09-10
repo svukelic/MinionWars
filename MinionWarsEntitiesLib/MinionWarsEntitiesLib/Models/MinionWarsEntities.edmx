@@ -148,6 +148,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="stored_date" Type="datetime" />
           <Property Name="minion_id" Type="int" Nullable="false" />
+          <Property Name="last_location" Type="geography" />
         </EntityType>
         <EntityType Name="HiveNode">
           <Key>
@@ -1912,6 +1913,7 @@
           <Property Name="stored_date" Type="DateTime" Precision="3" />
           <Property Name="minion_id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Minion" Relationship="MinionWarsModel.fk_evo_minion" FromRole="EvolutionPool" ToRole="Minion" />
+          <Property Name="last_location" Type="Geography" />
         </EntityType>
         <Association Name="fk_evo_minion">
           <End Type="MinionWarsModel.Minion" Role="Minion" Multiplicity="1" />
@@ -2269,6 +2271,7 @@
           <EntitySetMapping Name="EvolutionPool">
             <EntityTypeMapping TypeName="MinionWarsModel.EvolutionPool">
               <MappingFragment StoreEntitySet="EvolutionPool">
+                <ScalarProperty Name="last_location" ColumnName="last_location" />
                 <ScalarProperty Name="minion_id" ColumnName="minion_id" />
                 <ScalarProperty Name="stored_date" ColumnName="stored_date" />
                 <ScalarProperty Name="id" ColumnName="id" />

@@ -17,6 +17,7 @@ namespace MinionWarsEntitiesLib.Models
         public int id { get; set; }
         public Nullable<System.DateTime> stored_date { get; set; }
         public int minion_id { get; set; }
+        public System.Data.Entity.Spatial.DbGeography last_location { get; set; }
     
         public virtual Minion Minion { get; set; }
     }
